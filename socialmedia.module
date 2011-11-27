@@ -1,0 +1,301 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Demonstrate basic module socialmedia.
+ */
+
+// TODO figure out better way to include widgetx_elements
+include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.widgets.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function socialmedia_menu() {
+  // Module settings.
+  $items['admin/config/media/socialmedia'] = array(
+    'title' => 'Social media',
+    'description' => 'socialmedia configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('socialmedia_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'socialmedia.admin.inc',
+    'file path' => drupal_get_path('module', 'socialmedia'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/config/media/socialmedia/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'socialmedia configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('socialmedia_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'socialmedia.admin.inc',
+    'file path' => drupal_get_path('module', 'socialmedia'),
+    'weight' => 0,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/media/socialmedia/accounts'] = array(
+    'title' => 'Accounts',
+    'description' => 'socialmedia account configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('socialmedia_admin_accounts_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'socialmedia.admin.inc',
+    'file path' => drupal_get_path('module', 'socialmedia'),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/media/socialmedia/widgetset'] = array(
+    'title' => 'Widget set',
+    'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
+    'page callback' => 'socialmedia_widgetset_list',
+    'access arguments' => array('administer social media widgets'),
+    'file' => 'socialmedia.admin.inc',
+  );
+  $items['admin/config/media/socialmedia/widgetset/list'] = array(
+    'title' => 'List',
+    'description' => 'List the current image styles on the site.',
+    'page callback' => 'image_style_list',
+    'access arguments' => array('administer social media widgets'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'socialmedia.admin.inc',
+  );
+  $items['admin/config/media/socialmedia/widgetset/add'] = array(
+    'title' => 'Add set',
+    'description' => 'Add a new social media widget set.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('socialmedia_widgetset_add_form'),
+    'access arguments' => array('administer social media widgets'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 2,
+    'file' => 'socialmedia.admin.inc',
+  );
+  $items['admin/config/media/socialmedia/widgetset/edit/%socialmedia_widgetset'] = array(
+    'title' => 'Edit set',
+    'description' => 'Configure an social media widget set.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('socialmedia_widgetset_form', 6),
+    'access arguments' => array('administer social media widgets'),
+    'file' => 'socialmedia.admin.inc',
+  );
+  $items['admin/config/media/socialmedia/widgetset/delete/%image_style'] = array(
+    'title' => 'Delete set',
+    'description' => 'Delete an social media widget set.',
+    'load arguments' => array(NULL, (string) IMAGE_STORAGE_NORMAL),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('image_style_delete_form', 6),
+    'access arguments' => array('administer social media widgets'),
+    'file' => 'socialmedia.admin.inc',
+  );
+  $items['socialmedia/util'] = array(
+    'title' => t('Social media util'),
+    'page callback' => 'socialmedia_util',
+    'access arguments' => array('access link intelligence'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['socialmedia/util_pattern'] = array(
+    'title' => t('Social media pattern util'),
+    'page callback' => 'socialmedia_util_pattern',
+    'access arguments' => array('access link intelligence'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function socialmedia_util() {
+	
+	$services = service_links_get_links();
+	dsm($services);
+	return '';
+	
+	//$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
+  
+	//$pattern = '/http:\/\/(www\.)(facebook\.com\/)?(\w+)+/i';
+	
+  $pattern = '/http:\/\/(www\.)(facebook\.com\/)?(\w+)+/i';
+  
+  $strs[] = 'http://www.facebook.com/levelten';
+  $strs[] = 'http://www.facebook.com/pages/Tutrtv/226952000664950';
+  $strs[] = 'http://www.facebook.com/profile.php?id=1265065160';
+  foreach ($strs AS $str) {
+  	$profile = array();
+    preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE);
+  	$a = explode('facebook.com/', $str);
+  	$b = explode('?', $a[1]);
+  	$c = explode('/', $b[0]);
+  	if(!isset($b[1]) && ($b[0] != 'profile.php')) {
+  		$profile['username'] = $b[0];
+  	}
+  	else if($b[0] == 'pages') {
+  		$profile['username'] = $b[1];
+  	}
+  	dsm($str);
+  	dsm($profile);
+  }
+
+  return '';
+}
+
+function socialmedia_field_scan($text, $return_matches = FALSE) {
+  // Matches tokens with the following pattern: [$type:$name]
+  // $type and $name may not contain  [ ] or whitespace characters.
+  // $type may not contain : characters, but $name may.
+  preg_match_all('/
+    \[\?             # [ - pattern start
+    ([^\s\?=]*)   # match $type not containing whitespace ? or =
+    =               # = - separator
+    ([^\s\?]*)    # match $name not containing whitespace or ?
+    \?\]             # ] - pattern end
+    /x', $text, $matches);
+
+  if ($matches) {
+  	return $matches;
+  }
+  
+  $fields = $matches[1];
+  $defaults = $matches[2];
+  
+  // Iterate through the matches, building an associative array containing
+  // $tokens grouped by $types, pointing to the version of the token found in
+  // the source text. For example, $results['node']['title'] = '[node:title]';
+  $results = array();
+  for ($i = 0; $i < count($fields); $i++) {
+    $results[$fields[$i]] = $defaults[$i];
+  }
+
+  return $results;
+}
+
+function socialmedia_util_pattern() {
+  $str = <<<EOF
+Twitter url: [socialmedia:twitter_url] 
+Twitter @username: [socialmedia:twitter_amp-username]  
+  
+EOF;
+  $output = $str;
+  $output .= "<br /><br />";
+  $output .= token_replace($str);
+  dsm(token_scan($str));
+
+  return $output;
+}
+
+
+/**
+ * Implements hook_help().
+ */
+function socialmedia_help($path, $arg) {
+  switch ($path) {
+    case 'admin/settings/socialmedia':
+      return t('This is some help text for the socialmedia settings page.');
+
+    case 'admin/help#socialmedia':
+      $output = '<p>' . t('This is help text for the socialmedia help page') . '</p>';
+      return $output;
+  }
+}
+
+function socialmedia_account_save($account, $platform, $uid = 0) {
+  $query = db_merge('socialmedia_account');
+  $query->key(array(
+    'platform' => $platform,
+    'uid' => $uid,
+  ));
+  $query->fields(array(
+    'data' => serialize($account),
+  ));
+  $id = $query->execute();
+}
+
+function socialmedia_account_load($platform, $uid = 0) {
+  static $accounts = array();
+  if (isset($accounts[$platform][$uid])) {
+    return $accounts[$platform][$uid];
+  }
+  
+  $query = db_select('socialmedia_account', 'a')
+    ->fields('a')
+    ->condition('a.platform', $platform)
+    ->condition('a.uid', $uid);
+  $result = $query->execute()->fetchAssoc();
+  if(!$result) {
+    return FALSE; 
+  }
+  $account = unserialize($result['data']);
+  $account['result'] = $result;
+  
+  $accounts[$platform][$uid] = $account;
+  return $account;
+}
+
+/**
+ * Pull in image elements exposed by modules implementing hook_widgetx_element_info().
+ *
+ * @return
+ *   An array of image elements to be used when transforming images.
+ * @see hook_widgetx_element_info()
+ * @see widgetx_element_definition_load()
+ */
+function socialmedia_platform_definitions() {
+  global $language;
+  static $platforms = NULL;
+  
+  if (isset($platforms)) {
+  	return $platforms;
+  }
+
+  $platforms = array();
+  include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.platforms.inc';
+  foreach (module_implements('socialmedia_platform_info') as $module) {
+    foreach (module_invoke($module, 'socialmedia_platform_info') as $name => $platform) {
+      // Ensure the current toolkit supports the element.
+//dsm($platform);
+      $platform['module'] = $module;
+      $platform['name'] = $name;
+      $platform['title'] = $platform['title'];
+      $platform['data'] = isset($platform['data']) ? $platform['data'] : array();
+      $platforms[$name] = $platform;
+    }
+  }
+   
+  return $platforms;
+}
+
+/**
+ * Load the definition for an widget.
+ *
+ * The element definition is a set of core properties for an image element, not
+ * containing any user-settings. The definition defines various functions to
+ * call when configuring or executing an image element. This loader is mostly for
+ * internal use within image.module. Use widgetx_element_load() or
+ * widgetx_set_load() to get image elements that contain configuration.
+ *
+ * @param $element
+ *   The name of the element definition to load.
+ * @param $set
+ *   An image set array to which this element will be added.
+ * @return
+ *   An array containing the image element definition with the following keys:
+ *   - "element": The unique name for the element being performed. Usually prefixed
+ *     with the name of the module providing the element.
+ *   - "module": The module providing the element.
+ *   - "help": A description of the element.
+ *   - "function": The name of the function that will execute the element.
+ *   - "form": (optional) The name of a function to configure the element.
+ *   - "summary": (optional) The name of a theme function that will display a
+ *     one-line summary of the element. Does not include the "theme_" prefix.
+ */
+function socialmedia_platform_definition_load($platform, $uid = NULL) {
+  $definitions = socialmedia_platform_definitions();
+
+  // If a set is specified, do not allow loading of default set
+  // elements.
+  if (isset($uid)) {
+    $set = socialmedia_user_load($uid, NULL);
+  }
+
+  return isset($definitions[$platform]) ? $definitions[$platform] : FALSE;
+}
+
