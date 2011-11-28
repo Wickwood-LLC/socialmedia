@@ -121,6 +121,10 @@ EOF;
       'form callback' => 'socialmedia_widgets_addthis_google_plusone_form',
     ),
   );
+  
+  $elements = array_merge($elements, socialmedia_share_platforms_info());
+  
+  dsm($elements);
 
   return $elements;
 }
@@ -226,4 +230,114 @@ function socialmedia_widgets_default_sets() {
   );
 
   return $sets;
+}
+
+function socialmedia_share_platforms_info() {
+	$platforms = socialmedia_share_platforms();
+	$elements = array();
+	$labelpost = array(
+    'profile-link-text' => t('profile text link'),
+	  'profile-link' => t('profile link'),    
+    'share-link-text' => t('share text link'),
+    'share-link' => t('share link'),
+	);
+	foreach ($platforms AS $platform_name => $platform) {
+		foreach ($platform['templates'] AS $template_name => $template) {
+			$lin = 
+			$elements['socialmedia_' . $platform_name . '-' . $template_name] = array(
+	      'label' => t('Socialmedia @platform @type', 
+			    array(
+			      '@platform' => $platform['label'],
+			      '@type' => $labelpost[$template_name],
+			    )),
+	      //'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
+	      'group' => 'TEST:' . $platform['group'],
+	      'template' => $template,
+	      //'form callback' => 'socialmedia_widgets_share_platforms_form',
+	    );
+	    // add form callback if fields
+	    if($template_name != 'share-link-text') {
+	    	$elements['socialmedia_' . $platform_name . '-' . $template_name]['form callback'] = 'socialmedia_widgets_share_platforms_form';
+	    }
+		}
+	}
+	return $elements;
+}
+
+function socialmedia_share_platforms() {
+	$platforms = array();
+	$platforms['twitter'] = array(
+	  'label' => t('Twitter'),
+    'group' => t('Social media: Twitter'),
+	);
+	$platforms['twitter']['templates'] = array(
+	  'profile-link-text' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter">[?profile_username=[socialmedia:sm-twitter_amp-username]?]</a>',	
+	  'profile-link' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter"><img src="[?icon=[socialmedia:twitter-icon]?]/twitter.png" alt="Twitter icon" ></a>',
+	  'share-link-text' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this">Tweet</a>',
+	  'share-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon=[socialmedia:twitter-icon]?]/twitter.png" alt="Twitter icon" ></a>',
+	);
+	
+  $platforms['facebook'] = array(
+    'label' => t('Facebook'),
+    'group' => t('Social media: Facebook'),
+  );
+  $platforms['facebook']['templates'] = array(
+    'profile-link-text' => '<a href="http://[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Facebook">[?profile_username=[socialmedia:sm-twitter_amp-username]?]</a>',  
+    'profile-link' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Facebook"><img src="[?icon=[socialmedia:facebook-icon]?]/facebook.png" alt="Facebook icon" ></a>',
+    'share-link-text' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Share on Facebook">Share</a>',
+    'share-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Share on Facebook"><img src="[?icon=[socialmedia:twitter-icon]?]/facebook.png" alt="Facebook icon" ></a>',
+  );
+	return $platforms;
+}
+
+function socialmedia_widgets_share_platforms_form($data) {
+//dsm($data);
+  
+  $form = array();
+  if (arg(5) == 'add') {
+  	$element = widgets_element_definition_load(arg(6));	
+  }
+  else {
+    $element = widgets_element_load(arg(6), arg(4));
+  }
+  $fields = widgets_field_scan($element['template']);
+//dsm($element);
+//dsm($fields);
+  if (is_array($fields)) {
+	  foreach ($fields AS $key => $default) {
+	    $form[$key] = array(
+	      '#type' => 'textfield',
+	      '#title' => ucfirst(str_replace(array('_', '-'), ' ', $key)),
+	      '#default_value' => isset($data[$key]) ? $data[$key] : '',
+	      '#description' => t('Leave blank to use default %default',
+	        array(
+	          '%default' => $default,
+	        )
+	      ),              
+	    );
+	  }
+  }
+  if (isset($form['icon'])) {
+  	$path_pre = base_path() . drupal_get_path('module', 'socialmedia') . '/icons/icondock/';
+  	$options = array(
+  	  $path_pre  . '16px' => '16x16',
+  	  $path_pre  . '24px' => '24x24',
+  	  $path_pre  . '32px' => '32x32',
+  	);
+  	$form['icon'] = array(
+      '#type' => 'select',
+      '#title' => t('Icon size'),
+      '#default_value' => (isset($data['icon']) && $data['icon']) ? $data['icon'] : '',
+    //'#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+      '#options' => $options,
+    );
+  }
+dsm($form);
+  return $form;
+}
+
+function socialmedia_platform_icon_info() {
+	$icons = array(
+	 
+	);
 }

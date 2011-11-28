@@ -9,7 +9,8 @@ function socialmedia_token_info() {
   $tokens = array(
     'socialmedia' => array(),
     'site' => array(),
-    'user' => array(),  
+    'user' => array(), 
+    'current-page' => array(), 
   );
 
   $profiles = socialmedia_platform_definitions();
@@ -39,6 +40,10 @@ function socialmedia_token_info() {
   );
   */
   
+  $tokens['current-page']['title-plain'] = array(
+    'name' => t('The title of the current page stripped of HTML'),
+  );
+  
   return array(
     'types' => array('socialmedia' => $type), 
     'tokens' => array(
@@ -46,6 +51,7 @@ function socialmedia_token_info() {
       //'usersite' => $tokens['usersite'],
       'site' => $tokens['site'],
       'user' => $tokens['user'],
+      'current-page' => $tokens['current-page'],
     ),
   );
 }
@@ -55,6 +61,11 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
 //dsm($tokens);
 //dsm($type);
   $replacements = array();
+  if ($type == 'current-page') {
+  	if (isset($tokens['title-plain'])) {
+  		$replacements[$tokens['title-plain']] = strip_tags(drupal_get_title());
+  	}
+  }
   if (($type == 'site') || ($type == 'user') || ($type == 'socialmedia')) {
     $uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
     foreach ($tokens as $name => $original) {     	
