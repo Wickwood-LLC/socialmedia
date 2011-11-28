@@ -8,6 +8,7 @@
 
 // TODO figure out better way to include widgetx_elements
 include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.widgets.inc';
+include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.platforms.inc';
 
 /**
  * Implements hook_menu().
@@ -105,6 +106,10 @@ function socialmedia_menu() {
 }
 
 function socialmedia_util() {
+	
+	$options = socialmedia_icon_style_options();
+	dsm($options);
+	return '';
 	
 	$services = service_links_get_links();
 	dsm($services);

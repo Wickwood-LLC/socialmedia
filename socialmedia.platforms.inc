@@ -40,11 +40,10 @@ function socialmedia_twitter_platform_info() {
     ),
   );
   $platforms['twitter']['tokens']['socialmedia'] = array(
-    'twitter_icon' => array(
-      'name' => t("Twitter icon"), 
-      'description' => t("Displays Twitter icon"),
+    'twitter_icon-path' => array(
+      'name' => t("Twitter icon path"), 
+      'description' => t("File path to twitter icon"),
     ),
-
   );  
   return $platforms;	
 }
@@ -76,8 +75,6 @@ function socialmedia_twitter_tokens($key, $profile) {
       return $profile['title'];
     case 'amp-username':
       return '@' . $profile['title'];
-    case 'icon':
-      return base_path() . drupal_get_path('module', 'socialmedia') . '/icons/24 by 24 pixels/twitter.png';
   }
   return '';
 }
@@ -103,15 +100,15 @@ function socialmedia_facebook_platform_info() {
       'name' => t("Facebook profile url (brief)"), 
       'description' => t("URL to Facebook profile without protocol."),
     ), 
-    'facebook_name' => array(
+    'facebook_username' => array(
       'name' => t("Facebook name"), 
       'description' => t("Facebook profile name"),
     ),   
   );
   $platforms['facebook']['tokens']['socialmedia'] = array(
-    'facebook_icon' => array(
-      'name' => t("Facebook icon"), 
-      'description' => t("Displays Facebook icon"),
+    'facebook_icon-path' => array(
+      'name' => t("Facebook icon path"), 
+      'description' => t("File path to facebook icon"),
     ),
   );  
   return $platforms;  
@@ -136,7 +133,7 @@ function socialmedia_facebook_parser($str) {
   else if($b[0] == 'pages') {
     $profile['title'] = $b[1];
   }
-  $profile['url'] = 'facebook.com/' . $a[1];
+  $profile['url'] = 'www.facebook.com/' . $a[1];
   
 //dsm($matches);
   return $profile;
@@ -150,10 +147,8 @@ function socialmedia_facebook_tokens($key, $profile) {
       return 'http://' . $profile['url'];
     case 'url-brief':
       return $profile['url'];
-    case 'name':
+    case 'username':
       return $profile['title'];
-    case 'icon':
-      return base_path() . drupal_get_path('module', 'socialmedia') . '/icons/24 by 24 pixels/facebook.png';
   }
   return '';
 }
@@ -177,26 +172,115 @@ function socialmedia_addthis_platform_info() {
   return $platforms;  
 }
 
-/*
-function socialmedia_platform_links() {
-  $platforms = array();
-  $platforms['twitter'] = array(
-    'label' => t('Twitter'),
-    'profile template text' => 
-    'profile template' =>
-    'share template' => 
-  );
+function socialmedia_icon_style_options($platform = NULL) {
+	$icons = socialmedia_iconset_info();
+	$options = array();
+	foreach ($icons AS $iconset_name => $iconset) {
+		if (!$platform) {
+			if (socialmedia_iconset_is_installed($iconset_name)) {
+				$options[$iconset['name']] = $iconset['styles'];
+			}
+		}
+	}
+	return $options;
 }
 
-function socialmedia_icons() {
-  $icons = array(
-    'setname' => 'icondock',
-    'sizes' => array(
+function socialmedia_iconset_is_installed($iconset) {
+	return is_dir(drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset );
+}
+
+function socialmedia_icon_platforms() {
+	$platforms = array( 
+	  'digg' => t('Digg'), 
+	  'delicious' => t('Del.icio.us'),
+	  'email' => t('E-mail'),  
+	  'facebook' => t('Facebook'),
+	  'flickr' => t('Flikr'),
+	  'google' => t('Google'),
+	  'google-plus' => t('Google+'),
+	  'linkedin' => t('LinkedIn'),
+	  'myspace' => t('MySpace'),
+	  'pinterest' => t('Pinterest'),
+	  'reddit' => t('Reddit'),
+	  'rss' => t('RSS'),
+	  'slideshare' => t('Slideshare'),
+	  'stumbleupon' => t('StumbleUpon'),
+	  'technorati' => t('Technorati'),
+	  'twitter' => t('Twitter'),
+	  'vimeo' => t('Vimeo'),
+	  'youtube' => t('YouTube'),
+	);
+	return $platforms;
+}
+
+function socialmedia_iconset_info() {
+  $icons['icondock'] = array(
+    'name' => 'Icon Dock',
+    'styles' => array(
       '16px' => '16x16',
       '24px' => '24x24',
       '32px' => '32x32',  
-    )
-    'extension' 
+    ),
+    'path callback' => 'socialmedia_icon_path_icondock', 
+    'download' => 'http://icondock.com/free/vector-social-media-icons',
   );
+  $icons['sada'] = array(
+    'name' => 'Sada',
+    'styles' => array(
+      '16x16' => '16x16',
+      '32x32' => '32x32',
+      '64x64' => '64x64',  
+    ),
+    'path callback' => 'socialmedia_icon_path_sada', 
+    'download' => 'http://www.profimagazin.cz/ikony/socialni-ikony-vcetne-ceskych-linkovacich-sluzeb-ke-stazeni-zdarma',
+  );
+  $icons['theg-force'] = array(
+    'name' => 'TheG-Force',
+    'styles' => array(
+      '24x24' => '24x24',
+      '32x32' => '32x32',
+      '48x48' => '48x48',
+      '64x64' => '64x64',  
+    ),
+    'path callback' => 'socialmedia_icon_path_thegforce', 
+    'download' => 'http://theg-force.deviantart.com/art/Social-Icons-hand-drawned-109467069',
+  );
+  return $icons;
 }
-*/
+
+function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
+	$style = isset($style) ? $style : '32px';
+	$path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/' . $style . '/' . $platform . '.png'; 
+	return $path;
+}
+
+function socialmedia_icon_path_sada($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/sada/' . $style . '/' . $platform . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
+	$trans = array(
+	  'delicious' => 'Del icio us',
+	  'digg' => 'Digg',
+	  'facebook' => 'Facebook',
+	  'flickr' => 'Flickr',
+	  'google' => 'Google',
+	  'linkedin' => 'Linkedin',
+	  'myspace' => 'Myspace',
+	  'reddit' => 'Reddit',
+	  'rss' => 'RSS',	  
+	  'stumbleupon' => 'StumbleUpon',
+	  'technorati' => 'Technorati',
+	  'twitter' => 'Twitter',
+	  'vimeo' => 'Vimeo',
+	  'youtube' => 'Youtube',
+	);
+	if(!isset($trans[$platform])) {
+		return FALSE;
+	}
+  $style = isset($style) ? $style : '32x32';
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/theg-force/' . $trans[$platform] . '/' . $style . '.png'; 
+  return $path;
+}

@@ -2,7 +2,12 @@
 /**
  * Image style configuration pages.
  */
-div.widgetset-new,
-div.widgetset-new div {
-  display: inline;
+table#socialmedia-iconsets th {
+  padding: 3px 2px;
+  width: 34px;
+}
+
+table#socialmedia-iconsets td {
+  padding: 5px 2px;
+  width: 34px;
 }
