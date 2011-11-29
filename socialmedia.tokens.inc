@@ -40,6 +40,14 @@ function socialmedia_token_info() {
   );
   */
   
+  $platforms = socialmedia_icon_platforms();
+  foreach ($platforms AS $platform => $name) {
+	  $tokens['socialmedia']['sm-' . $platform . '_icon-path:?'] = array(
+	    'name' => t('@platform icon path', array('@platform' => $name)),
+	    'description' => t("The path to the @platform icon", array('@platform' => $name)),
+	  );
+  }
+  
   $tokens['current-page']['title-plain'] = array(
     'name' => t('The title of the current page stripped of HTML'),
   );
@@ -68,11 +76,14 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
   }
   if (($type == 'site') || ($type == 'user') || ($type == 'socialmedia')) {
     $uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
-    foreach ($tokens as $name => $original) {     	
+    foreach ($tokens as $name => $original) {  
       if (strpos($name, 'sm-') === 0) {
-      	$a = explode('_', substr($name, 3));
-      	$platform_name = $a[0];
-      	$hash = $a[1];
+      	list($platform_name, $hash) = explode('_', substr($name, 3));
+      	// process icon paths
+      	if (strpos($hash, 'icon-path') === 0) {
+          $replacements[$original] = socialmedia_icon_tokens($platform_name, $hash);
+      		continue;
+      	}
       	$profile = NULL;      	
         if ((($type == 'user') || ($type == 'socialmedia')) && $uid) {
           $profile = socialmedia_account_load($platform_name, $uid);
@@ -81,14 +92,49 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
           $profile = socialmedia_account_load($platform_name, 0);
         }
         $platform = socialmedia_platform_definition_load($platform_name);
-//dsm($platform_name);
-//dsm($platform);
-        $replacements[$original] = call_user_func($platform['tokens callback'], $hash, $profile);
+dsm($platform_name);
+dsm($platform);
+        $replacement = call_user_func($platform['tokens callback'], $hash, $profile);
+        if (!$replacement) {
+dsm($platform);
+			    $msg = t('You are trying to use a social media %platform profile token but the profile has not been set. !link',
+			      array(
+			        '%platform' => $platform['title'],
+			        '!link' => l(t('Set @platform profile.', array('@platform' => $platform['title'])), 'admin/config/media/socialmedia')
+			      )
+			    );
+			    widgets_set_error($data['widgets']['element'], $msg);
+        }
+        else {
+        	$replacements[$original] = $replacement;
+        }
       }
     }
   }
 //dsm($replacements);
   return $replacements;
+}
+
+function socialmedia_icon_tokens($platform_name, $hash) {
+  $b = explode(':', $hash);
+  $iconsets = socialmedia_iconset_info();
+  if (isset($b[1])) {
+    $s = $b[1];
+  }
+  else {
+    $s = variable_get('socialmedia_icon_default_style', '');
+  }
+  if (!$s) {
+    $msg = t('You are trying to use a social media icon token but no default icon style has been set. !link',
+      array(
+        '!link' => l(t('Set default icon style.'), 'admin/config/media/socialmedia')
+      )
+    );
+    widgets_data_error('set', $msg, 'warning', 'administer socialmedia');
+    return '';
+  }
+  list($iconset, $style) = explode(':', $s);
+  return base_path() . call_user_func($iconsets[$iconset]['path callback'], $platform_name, $style);	
 }
 
 

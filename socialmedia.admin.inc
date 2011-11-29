@@ -20,7 +20,7 @@ function socialmedia_admin_settings() {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  $options = socialmedia_icon_style_options();
+  $options = socialmedia_icon_style_options(FALSE);
   $form['iconsets']['socialmedia_icon_default_style'] = array(
     '#type' => 'select',
     '#title' => t('Default icon style'),
@@ -39,7 +39,7 @@ function socialmedia_admin_settings() {
   $icons = socialmedia_iconset_info();
   //$examples = array('twitter', 'facebook', 'stumbleupon', 'youtube');
   foreach ($icons AS $iconset_name => $iconset) {
-dsm($iconset);
+//dsm($iconset);
     $row = array(
       $iconset['name'],
       implode('<br />', $iconset['styles']),
