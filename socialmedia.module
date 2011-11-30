@@ -127,8 +127,8 @@ function socialmedia_util() {
   	else if($b[0] == 'pages') {
   		$profile['username'] = $b[1];
   	}
-  	dsm($str);
-  	dsm($profile);
+  	//dsm($str);
+  	//dsm($profile);
   }
 
   return '';
@@ -173,7 +173,7 @@ EOF;
   $output = $str;
   $output .= "<br /><br />";
   $output .= token_replace($str);
-  dsm(token_scan($str));
+  //dsm(token_scan($str));
 
   return $output;
 }
