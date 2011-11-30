@@ -98,12 +98,8 @@ function socialmedia_menu() {
 
 function socialmedia_util() {
 	
-	$options = socialmedia_icon_style_options();
-//dsm($options);
-	return '';
-	
 	$services = service_links_get_links();
-	//dsm($services);
+	dsm($services);
 	return '';
 	
 	//$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -293,5 +289,16 @@ function socialmedia_platform_definition_load($platform, $uid = NULL) {
   }
 
   return isset($definitions[$platform]) ? $definitions[$platform] : FALSE;
+}
+
+function _socialmedia_widgets_set_error($element, $msg, $status = 'warning') {
+  if (module_exists('widgets')) {
+    if (user_access('administer socialmedia')) {
+      widgets_set_error($element, $msg);
+    }
+    else {
+      widgets_set_error($element);
+    }
+  }
 }
 

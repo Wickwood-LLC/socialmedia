@@ -22,6 +22,7 @@ function socialmedia_widgets_element_info() {
 EOF;
   //$addthis_js = '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=[?addthis_username:[socialmedia:addthis:username]]"></script>';
   $addthis_js = '<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=tomdude48"></script>';
+    
   
   $elements = array(
     'socialmedia_twitter-tweet-no-count' => array(
@@ -68,7 +69,7 @@ EOF;
       'form callback' => 'socialmedia_widgets_addthis_tweet_form',
     ),
     'socialmedia_addthis-facebook-like' => array(
-      'label' => t('Addthis Facebook like button'),
+      'label' => t('AddThis Facebook like button'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'group' => t('Social media: Facebook'),
       'template' => '<a class="addthis_button_facebook_like"[?layout=?] fb:like:width="450" fb:like:show_faces="true"></a>',
@@ -81,7 +82,7 @@ EOF;
       'form callback' => 'socialmedia_widgets_addthis_facebook_like_form',
     ),
     'socialmedia_addthis-facebook-send' => array(
-      'label' => t('Addthis Facebook send button'),
+      'label' => t('AddThis Facebook send button'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'group' => t('Social media: Facebook'),
       'template' => '<a class="addthis_button_facebook_like"[?layout=?]></a>',
@@ -94,7 +95,7 @@ EOF;
       'form callback' => 'socialmedia_widgets_addthis_facebook_send_form',
     ),
     'socialmedia_addthis-google-plusone' => array(
-      'label' => t('Addthis Google +1 button'),
+      'label' => t('AddThis Google +1 button'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'group' => t('Social media: Google+'),
       'template' => '<a class="addthis_button_google_plusone"[?size=?]></a>',
@@ -106,7 +107,72 @@ EOF;
       ),
       'form callback' => 'socialmedia_widgets_addthis_google_plusone_form',
     ),
+    'socialmedia_addthis-stumbleupon' => array(
+      'label' => t('AddThis StumbleUpon Badge'),
+      'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
+      'group' => t('Social media: StumbleUpon'),
+      'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?]&su:bdg:url=[current-page:url]></a>',
+      'add_js' => array(
+        'data' => $addthis_js,
+        'options' => array(
+          'scope' => 'set_post', 
+        ),
+      ),
+      'form callback' => 'socialmedia_widgets_addthis_stumbleupon_form',
+    ),
+    'socialmedia_addthis-addthis-counter' => array(
+      'label' => t('AddThis Counter'),
+      'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
+      'group' => t('Social media: Multi'),
+      'template' => '<a class="addthis_counter"[?style=?]></a>',
+      'add_js' => array(
+        'data' => $addthis_js,
+        'options' => array(
+          'scope' => 'set_post', 
+        ),
+      ),
+      'form callback' => 'socialmedia_widgets_addthis_addthis_counter_form',
+    ),
   );
+  
+  $template = <<<EOF
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 250,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#333333',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#000000',
+      color: '#ffffff',
+      links: '#4aed05'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    behavior: 'all'
+  }
+}).render().setUser('[?profile=[socialmedia:sm-twitter_username]?]').start();
+</script>  
+EOF;
+  $elements['socialmedia_twitter-profile-widget'] = array(
+    'label' => t('Twitter profile widget'),
+    'group' => t('Social media: Twitter'),
+    'template' => $template,
+    'form callback' => 'widgets_template_auto_form',
+  );
+  
+  
   
   $elements = array_merge($elements, socialmedia_share_platforms_info());
   
@@ -159,8 +225,8 @@ function socialmedia_share_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-twitter_url]?]",
     'profile-text-link' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter">[?profile_username=[socialmedia:sm-twitter_amp-username]?]</a>',  
     'profile-button' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
-    'share-text-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this">Tweet</a>',
-    'share-button' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon-path=[socialmedia:twitter_icon-path]?]" alt="Twitter icon" ></a>',
+    'share-text-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this">[?link-text=Tweet?]</a>',
+    'share-button' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
   );
   
   $platforms['facebook'] = array(
@@ -171,6 +237,8 @@ function socialmedia_share_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-facebook_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook">[?profile_username=[socialmedia:sm-facebook_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
+    'share-text-link' => '<a href="http://www.facebook.com/sharer.php?u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Share on Facebook?]">[?link-text=Share on Facebook?]</a>',
+    'share-button' => '<a href="http://www.facebook.com/sharer.php?u=[current-page:url]&t=[current-page:title-plain]" title="Share on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
   );
   
   $platforms['flickr'] = array(
@@ -201,6 +269,8 @@ function socialmedia_share_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-linkedin_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn">[?profile_username=[socialmedia:sm-linkedin_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
+    'share-text-link' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[current-page:url]&title=[current-page:title-plain]&source=' . $_SERVER['HTTP_HOST'] . '" title="[?link-text=Share on LinkedIn?]">[?link-text=Share on LinkedIn?]</a>',
+    'share-button' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
   );
 
   $platforms['slideshare'] = array(
@@ -318,7 +388,7 @@ function socialmedia_icon_platforms() {
     'facebook' => t('Facebook'),
     'flickr' => t('Flikr'),
     'google' => t('Google'),
-    'google-plus' => t('Google+'),
+    'googleplus' => t('Google+'),
     'linkedin' => t('LinkedIn'),
     'myspace' => t('MySpace'),
     'pinterest' => t('Pinterest'),
@@ -344,16 +414,9 @@ function socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_icondock', 
     'download' => 'http://icondock.com/free/vector-social-media-icons',
-  );
-  $icons['sada'] = array(
-    'name' => 'Sada',
-    'styles' => array(
-      '16x16' => '16x16',
-      '32x32' => '32x32',
-      '64x64' => '64x64',  
-    ),
-    'path callback' => 'socialmedia_icon_path_sada', 
-    'download' => 'http://www.profimagazin.cz/ikony/socialni-ikony-vcetne-ceskych-linkovacich-sluzeb-ke-stazeni-zdarma',
+    'instructions' => t('Copy the content of the <em>Vector Social Media Icons/PNG</em> directory in the download archive into the %directory.',
+      array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/icondock/')
+    )
   );
   $icons['theg-force'] = array(
     'name' => 'TheG-Force',
@@ -366,7 +429,32 @@ function socialmedia_iconset_info() {
     'path callback' => 'socialmedia_icon_path_thegforce', 
     'download' => 'http://theg-force.deviantart.com/art/Social-Icons-hand-drawned-109467069',
   );
+  $icons['dryicons'] = array(
+    'name' => 'dryicons',
+    'styles' => array(
+      '16x16' => '16x16',
+      '24x24' => '24x24',
+      '32x32' => '32x32',
+      '48x48' => '48x48',
+      '64x64' => '64x64', 
+      '128x128' => '128x128', 
+    ),
+    'path callback' => 'socialmedia_icon_path_dryicons', 
+    'download' => 'http://dryicons.com/free-icons/category/social/',
+    'instructions' => t('Download the PNG version of all four sets. Copy the content of the <em>PNG</em> directory in the download archive into the %directory. Some directories are misnamed in set 2. Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
+      array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/dryicons/')
+    )
+  );
   return $icons;
+}
+
+function socialmedia_icon_path_dryicons($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+  $pt = array(
+    'googleplus' => 'google_plus',
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/dryicons/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  return $path;
 }
 
 function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
@@ -378,12 +466,6 @@ function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
   return $path;
 }
 
-function socialmedia_icon_path_sada($platform = 'twitter', $style = NULL) {
-  $style = isset($style) ? $style : '32x32';
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/sada/' . $style . '/' . $platform . '.png'; 
-  return $path;
-}
-
 function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
   $trans = array(
     'delicious' => 'Del icio us',
@@ -391,6 +473,7 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
     'facebook' => 'Facebook',
     'flickr' => 'Flickr',
     'google' => 'Google',
+    'googleplus' => 'Google',
     'linkedin' => 'Linkedin',
     'myspace' => 'Myspace',
     'reddit' => 'Reddit',
@@ -489,7 +572,37 @@ function socialmedia_widgets_addthis_google_plusone_form($data) {
   return $form;
 }
 
+function socialmedia_widgets_addthis_stumbleupon_form($data) {
+  $options = array(
+    ' su:bdg:style="4"' => t('Small button (no count)'),
+    ' su:bdg:style="6"' => t('Large button (no count)'),
+    ' su:bdg:style="1"' => t('Small button with horizontal count'),
+    ' su:bdg:style="5"' => t('Large button with verticle count'),
+  );
+  $form['style'] = array(
+    '#type' => 'select',
+    '#title' => t('Style'),
+    '#default_value' => (isset($data['style']) && $data['style']) ? $data['style'] : '',
+    //'#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+    '#options' => $options,
+  );
+  return $form;
+}
 
+function socialmedia_widgets_addthis_addthis_counter_form($data) {
+  $options = array(
+    '' => t('Large button with verticle count'),
+    ' addthis_pill_style' => t('Small button with horizontal count')
+  );
+  $form['style'] = array(
+    '#type' => 'select',
+    '#title' => t('Style'),
+    '#default_value' => (isset($data['style']) && $data['style']) ? $data['style'] : '',
+    //'#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+    '#options' => $options,
+  );
+  return $form;
+}
 
 function socialmedia_widgets_default_sets() {
   $sets = array();
@@ -550,6 +663,30 @@ function socialmedia_widgets_default_sets() {
         'name' => 'socialmedia_socialmedia-youtube-profile-button',
         'data' => array(),
         'weight' => 1,
+      ),
+    ),
+  );
+  $sets['socialmedia_addthis-share'] = array(
+    'elements' => array(
+      array(
+        'name' => 'socialmedia_addthis-tweet',
+        'data' => array('count' => ' tw:count="vertical"'),
+        'weight' => 1,
+      ),
+      array(
+        'name' => 'socialmedia_addthis-facebook-like',
+        'data' => array('layout' =>  ' fb:like:layout="box_count"'),
+        'weight' => 2,
+      ),
+      array(
+        'name' => 'socialmedia_addthis-google-plusone',
+        'data' => array('size' => ' g:plusone:size="tall"'),
+        'weight' => 3,
+      ),
+      array(
+        'name' => 'socialmedia_addthis-addthis-counter',
+        'data' => array(),
+        'weight' => 4,
       ),
     ),
   );

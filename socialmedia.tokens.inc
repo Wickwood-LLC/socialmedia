@@ -113,7 +113,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
 			        '!link' => l(t('Set @platform profile.', array('@platform' => $platform['title'])), 'admin/config/media/socialmedia')
 			      )
 			    );
-			    widgets_set_error($data['widgets']['element'], $msg);
+			    _socialmedia_widgets_set_error($data['widgets']['element'], $msg);
         }
         else {
         	$replacements[$original] = $replacement;
@@ -140,7 +140,7 @@ function socialmedia_icon_tokens($platform_name, $hash) {
         '!link' => l(t('Set default icon style.'), 'admin/config/media/socialmedia')
       )
     );
-    widgets_data_error('set', $msg, 'warning', 'administer socialmedia');
+    _socialmedia_widgets_set_error('set', $msg);
     return '';
   }
   list($iconset, $style) = explode(':', $s);

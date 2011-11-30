@@ -47,7 +47,7 @@ function socialmedia_facebook_platform_info() {
 function socialmedia_facebook_parser($values) {
 //dsm($str);
   $str = $values['url'];
-  $pattern = '/http:\/\/(www\.)(facebook\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)(facebook\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_facebook_url', t('Facebook URL invalid.'));
@@ -122,7 +122,7 @@ function socialmedia_flickr_platform_info() {
 function socialmedia_flickr_parser($values) {
 //dsm($str);
   $str = $values['url'];
-  $pattern = '/http:\/\/(www\.)(flickr\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)(flickr\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_flickr_url', t('Flickr URL invalid.'));
@@ -191,7 +191,7 @@ function socialmedia_googleplus_platform_info() {
 function socialmedia_googleplus_parser($values) {
 //dsm($str);
   $str = $values['url'];
-  $pattern = '/http(s):\/\/(plus\.)(google\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http(?:s)?:\/\/)?(plus\.)(google\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_googleplus_url', t('Google+ URL invalid.'));
@@ -255,7 +255,7 @@ function socialmedia_linkedin_platform_info() {
 function socialmedia_linkedin_parser($values) {
 //dsm($values);
   $str = $values['url'];
-  $pattern = '/http:\/\/(www\.)(linkedin\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)(linkedin\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_linkedin_url', t('LinkedIn URL invalid.'));
@@ -324,7 +324,7 @@ function socialmedia_slideshare_platform_info() {
 function socialmedia_slideshare_parser($values) {
 //dsm($values);
   $str = $values['url'];
-  $pattern = '/http:\/\/(www\.)(slideshare\.net\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)(slideshare\.net\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_slideshare_url', t('SlideShare URL invalid.'));
@@ -396,7 +396,7 @@ function socialmedia_twitter_platform_info() {
 
 function socialmedia_twitter_parser($values) {
   $str = $values['url'];
-  $pattern = '/http:\/\/(twitter\.com\/)(#!\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(twitter\.com\/)(#!\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_twitter_url', t('Twitter URL invalid.'));
@@ -457,7 +457,7 @@ function socialmedia_vimeo_platform_info() {
 function socialmedia_vimeo_parser($values) {
 //dsm($values);
   $str = $values['url'];
-  $pattern = '/http:\/\/(vimeo\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(vimeo\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_vimeo_url', t('Vimeo URL invalid.'));
@@ -522,7 +522,7 @@ function socialmedia_youtube_platform_info() {
 function socialmedia_youtube_parser($values) {
 //dsm($values);
   $str = $values['url'];
-  $pattern = '/http:\/\/(www\.)(youtube\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)(youtube\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_youtube_url', t('YouTube URL invalid.'));

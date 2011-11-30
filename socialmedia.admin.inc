@@ -92,12 +92,15 @@ function socialmedia_admin_settings() {
     	
     }
     else {
-    	$str = t('<strong>Not installed.</strong><br />To install: !download and install into %dir',
+    	$str = t('<strong>Not installed.</strong><br />To install: !download and install into %dir.',
     	  array(
     	    '!download' => l(t('download'), $iconset['download'], array('attributes' => array('target' => '_blank'))),
     	    '%dir' => drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset_name . '/',
     	  )
     	);
+    	if (isset($iconset['instructions'])) {
+    	  $str .= ' ' . $iconset['instructions'];
+    	}
     	$row[] = array(
     	  'data' => $str,
     	  'colspan' => count($examples),
