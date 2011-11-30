@@ -34,9 +34,9 @@ function socialmedia_token_info() {
   }
   /*
   // Core tokens for nodes.
-  $socialmedia['twitter_account_url'] = array(
-    'name' => t("Twitter account url"), 
-    'description' => t("URL to twitter account."),
+  $socialmedia['twitter_profile_url'] = array(
+    'name' => t("Twitter profile url"), 
+    'description' => t("URL to twitter profile."),
   );
   */
   
@@ -75,7 +75,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
   	}
   }
   if (($type == 'site') || ($type == 'user') || ($type == 'socialmedia')) {
-    $uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
+    //$uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
     foreach ($tokens as $name => $original) {  
       if (strpos($name, 'sm-') === 0) {
       	list($platform_name, $hash) = explode('_', substr($name, 3));
@@ -84,19 +84,29 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
           $replacements[$original] = socialmedia_icon_tokens($platform_name, $hash);
       		continue;
       	}
-      	$profile = NULL;      	
-        if ((($type == 'user') || ($type == 'socialmedia')) && $uid) {
-          $profile = socialmedia_account_load($platform_name, $uid);
+      	$profile = NULL;
+      	// if token has user context, load the profiles for the user      	
+        if ((($type == 'user') || ($type == 'socialmedia'))) {
+        	if ((arg(0) == 'node') && is_numeric(arg(1))) {        	
+        	  $uid = menu_get_object()->uid;
+        	}
+        	elseif (arg(0) == 'user' && is_numeric(arg(1))) {
+        		$uid = menu_get_object('user', 1)->uid;
+        	}
+        	if (isset($uid) && $uid) {
+            $profile = socialmedia_profile_load($platform_name, $uid);
+        	}
         }
+        // if site context or user profile not found, load site profile
         if (($type == 'site') || (($type == 'socialmedia') && (!isset($profile['result']) || !$profile['result']))) {
-          $profile = socialmedia_account_load($platform_name, 0);
+          $profile = socialmedia_profile_load($platform_name, 0);
         }
         $platform = socialmedia_platform_definition_load($platform_name);
-dsm($platform_name);
-dsm($platform);
+//dsm($platform_name);
+//dsm($platform);
         $replacement = call_user_func($platform['tokens callback'], $hash, $profile);
         if (!$replacement) {
-dsm($platform);
+//dsm($platform);
 			    $msg = t('You are trying to use a social media %platform profile token but the profile has not been set. !link',
 			      array(
 			        '%platform' => $platform['title'],

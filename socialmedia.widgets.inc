@@ -119,6 +119,7 @@ function socialmedia_share_platforms_info() {
   $platforms = socialmedia_share_platforms();
   $elements = array();
   $labelpost = array(
+    'profile-url' => t('profile url'),
     'profile-text-link' => t('profile text link'),
     'profile-button' => t('profile button'),    
     'share-text-link' => t('share text link'),
@@ -155,6 +156,7 @@ function socialmedia_share_platforms() {
     'group' => t('Social media: Twitter'),
   );
   $platforms['twitter']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-twitter_url]?]",
     'profile-text-link' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter">[?profile_username=[socialmedia:sm-twitter_amp-username]?]</a>',  
     'profile-button' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit [?profile_username=[socialmedia:sm-twitter_amp-username]?] on Twitter"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
     'share-text-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this">Tweet</a>',
@@ -166,35 +168,9 @@ function socialmedia_share_platforms() {
     'group' => t('Social media: Facebook'),
   );
   $platforms['facebook']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-facebook_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook">[?profile_username=[socialmedia:sm-facebook_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
-  );
-  
-  $platforms['linkedin'] = array(
-    'label' => t('LinkedIn'),
-    'group' => t('Social media: LinkedIn'),
-  );
-  $platforms['linkedin']['templates'] = array(
-    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn">[?profile_username=[socialmedia:sm-linkedin_username]?]</a>',  
-    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
-  );
-  
-  $platforms['google-plus'] = array(
-    'label' => t('Google+'),
-    'group' => t('Social media: Google+'),
-  );
-  $platforms['google-plus']['templates'] = array(
-    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-google-plus_url]?]" title="Visit [?profile_username=[socialmedia:sm-google-plus_username]?] on Google+">[?profile_username=[socialmedia:sm-google-plus_username]?]</a>',  
-    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-google-plus_url]?]" title="Visit [?profile_username=[socialmedia:sm-google-plus_username]?] on Google+"><img src="[?icon-path=[socialmedia:sm-google-plus_icon-path]?]" alt="Google+ icon" ></a>',
-  );
-
-  $platforms['youtube'] = array(
-    'label' => t('YouTube'),
-    'group' => t('Social media: YouTube'),
-  );
-  $platforms['youtube']['templates'] = array(
-    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-youtube_url]?]" title="Visit [?profile_username=[socialmedia:sm-youtube_username]?] on YouTube">[?profile_username=[socialmedia:sm-youtube_username]?]</a>',  
-    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-youtube_url]?]" title="Visit [?profile_username=[socialmedia:sm-youtube_username]?] on YouTube"><img src="[?icon-path=[socialmedia:sm-youtube_icon-path]?]" alt="YouTube icon" ></a>',
   );
   
   $platforms['flickr'] = array(
@@ -202,9 +178,62 @@ function socialmedia_share_platforms() {
     'group' => t('Social media: Flickr'),
   );
   $platforms['flickr']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-flickr_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-flickr_url]?]" title="Visit [?profile_username=[socialmedia:sm-flickr_username]?] on Flickr">[?profile_username=[socialmedia:sm-flickr_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-flickr_url]?]" title="Visit [?profile_username=[socialmedia:sm-flickr_username]?] on Flickr"><img src="[?icon-path=[socialmedia:sm-flickr_icon-path]?]" alt="Flickr icon" ></a>',
   );
+  
+  $platforms['googleplus'] = array(
+    'label' => t('Google+'),
+    'group' => t('Social media: Google+'),
+  );
+  $platforms['googleplus']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-googleplus_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-googleplus_url]?]" title="Visit [?profile_username=[socialmedia:sm-googleplus_username]?] on Google+">[?profile_username=[socialmedia:sm-googleplus_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-googleplus_url]?]" title="Visit [?profile_username=[socialmedia:sm-googleplus_username]?] on Google+"><img src="[?icon-path=[socialmedia:sm-googleplus_icon-path]?]" alt="Google+ icon" ></a>',
+  );
+  
+  $platforms['linkedin'] = array(
+    'label' => t('LinkedIn'),
+    'group' => t('Social media: LinkedIn'),
+  );
+  $platforms['linkedin']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-linkedin_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn">[?profile_username=[socialmedia:sm-linkedin_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
+  );
+
+  $platforms['slideshare'] = array(
+    'label' => t('SlideShare'),
+    'group' => t('Social media: SlideShare'),
+  );
+  $platforms['slideshare']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-slideshare_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="Visit [?profile_username=[socialmedia:sm-slideshare_username]?] on SlideShare">[?profile_username=[socialmedia:sm-slideshare_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="Visit [?profile_username=[socialmedia:sm-slideshare_username]?] on SlideShare"><img src="[?icon-path=[socialmedia:sm-slideshare_icon-path]?]" alt="SlideShare icon" ></a>',
+  );  
+
+  $platforms['vimeo'] = array(
+    'label' => t('Vimeo'),
+    'group' => t('Social media: Vimeo'),
+  );
+  $platforms['vimeo']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-vimeo_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-vimeo_url]?]" title="Visit [?profile_username=[socialmedia:sm-vimeo_username]?] on Vimeo">[?profile_username=[socialmedia:sm-vimeo_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-vimeo_url]?]" title="Visit [?profile_username=[socialmedia:sm-vimeo_username]?] on Vimeo"><img src="[?icon-path=[socialmedia:sm-vimeo_icon-path]?]" alt="Vimeo icon" ></a>',
+  );
+
+  $platforms['youtube'] = array(
+    'label' => t('YouTube'),
+    'group' => t('Social media: YouTube'),
+  );
+  $platforms['youtube']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-youtube_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-youtube_url]?]" title="Visit [?profile_username=[socialmedia:sm-youtube_username]?] on YouTube">[?profile_username=[socialmedia:sm-youtube_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-youtube_url]?]" title="Visit [?profile_username=[socialmedia:sm-youtube_username]?] on YouTube"><img src="[?icon-path=[socialmedia:sm-youtube_icon-path]?]" alt="YouTube icon" ></a>',
+  );
+  
+
   
   return $platforms;
 }
@@ -342,7 +371,10 @@ function socialmedia_iconset_info() {
 
 function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
   $style = isset($style) ? $style : '32px';
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/' . $style . '/' . $platform . '.png'; 
+  $t = array(
+    'googleplus' => 'google-plus',
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/' . $style . '/' . ((isset($t[$platform]))? $t[$platform] : $platform) . '.png'; 
   return $path;
 }
 
@@ -462,15 +494,31 @@ function socialmedia_widgets_addthis_google_plusone_form($data) {
 function socialmedia_widgets_default_sets() {
   $sets = array();
 
-  $sets['socialmedia_text-signature'] = array(
+  $sets['socialmedia_profile-urls'] = array(
+    'style' => 'plain-linebreaks',
     'elements' => array(
       array(
-        'name' => 'widgets_custom-markup',
-        'data' => array('markup' => 'Follow us on:'),
-        'weight' => 0,
+        'name' => 'socialmedia_socialmedia-twitter-profile-url',
+        'data' => array(),
+        'weight' => 1,
       ),
       array(
-        'name' => 'socialmedia_twiter-account-text-link',
+        'name' => 'socialmedia_socialmedia-facebook-profile-url',
+        'data' => array(),
+        'weight' => 1,
+      ),
+      array(
+        'name' => 'socialmedia_socialmedia-linkedin-profile-url',
+        'data' => array(),
+        'weight' => 1,
+      ),
+      array(
+        'name' => 'socialmedia_socialmedia-googleplus-profile-url',
+        'data' => array(),
+        'weight' => 1,
+      ),
+      array(
+        'name' => 'socialmedia_socialmedia-youtube-profile-url',
         'data' => array(),
         'weight' => 1,
       ),
@@ -500,11 +548,6 @@ function socialmedia_widgets_default_sets() {
       ),
       array(
         'name' => 'socialmedia_socialmedia-youtube-profile-button',
-        'data' => array(),
-        'weight' => 1,
-      ),
-      array(
-        'name' => 'socialmedia_socialmedia-flickr-profile-button',
         'data' => array(),
         'weight' => 1,
       ),
