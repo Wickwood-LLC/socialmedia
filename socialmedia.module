@@ -13,11 +13,12 @@ define('SOCIALMEDIA_COLOR_BODY_TEXT_DEFAULT', '#3B3B3B');
 define('SOCIALMEDIA_COLOR_BODY_LINKTEXT_DEFAULT', '#0779BF');
 define('SOCIALMEDIA_COLOR_HEADER_BACKGROUND_DEFAULT', '#DDDDDD');
 define('SOCIALMEDIA_COLOR_HEADER_TEXT_DEFAULT', '#3B3B3B');
-define('SOCIALMEDIA_COLOR_BORDER_DEFAULT', '#0779BF');
+define('SOCIALMEDIA_COLOR_BORDER_DEFAULT', '#D6D6D6');
 
 // TODO figure out better way to include widgetx_elements
 include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.widgets.inc';
 include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.platforms.inc';
+include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.icons.inc';
 
 
 /**
@@ -107,66 +108,16 @@ function socialmedia_menu() {
 
 function socialmedia_util() {
 	
-	$services = service_links_get_links();
-	dsm($services);
-	return '';
+	//$services = service_links_get_links();
+	//dsm($services);
+	//return '';
 	
-	//$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
-  
-	//$pattern = '/http:\/\/(www\.)(facebook\.com\/)?(\w+)+/i';
-	
-  $pattern = '/http:\/\/(www\.)(facebook\.com\/)?(\w+)+/i';
-  
-  $strs[] = 'http://www.facebook.com/levelten';
-  $strs[] = 'http://www.facebook.com/pages/Tutrtv/226952000664950';
-  $strs[] = 'http://www.facebook.com/profile.php?id=1265065160';
-  foreach ($strs AS $str) {
-  	$profile = array();
-    preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE);
-  	$a = explode('facebook.com/', $str);
-  	$b = explode('?', $a[1]);
-  	$c = explode('/', $b[0]);
-  	if(!isset($b[1]) && ($b[0] != 'profile.php')) {
-  		$profile['username'] = $b[0];
-  	}
-  	else if($b[0] == 'pages') {
-  		$profile['username'] = $b[1];
-  	}
-  	//dsm($str);
-  	//dsm($profile);
-  }
+  $str = 'some stuff [?bob=pre{default}post?] more stuff';
+  $str = 'data-width="[?width=[socialmedia:sm-default_width]?]" [?height=data-height="{[socialmedia:sm-default_width]}"?] data-show-faces';
+  $matches = widgets_field_scan($str, FALSE);
+  dsm($matches);
 
   return '';
-}
-
-function socialmedia_field_scan($text, $return_matches = FALSE) {
-  // Matches tokens with the following pattern: [$type:$name]
-  // $type and $name may not contain  [ ] or whitespace characters.
-  // $type may not contain : characters, but $name may.
-  preg_match_all('/
-    \[\?             # [ - pattern start
-    ([^\s\?=]*)   # match $type not containing whitespace ? or =
-    =               # = - separator
-    ([^\s\?]*)    # match $name not containing whitespace or ?
-    \?\]             # ] - pattern end
-    /x', $text, $matches);
-
-  if ($matches) {
-  	return $matches;
-  }
-  
-  $fields = $matches[1];
-  $defaults = $matches[2];
-  
-  // Iterate through the matches, building an associative array containing
-  // $tokens grouped by $types, pointing to the version of the token found in
-  // the source text. For example, $results['node']['title'] = '[node:title]';
-  $results = array();
-  for ($i = 0; $i < count($fields); $i++) {
-    $results[$fields[$i]] = $defaults[$i];
-  }
-
-  return $results;
 }
 
 function socialmedia_util_pattern() {

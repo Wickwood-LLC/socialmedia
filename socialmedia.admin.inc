@@ -69,7 +69,7 @@ function socialmedia_admin_settings() {
     '#title' => t('Height'),
     '#size' => 4,
     '#field_suffix' => t('px'),    
-    '#default_value' => variable_get('socialmedia_default_height', SOCIALMEDIA_WIDTH_DEFAULT),
+    '#default_value' => variable_get('socialmedia_default_height', SOCIALMEDIA_HEIGHT_DEFAULT),
   );
   $form['appearance']['socialmedia_default_color_body_background'] = array(
     '#type' => 'textfield',
