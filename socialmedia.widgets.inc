@@ -44,7 +44,7 @@ EOF;
       'label' => t('Facebook like box'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'group' => t('Social media: Facebook'),
-      'template' => '<div class="fb-like-box" data-href="[?href=[socialmedia:sm-facebook_url]?]" data-width="292" data-show-faces="true" data-stream="true" data-header="true"></div>',
+      'template' => '<div class="fb-like-box" data-href="[?href=[socialmedia:sm-facebook_url]?]" data-width="[?width=[socialmedia:sm-default_width]?]" data-show-faces="[?show_faces=true?]" data-stream="[?data_stream=false?]" data-header="[?data_header=false?]"></div>',
       'add_js' => array(
         'data' => $facebook_js_sdk,
         'options' => array(
@@ -143,17 +143,17 @@ new TWTR.Widget({
   type: 'profile',
   rpp: 4,
   interval: 30000,
-  width: 250,
-  height: 300,
+  width: [?width=[socialmedia:sm-default_width]?],
+  height: [?height=[socialmedia:sm-default_height]?],
   theme: {
     shell: {
-      background: '#333333',
-      color: '#ffffff'
+      background: '[?shell_background_color=[socialmedia:sm-default_color_header_background]?]',
+      color: '[?shell_text_color=[socialmedia:sm-default_color_header_text]?]'
     },
     tweets: {
-      background: '#000000',
-      color: '#ffffff',
-      links: '#4aed05'
+      background: '[?tweets_background_color=[socialmedia:sm-default_color_body_background]?]',
+      color: '[?tweets_text_color=[socialmedia:sm-default_color_body_text]?]',
+      links: '[?shell_link_color=[socialmedia:sm-default_color_body_linktext]?]'
     }
   },
   features: {
@@ -492,6 +492,29 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
   return $path;
 }
 
+function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
+  dsm($form);
+  dsm($set);
+  dsm($element);
+  if ($element['name'] == 'socialmedia_facebook-like-box') {
+    $options = array(
+      'true' => t('Yes'),
+      'false' => t('No'),
+    );
+    $fields = array(
+      'show_faces',
+      'data_stream',
+      'data_header',
+    );
+    foreach ($fields AS $field) {
+      $form[$field]['#type'] = 'radios';
+      $form[$field]['#options'] = $options;
+      $form[$field]['#description'] = '';
+      $form[$field]['#default_value'] = isset($element['data'][$field]) ? $element['data'][$field] : $form[$field]['#template_default_value'];    
+    }
+  }
+}
+
 function socialmedia_widgets_addthis_tweet_form($data) {
   $options = array(
     '' => t('None'),
@@ -603,6 +626,8 @@ function socialmedia_widgets_addthis_addthis_counter_form($data) {
   );
   return $form;
 }
+
+
 
 function socialmedia_widgets_default_sets() {
   $sets = array();

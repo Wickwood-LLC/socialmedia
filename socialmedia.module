@@ -6,6 +6,15 @@
  * Demonstrate basic module socialmedia.
  */
 
+define('SOCIALMEDIA_WIDTH_DEFAULT', '292');
+define('SOCIALMEDIA_HEIGHT_DEFAULT', '300');
+define('SOCIALMEDIA_COLOR_BODY_BACKGROUND_DEFAULT', '#F6F6F2');
+define('SOCIALMEDIA_COLOR_BODY_TEXT_DEFAULT', '#3B3B3B');
+define('SOCIALMEDIA_COLOR_BODY_LINKTEXT_DEFAULT', '#0779BF');
+define('SOCIALMEDIA_COLOR_HEADER_BACKGROUND_DEFAULT', '#DDDDDD');
+define('SOCIALMEDIA_COLOR_HEADER_TEXT_DEFAULT', '#3B3B3B');
+define('SOCIALMEDIA_COLOR_BORDER_DEFAULT', '#0779BF');
+
 // TODO figure out better way to include widgetx_elements
 include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.widgets.inc';
 include_once drupal_get_path('module', 'socialmedia') . '/socialmedia.platforms.inc';
@@ -301,4 +310,3 @@ function _socialmedia_widgets_set_error($element, $msg, $status = 'warning') {
     }
   }
 }
-

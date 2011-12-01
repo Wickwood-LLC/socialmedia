@@ -50,6 +50,65 @@ function socialmedia_admin_settings() {
     '#multicolumn' => array('width' => 2),  // multi colunms the checkboxes if multicolumnchecdkboxesradio.module installed
   );
   
+  $form['appearance'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Widget appearance'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Default settings for widget appearance.'),
+  );
+  $form['appearance']['socialmedia_default_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Width'),
+    '#size' => 4,
+    '#field_suffix' => t('px'),    
+    '#default_value' => variable_get('socialmedia_default_width', SOCIALMEDIA_WIDTH_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Height'),
+    '#size' => 4,
+    '#field_suffix' => t('px'),    
+    '#default_value' => variable_get('socialmedia_default_height', SOCIALMEDIA_WIDTH_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_body_background'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Body background color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_body_background', SOCIALMEDIA_COLOR_BODY_BACKGROUND_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_body_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Body text color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_body_text', SOCIALMEDIA_COLOR_BODY_TEXT_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_body_linktext'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Body linktext color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_body_linktext', SOCIALMEDIA_COLOR_BODY_LINKTEXT_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_header_background'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Header background color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_header_background', SOCIALMEDIA_COLOR_HEADER_BACKGROUND_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_header_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Header text color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_header_text', SOCIALMEDIA_COLOR_HEADER_TEXT_DEFAULT),
+  );
+  $form['appearance']['socialmedia_default_color_border'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Border color'),
+    '#size' => 8,    
+    '#default_value' => variable_get('socialmedia_default_color_border', SOCIALMEDIA_COLOR_BORDER_DEFAULT),
+  );
+
+  
   $form['iconsets'] = array(
     '#type' => 'fieldset',
     '#title' => t('Icon sets'),

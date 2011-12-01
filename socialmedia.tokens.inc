@@ -48,6 +48,24 @@ function socialmedia_token_info() {
 	  );
   }
   
+  $defaults = array(
+    'width' => t('Default width'),
+    'height' => t('Default height'),
+    'color_body_background' => t('Default body background color'),
+    'color_body_background' => t('Default body background color'),
+    'color_body_text' => t('Default body text color'),
+    'color_body_linktext' => t('Default body linktext color'),
+    'color_header_background' => t('Default header background color'),
+    'color_header_text' => t('Default header text color'),
+    'color_border' => t('Default border color'),
+  );
+  foreach ($defaults AS $key => $value) {
+    $tokens['socialmedia']['sm-default-' . $key] = array(
+      'name' => $value,
+      //'description' => t(" path to the @platform icon", array('@platform' => $name)),
+    );    
+  }
+  
   $tokens['current-page']['title-plain'] = array(
     'name' => t('The title of the current page stripped of HTML'),
   );
@@ -78,8 +96,12 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
     //$uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
     foreach ($tokens as $name => $original) {  
       if (strpos($name, 'sm-') === 0) {
-      	list($platform_name, $hash) = explode('_', substr($name, 3));
+      	list($platform_name, $hash) = explode('_', substr($name, 3), 2);
       	// process icon paths
+        if (strpos($platform_name, 'default') === 0) {
+          $replacements[$original] = socialmedia_default_tokens($hash);
+          continue;         
+        }
       	if (strpos($hash, 'icon-path') === 0) {
           $replacements[$original] = socialmedia_icon_tokens($platform_name, $hash);
       		continue;
@@ -125,6 +147,10 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
   return $replacements;
 }
 
+function socialmedia_default_tokens($hash) {
+  return variable_get('socialmedia_default_' . $hash, constant('SOCIALMEDIA_' . strtoupper($hash) . '_DEFAULT'));
+}
+
 function socialmedia_icon_tokens($platform_name, $hash) {
   $b = explode(':', $hash);
   $iconsets = socialmedia_iconset_info();
@@ -146,5 +172,7 @@ function socialmedia_icon_tokens($platform_name, $hash) {
   list($iconset, $style) = explode(':', $s);
   return base_path() . call_user_func($iconsets[$iconset]['path callback'], $platform_name, $style);	
 }
+
+
 
 
