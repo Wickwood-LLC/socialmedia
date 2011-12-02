@@ -124,7 +124,7 @@ function socialmedia_admin_settings() {
     '#options' => $options,
   );
   
-  $examples = socialmedia_icon_platforms();
+  $examples = socialmedia_icon_platforms(TRUE);
   $header = array(t('Icon set'), t('Styles'));
   foreach ($examples AS $ekey => $ename) {
   	$header[] = '';
@@ -134,7 +134,6 @@ function socialmedia_admin_settings() {
   $icons = socialmedia_iconset_info();
   //$examples = array('twitter', 'facebook', 'stumbleupon', 'youtube');
   foreach ($icons AS $iconset_name => $iconset) {
-//dsm($iconset);
     $row = array(
       $iconset['name'],
       implode('<br />', $iconset['styles']),
@@ -157,8 +156,8 @@ function socialmedia_admin_settings() {
     	    '%dir' => drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset_name . '/',
     	  )
     	);
-    	if (isset($iconset['instructions'])) {
-    	  $str .= ' ' . $iconset['instructions'];
+    	if (isset($iconset['additional instructions'])) {
+    	  $str .= ' ' . $iconset['additional instructions'];
     	}
     	$row[] = array(
     	  'data' => $str,
@@ -179,7 +178,6 @@ function socialmedia_admin_settings() {
   
   }
   
-  //dsm($form);
   return system_settings_form($form);
 }
 
@@ -187,22 +185,19 @@ function socialmedia_admin_settings() {
  * Builds and returns the socialmedia settings form.
  */
 function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site', $user = NULL) {
-//dsm(func_get_args());
-//dsm($user);
+
   $uid = (is_object($user)) ? $user->uid : 0;
 
   $platforms = socialmedia_platform_definitions();
   $defaults = array_keys($platforms);
-//dsm($platforms);
-//dsm($defaults);
+
   $active_platforms = variable_get('socialmedia_platforms_' . (($user) ? 'user' : 'site'), $defaults);
-//dsm($active_platforms);
+
   foreach ($platforms AS $name => $platform) {
   	if (!$active_platforms[$name]) {
   		continue;
   	}
     $profile = socialmedia_profile_load($name, $uid);
-//dsm($profile);
     $form['uid'] = array(
       '#type' => 'value',
       '#value' => $uid,
@@ -244,7 +239,6 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
     '#value' => t('Submit'),
   );
   
-  //dsm($form);
   return $form;
 }
 
@@ -271,7 +265,7 @@ function socialmedia_admin_profiles_form_validate($form, &$form_state) {
 
 	$platforms = socialmedia_platform_definitions('site');
 	$inputs = _socialmedia_admin_profiles_form_build_inputs($form_state['values'], $platforms);
-//dsm($inputs);
+
 	foreach ($platforms AS $platform_name => $platform) {
 		if (!isset($inputs[$platform_name])) {
 			continue;
@@ -292,7 +286,6 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
     if (isset($platform['parser callback'])) {    	
       $profile = call_user_func($platform['parser callback'], $inputs[$platform_name]);
       $profile['inputs'] = $inputs[$platform_name];
-//dsm($profile);
       socialmedia_profile_save($profile, $platform_name, $form_state['values']['uid']);
     }
   }

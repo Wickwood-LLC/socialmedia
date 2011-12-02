@@ -62,7 +62,7 @@ function socialmedia_token_info() {
   foreach ($defaults AS $key => $value) {
     $tokens['socialmedia']['sm-default-' . $key] = array(
       'name' => $value,
-      //'description' => t(" path to the @platform icon", array('@platform' => $name)),
+      'description' => $value . t(' values set in social media config.'),
     );    
   }
   
@@ -83,9 +83,6 @@ function socialmedia_token_info() {
 }
 
 function socialmedia_tokens($type, $tokens, array $data = array(), array $options = array()) {
-//dsm($data);
-//dsm($tokens);
-//dsm($type);
   $replacements = array();
   if ($type == 'current-page') {
   	if (isset($tokens['title-plain'])) {
@@ -124,11 +121,10 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
           $profile = socialmedia_profile_load($platform_name, 0);
         }
         $platform = socialmedia_platform_definition_load($platform_name);
-//dsm($platform_name);
-//dsm($platform);
+
         $replacement = call_user_func($platform['tokens callback'], $hash, $profile);
         if (!$replacement) {
-//dsm($platform);
+
 			    $msg = t('You are trying to use a social media %platform profile token but the profile has not been set. !link',
 			      array(
 			        '%platform' => $platform['title'],
@@ -143,7 +139,6 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
       }
     }
   }
-//dsm($replacements);
   return $replacements;
 }
 

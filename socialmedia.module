@@ -44,7 +44,7 @@ function socialmedia_menu() {
   // Module settings.
   $items['admin/config/media/socialmedia'] = array(
     'title' => 'Social media',
-    'description' => 'socialmedia configuration',
+    'description' => 'Social media defaults and site profile settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_settings'),
     'access arguments' => array('administer social media'),
@@ -54,7 +54,7 @@ function socialmedia_menu() {
   );
   $items['admin/config/media/socialmedia/settings'] = array(
     'title' => 'Settings',
-    'description' => 'socialmedia configuration',
+    'description' => 'Social media defaults and site profile settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_settings'),
     'access arguments' => array('administer social media'),
@@ -65,7 +65,7 @@ function socialmedia_menu() {
   );
   $items['admin/config/media/socialmedia/profiles'] = array(
     'title' => 'Profiles',
-    'description' => 'socialmedia profile configuration',
+    'description' => 'Social media profile configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_profiles_form'),
     'access arguments' => array('administer social media'),
@@ -76,19 +76,12 @@ function socialmedia_menu() {
   );
   $items['user/%user/socialmedia'] = array(
     'title' => 'Social profiles',
-    'description' => 'socialmedia profile configuration',
+    'description' => 'User social media profiles',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_profiles_form', 'user', 1),
     //'page arguments' => array(),
     'access arguments' => array('administer own profiles'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'socialmedia.admin.inc',
-  );
-  $items['admin/config/media/socialmedia/widgetset'] = array(
-    'title' => 'Widget set',
-    'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'page callback' => 'socialmedia_widgetset_list',
-    'access arguments' => array('administer social media widgets'),
     'file' => 'socialmedia.admin.inc',
   );
   $items['socialmedia/util'] = array(
@@ -108,14 +101,9 @@ function socialmedia_menu() {
 
 function socialmedia_util() {
 	
-	//$services = service_links_get_links();
-	//dsm($services);
-	//return '';
-	
   $str = 'some stuff [?bob=pre{default}post?] more stuff';
   $str = 'data-width="[?width=[socialmedia:sm-default_width]?]" [?height=data-height="{[socialmedia:sm-default_width]}"?] data-show-faces';
   $matches = widgets_field_scan($str, FALSE);
-  dsm($matches);
 
   return '';
 }
@@ -129,7 +117,6 @@ EOF;
   $output = $str;
   $output .= "<br /><br />";
   $output .= token_replace($str);
-  //dsm(token_scan($str));
 
   return $output;
 }
@@ -203,7 +190,6 @@ function socialmedia_platform_definitions() {
   foreach (module_implements('socialmedia_platform_info') as $module) {
     foreach (module_invoke($module, 'socialmedia_platform_info') as $name => $platform) {
       // Ensure the current toolkit supports the element.
-//dsm($platform);
       $platform['module'] = $module;
       $platform['name'] = $name;
       $platform['title'] = $platform['title'];

@@ -10,7 +10,6 @@ function socialmedia_icon_style_options($for_widgets = TRUE, $platform = NULL) {
   if ($for_widgets) {
     $options[] = t('Default');
   }
-//dsm($icons);
   foreach ($icons AS $iconset_name => $iconset) {
     if (socialmedia_iconset_is_installed($iconset_name)) {
       foreach($iconset['styles'] AS $sid => $style) {
@@ -23,35 +22,51 @@ function socialmedia_icon_style_options($for_widgets = TRUE, $platform = NULL) {
       }       
     }
   }
-//dsm($options);
   return $options;
 }
 
 function socialmedia_iconset_is_installed($iconset) {
-  return is_dir(drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset );
+	
+	$iconsets = socialmedia_iconset_info();
+  return file_exists (call_user_func($iconsets[$iconset]['path callback']));
 }
 
-function socialmedia_icon_platforms() {
+function socialmedia_icon_platforms($featured = FALSE) {
   $platforms = array( 
+    //'box' => t('Box'),
+    'blinklist' => t('Blinklist'),
     'digg' => t('Digg'), 
     'delicious' => t('Del.icio.us'),
     'email' => t('E-mail'),  
     'facebook' => t('Facebook'),
     'flickr' => t('Flikr'),
+    //'furl' => t('Furl'),
     'google' => t('Google'),
     'googleplus' => t('Google+'),
+    'lastfm' => t('Last.fm'),
     'linkedin' => t('LinkedIn'),
+    //'misterwong' => t('Mister Wong'),
+    //'mixx' => t('Mixx'),
     'myspace' => t('MySpace'),
-    'pinterest' => t('Pinterest'),
+    'newsvine' => t('Newsvine'),
     'reddit' => t('Reddit'),
     'rss' => t('RSS'),
+    //'slashdot' => t('Slashdot'),
     'slideshare' => t('Slideshare'),
     'stumbleupon' => t('StumbleUpon'),
     'technorati' => t('Technorati'),
     'twitter' => t('Twitter'),
     'vimeo' => t('Vimeo'),
+    'yahoo' => t('Yahoo!'),
     'youtube' => t('YouTube'),
   );
+  
+  if ($featured) {
+  	unset($platforms['blinklist']);
+  	unset($platforms['lastfm']);
+  	unset($platforms['slideshare']);
+  }  
+  
   return $platforms;
 }
 
@@ -65,20 +80,6 @@ function socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_icondock', 
     'download' => 'http://icondock.com/free/vector-social-media-icons',
-    'instructions' => t('Copy the content of the <em>Vector Social Media Icons/PNG</em> directory in the download archive into the %directory.',
-      array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/icondock/')
-    )
-  );
-  $icons['theg-force'] = array(
-    'name' => 'TheG-Force',
-    'styles' => array(
-      '24x24' => '24x24',
-      '32x32' => '32x32',
-      '48x48' => '48x48',
-      '64x64' => '64x64',  
-    ),
-    'path callback' => 'socialmedia_icon_path_thegforce', 
-    'download' => 'http://theg-force.deviantart.com/art/Social-Icons-hand-drawned-109467069',
   );
   $icons['dryicons'] = array(
     'name' => 'dryicons',
@@ -92,10 +93,74 @@ function socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_dryicons', 
     'download' => 'http://dryicons.com/free-icons/category/social/',
-    'instructions' => t('Download the PNG version of all four sets. Copy the content of the <em>PNG</em> directory in the download archive into the %directory. Some directories are misnamed in set 2. Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
+    'additional instructions' => t('Download the PNG version of all four sets. Some directories are misnamed in set 2. Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
       array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/dryicons/')
     )
   );
+  $icons['instantshift'] = array(
+    'name' => 'instantshift',
+    'styles' => array(
+      '16' => '16x16',
+      '32' => '32x32',
+      '64' => '64x64', 
+    ),
+    'path callback' => 'socialmedia_icon_path_instantshift', 
+    'download' => 'http://www.instantshift.com/2010/12/07/socialshift-icon-set-246-free-social-networking-icons/',
+  );
+  $icons['jankoatwarpspeed'] = array(
+    'name' => 'jankoatwarpspeed',
+    'styles' => array(
+      '16x16' => '16x16',
+      '32x32' => '32x32',
+      '64x64' => '64x64', 
+      '128x128' => '128x128', 
+    ),
+    'path callback' => 'socialmedia_icon_path_jankoatwarpspeed', 
+    'download' => 'http://www.jankoatwarpspeed.com/post/2008/10/20/handycons-a-free-hand-drawn-social-media-icon-set.aspx',
+    'additional instructions' => t('Also download and install the !link.',
+      array('!link' => l(t('Handycons 2 set'), 'http://www.jankoatwarpspeed.com/post/2009/02/23/Handycons-2-another-free-hand-drawn-icon-set.aspx'))
+    ),
+  );
+  $icons['ristaumedia'] = array(
+    'name' => 'ristaumedia',
+    'styles' => array(
+      '32x32' => '32x32',
+    ),
+    'path callback' => 'socialmedia_icon_path_ristaumedia', 
+    'download' => 'http://ristaumedia.deviantart.com/art/Social-Media-Icons-Volume-3-268850170',
+  );
+  $icons['theg-force'] = array(
+    'name' => 'TheG-Force',
+    'styles' => array(
+      '24x24' => '24x24',
+      '32x32' => '32x32',
+      '48x48' => '48x48',
+      '64x64' => '64x64',  
+    ),
+    'path callback' => 'socialmedia_icon_path_thegforce', 
+    'download' => 'http://theg-force.deviantart.com/art/Social-Icons-hand-drawned-109467069',
+  );
+  $icons['arbent/clean'] = array(
+    'name' => 'arbent/clean',
+    'styles' => array(
+      '32x32' => '32x32',
+      '64x64' => '64x64', 
+      '128x128' => '128x128', 
+    ),
+    'path callback' => 'socialmedia_icon_path_arbent_clean', 
+    'download' => 'http://arbent.net/blog/social-media-circles-icon-set',
+  );
+  $icons['arbent/grunge'] = array(
+    'name' => 'arbent/grunge',
+    'styles' => array(
+      '32x32' => '32x32',
+      '64x64' => '64x64', 
+      '128x128' => '128x128', 
+    ),
+    'path callback' => 'socialmedia_icon_path_arbent_grunge', 
+    'download' => 'http://arbent.net/blog/social-media-circles-icon-set',
+  );
+
   return $icons;
 }
 
@@ -104,7 +169,7 @@ function socialmedia_icon_path_dryicons($platform = 'twitter', $style = NULL) {
   $pt = array(
     'googleplus' => 'google_plus',
   );
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/dryicons/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/dryicons/PNG/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
   return $path;
 }
 
@@ -113,7 +178,7 @@ function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
   $t = array(
     'googleplus' => 'google-plus',
   );
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/' . $style . '/' . ((isset($t[$platform]))? $t[$platform] : $platform) . '.png'; 
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/Vector Social Media Icons/PNG/' . $style . '/' . ((isset($t[$platform]))? $t[$platform] : $platform) . '.png'; 
   return $path;
 }
 
@@ -125,6 +190,7 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
     'flickr' => 'Flickr',
     'google' => 'Google',
     'googleplus' => 'Google',
+    'lastfm' => 'LastFM',
     'linkedin' => 'Linkedin',
     'myspace' => 'Myspace',
     'reddit' => 'Reddit',
@@ -139,6 +205,76 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
     return FALSE;
   }
   $style = isset($style) ? $style : '32x32';
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/theg-force/' . $trans[$platform] . '/' . $style . '.png'; 
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/theg-force/Social icons Hand Drawn/' . $trans[$platform] . '/' . $style . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_jankoatwarpspeed($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+	
+  $pt = array(
+    'googleplus' => 'google',
+  );
+  
+  $st = array(
+    'blinklist' => 1,
+    'twitter' => 1,
+    'facebook' => 1,
+    'flickr' => 1,
+    'google' => 1,
+    'googleplus' => 1,
+    'lastfm' => 1,
+    'linkedin' => 1,
+    'newsvine' => 1,
+    'vimeo' => 1,
+    'youtube' => 1,
+    'yahoo' => 1,
+  );
+  if (isset($st[$platform])) {
+  	list($style, $t) = explode('x', $style); 
+  }
+
+  $style = isset($style) ? $style : '32x32';
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/jankoatwarpspeed/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '_' . $style . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_ristaumedia($platform = 'twitter', $style = NULL) {
+  $pt = array(
+    'email' => 'mail',
+    'flickr' => 'flikr'
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/ristaumedia/icons png/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_arbent_clean($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+	$pt = array(
+    'email' => 'mail',
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/arbent/clean/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_arbent_grunge($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+  $pt = array(
+    'email' => 'mail',
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/arbent/grunge/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  return $path;
+}
+
+function socialmedia_icon_path_instantshift($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32';
+  $pt = array(
+    'delicious' => 'del.icio.us',
+    'email' => 'mail',
+    'googleplus' => 'buzz',
+    'lastfm' => 'last_fm',
+    'stumbleupon' => 'StumbleUpon',
+  );
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/instantshift/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
   return $path;
 }

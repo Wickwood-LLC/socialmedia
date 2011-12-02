@@ -45,7 +45,6 @@ function socialmedia_facebook_platform_info() {
 }
 
 function socialmedia_facebook_parser($values) {
-//dsm($str);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)(facebook\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -77,7 +76,6 @@ function socialmedia_facebook_parser($values) {
 }
 
 function socialmedia_facebook_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -120,7 +118,6 @@ function socialmedia_flickr_platform_info() {
 }
 
 function socialmedia_flickr_parser($values) {
-//dsm($str);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)(flickr\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -146,7 +143,6 @@ function socialmedia_flickr_parser($values) {
 }
 
 function socialmedia_flickr_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -189,7 +185,6 @@ function socialmedia_googleplus_platform_info() {
 }
 
 function socialmedia_googleplus_parser($values) {
-//dsm($str);
   $str = $values['url'];
   $pattern = '/(?:http(?:s)?:\/\/)?(plus\.)(google\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -210,7 +205,6 @@ function socialmedia_googleplus_parser($values) {
 }
 
 function socialmedia_googleplus_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -253,7 +247,6 @@ function socialmedia_linkedin_platform_info() {
 }
 
 function socialmedia_linkedin_parser($values) {
-//dsm($values);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)(linkedin\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -263,7 +256,6 @@ function socialmedia_linkedin_parser($values) {
   }
   $profile = array();
   $a = explode('linkedin.com/', $str);
-//dsm($a);
   $profile['url'] = 'www.linkedin.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
     $profile['username'] = $values['username'];
@@ -279,7 +271,6 @@ function socialmedia_linkedin_parser($values) {
 }
 
 function socialmedia_linkedin_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -322,7 +313,6 @@ function socialmedia_slideshare_platform_info() {
 }
 
 function socialmedia_slideshare_parser($values) {
-//dsm($values);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)(slideshare\.net\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -332,7 +322,6 @@ function socialmedia_slideshare_parser($values) {
   }
   $profile = array();
   $a = explode('slideshare.net/', $str);
-//dsm($a);
   $profile['url'] = 'www.slideshare.net/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
     $profile['username'] = $values['username'];
@@ -348,7 +337,6 @@ function socialmedia_slideshare_parser($values) {
 }
 
 function socialmedia_slideshare_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -406,7 +394,6 @@ function socialmedia_twitter_parser($values) {
   $profile['url'] = $matches[1][0] . $matches[3][0];
   $profile['username'] = (isset($values['username']) && $values['username']) ? $values['username'] : $matches[3][0];
   
-//dsm($matches);
   return $profile;
 }
 
@@ -455,7 +442,6 @@ function socialmedia_vimeo_platform_info() {
 }
 
 function socialmedia_vimeo_parser($values) {
-//dsm($values);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(vimeo\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -465,7 +451,6 @@ function socialmedia_vimeo_parser($values) {
   }
   $profile = array();
   $a = explode('vimeo.com/', $str);
-//dsm($a);
   $profile['url'] = 'vimeo.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
     $profile['username'] = $values['username'];
@@ -477,7 +462,6 @@ function socialmedia_vimeo_parser($values) {
 }
 
 function socialmedia_vimeo_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
@@ -520,7 +504,6 @@ function socialmedia_youtube_platform_info() {
 }
 
 function socialmedia_youtube_parser($values) {
-//dsm($values);
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)(youtube\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
@@ -530,7 +513,6 @@ function socialmedia_youtube_parser($values) {
   }
   $profile = array();
   $a = explode('youtube.com/', $str);
-//dsm($a);
   $profile['url'] = 'www.youtube.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
     $profile['username'] = $values['username'];
@@ -546,7 +528,6 @@ function socialmedia_youtube_parser($values) {
 }
 
 function socialmedia_youtube_tokens($key, $profile) {
-//dsm($profile);
   switch ($key) {
   // Simple key values on the node.
     case 'url':
