@@ -10,9 +10,56 @@ function socialmedia_socialmedia_platform_info() {
   $platforms = array_merge($platforms, socialmedia_vimeo_platform_info());
   $platforms = array_merge($platforms, socialmedia_youtube_platform_info());
   
-  //$platforms = array_merge($platforms, socialmedia_addthis_platform_info());
+  $platforms = array_merge($platforms, socialmedia_addthis_platform_info());
  
   return $platforms;
+}
+
+function socialmedia_addthis_platform_info() {
+  $platforms = array();
+  $platforms['addthis'] = array(
+    'title' => t('AddThis'),
+    'description' => t('URL to your Facebook profile or page'),
+    'group' => t('Widget platforms'),
+    'form callback' => 'socialmedia_addthis_form',
+    'parser callback' => 'socialmedia_addthis_parser',
+    'tokens callback' => 'socialmedia_addthis_tokens',
+  ); 
+  $platforms['addthis']['form'] = array(
+    'title' => t('Facebook profile'),
+    'description' => t('URL to your Facebook profile'),
+  );
+  $platforms['addthis']['tokens']['multi'] = array(
+    'addthis_username' => array(
+      'name' => t("AddThis username"), 
+      'description' => t("AddThis account username"),
+    ),   
+  );
+  return $platforms;  
+}
+
+function socialmedia_addthis_form($profile) {
+  $fields['input_addthis_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('AddThis username'),
+    '#default_value' => (isset($profile['inputs']['username'])) ? $profile['inputs']['username'] : '',
+    '#description' => t('This is the pubid used to tie AddThis widgets back to your AddThis account.'),
+    '#size' => 80,
+  );
+  return $fields;
+}
+
+function socialmedia_addthis_parser($values) {
+  $profile['username'] = $values['username'];
+  return $profile;
+}
+
+function socialmedia_addthis_tokens($key, $profile) {
+  switch ($key) {
+    case 'username':
+      return $profile['username'];
+  }
+  return '';
 }
 
 function socialmedia_facebook_platform_info() {
@@ -539,23 +586,3 @@ function socialmedia_youtube_tokens($key, $profile) {
   }
   return '';
 }
-
-function socialmedia_addthis_platform_info() {
-  $platforms = array();
-  $platforms['addthis'] = array(
-    'title' => t('AddThis'),
-    'description' => t('Social sharing widgets.'),
-  ); 
-  $platforms['facebook']['form'] = array(
-    'title' => t('AddThis username'),
-    'description' => t('AddThis account username'),
-  );
-  $platforms['addthis']['tokens']['multi'] = array(
-    'addthis_username' => array(
-      'name' => t("AddThis username"), 
-      'description' => t("Addthis"),
-    ),   
-  );
-  return $platforms;  
-}
-

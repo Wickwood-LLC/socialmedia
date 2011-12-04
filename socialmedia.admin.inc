@@ -192,46 +192,61 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
   $defaults = array_keys($platforms);
 
   $active_platforms = variable_get('socialmedia_platforms_' . (($user) ? 'user' : 'site'), $defaults);
-
+  $form['uid'] = array(
+    '#type' => 'value',
+    '#value' => $uid,
+  );
+  
   foreach ($platforms AS $name => $platform) {
-  	if (!$active_platforms[$name]) {
+  	if (!isset($active_platforms[$name]) || !$active_platforms[$name]) {
   		continue;
   	}
+  	$fields = array();
     $profile = socialmedia_profile_load($name, $uid);
-    $form['uid'] = array(
-      '#type' => 'value',
-      '#value' => $uid,
+
+    $fields[$name] = array(
+      '#type' => 'fieldset',
+      '#title' => $platform['title'],
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
     );
-	  $form[$name] = array(
-	    '#type' => 'fieldset',
-	    '#title' => $platform['title'],
-	    '#collapsible' => TRUE,
-	    '#collapsed' => FALSE,
-	  );
-	  $default_description = t('Enter the URL to your @platform profile.', array('@platform' => $platform['title']));
-    $form[$name]['input_' . $name . '_url'] = array(
-      '#type' => 'textfield',
-      '#title' => $platform['title'] . ' URL',
-      '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : '',
-      '#description' => isset($platform['profile url']) ? $platform['profile description url'] : $default_description,
-      '#size' => 80,
-    );
-    $default_description = t('Enter your @platform profile name how you want it displayed in text links. Leave blank to use the username from the URL.', array('@platform' => $platform['title']));
-    $form[$name]['input_' . $name . '_username'] = array(
-      '#type' => 'textfield',
-      '#title' => $platform['title'] . ' Username',
-      '#default_value' => (isset($profile['inputs']['username'])) ? $profile['inputs']['username'] : '',
-      '#description' => isset($platform['description username']) ? $platform['description username'] : $default_description,
-      '#size' => 32,
-    ); 
-    /* 
-    if ($profile) {
-      $form[$name]['info_' . $name] = array(
-        '#type' => 'markup',
-        '#markup' => t('profile: ') . l($profile['title'], 'http://' . $profile['url']),
-      );       
+    
+    // check if custom form callback, else use default form fields
+    if (isset($platform['form callback'])) {
+      $fields[$name] = array_merge($fields[$name], call_user_func($platform['form callback'], $profile)); 
     }
-    */
+    else {
+  	  $default_description = t('Enter the URL to your @platform profile.', array('@platform' => $platform['title']));
+      $fields[$name]['input_' . $name . '_url'] = array(
+        '#type' => 'textfield',
+        '#title' => $platform['title'] . ' URL',
+        '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : '',
+        '#description' => isset($platform['profile url']) ? $platform['profile description url'] : $default_description,
+        '#size' => 80,
+      );
+      $default_description = t('Enter your @platform profile name how you want it displayed in text links. Leave blank to use the username from the URL.', array('@platform' => $platform['title']));
+      $fields[$name]['input_' . $name . '_username'] = array(
+        '#type' => 'textfield',
+        '#title' => $platform['title'] . ' Username',
+        '#default_value' => (isset($profile['inputs']['username'])) ? $profile['inputs']['username'] : '',
+        '#description' => isset($platform['description username']) ? $platform['description username'] : $default_description,
+        '#size' => 32,
+      ); 
+    }
+    if (isset($platform['group'])) {
+      if (!isset($form[$platform['group']])) {
+        $form[$platform['group']] = array(
+          '#type' => 'fieldset',
+          '#title' => $platform['group'],
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+        );        
+      }
+      $form[$platform['group']] = array_merge($form[$platform['group']], $fields);
+    }
+    else {
+      $form = array_merge($form, $fields);
+    }
   }
   
   $form['submit'] = array(
@@ -294,4 +309,41 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
   //socialmedia_profile_save($twitter, 'twitter');
 
   return 'OK';
+}
+/*
+ * TODO: finish wizard
+ */
+function socialmedia_admin_setup($step = 1) {
+  if (!$step) {
+    $step = 1;
+  }
+  $output = render(drupal_get_form('socialmedia_admin_setup_' . $step .'_form'));
+  return $output;
+}
+
+function socialmedia_admin_setup_1_form($form, &$form_state) {
+  $form = array();
+  $output = '';
+  
+  if (!module_exists('widgets')) {
+    $output = t('In order to setup Social media you need to !install.',
+      array('!install' => l(t('install the Widgets module'), 'admin/modules'))
+    );
+  }
+  
+  $icons = socialmedia_iconset_info();
+  //$examples = array('twitter', 'facebook', 'stumbleupon', 'youtube');
+  $is_installed = FALSE;
+  foreach ($icons AS $iconset_name => $iconset) {
+    if (socialmedia_iconset_is_installed($iconset_name)) {  
+      $is_installed = $iconset_name;
+    }
+  }
+  
+  if (!$is_installed) {
+    
+  }
+  
+  return $form;
+  
 }

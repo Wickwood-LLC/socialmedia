@@ -74,6 +74,18 @@ function socialmedia_menu() {
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
   );
+  $items['admin/config/media/socialmedia/setup'] = array(
+    'title' => 'Setup',
+    'description' => 'Setup wizard to help you get started quickly.',
+    'page callback' => 'socialmedia_admin_setup',
+    'page arguments' => array(5),
+    'access arguments' => array('administer social media'),
+    'file' => 'socialmedia.admin.inc',
+    'file path' => drupal_get_path('module', 'socialmedia'),
+    'weight' => 2,
+    //'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
+  );
   $items['user/%user/socialmedia'] = array(
     'title' => 'Social profiles',
     'description' => 'User social media profiles',
