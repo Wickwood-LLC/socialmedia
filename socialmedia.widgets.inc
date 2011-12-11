@@ -326,7 +326,7 @@ function socialmedia_widgets_element_addthis_addthis_counter() {
   $elements['socialmedia_addthis-addthis-counter'] = array(
     'label' => t('AddThis Counter'),
     'group' => t('Social media: Multi'),
-    'template' => '<a class="addthis_counter"[?style=?]></a>',
+    'template' => '<a class="addthis_counter[?style=?]"></a>',
     'add_js' => array(
       'data' => $addthis_js,
       'options' => array(
@@ -341,7 +341,9 @@ function socialmedia_widgets_element_addthis_addthis_counter() {
 function socialmedia_widgets_element_alter_addthis_addthis_counter(&$form, $set, $element) {
   $options = array(
     '' => t('Large button with verticle count'),
-    ' addthis_pill_style' => t('Small button with horizontal count')
+    ' addthis_32x32_style addthis_bubble_style' => t('Large button with horizontal count'),
+    ' addthis_bubble_style' => t('Small button with horizontal count'),
+    ' addthis_pill_style' => t('Pill button (no count)'),
   );
   $form['style']['#type'] = 'select';
   $form['style']['#options'] = $options;
