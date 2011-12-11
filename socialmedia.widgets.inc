@@ -262,14 +262,12 @@ function socialmedia_base_platforms() {
 }
 
 function socialmedia_widgets_share_platforms_form($data) {
+//dsm($data);
   $form = widgets_template_auto_form($data);
 
-  if (arg(5) == 'add') {
-    $element = widgets_element_definition_load(arg(6)); 
-  }
-  else {
-    $element = widgets_element_load(arg(6), arg(4));
-  }
+  $element = widgets_element_load_by_admin_path();
+//dsm($form);
+//dsm($element);
   if (isset($form['icon-path'])) {
     $options = socialmedia_icon_style_options(TRUE, $element['platform']);
     $form['icon-path'] = array(
@@ -286,6 +284,7 @@ function socialmedia_widgets_share_platforms_form($data) {
 
 
 function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
+//dsm($element);
   if($element['name'] == 'socialmedia_addthis-addthis-counter') {
     socialmedia_widgets_element_alter_addthis_addthis_counter($form, $set, $element);
   }
