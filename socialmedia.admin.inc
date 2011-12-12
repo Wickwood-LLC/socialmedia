@@ -188,7 +188,7 @@ function socialmedia_admin_settings() {
 function socialmedia_admin_settings_submit() {
   //flush widgets caches so tokens are reloaded
   if (module_exists('widgets')) {
-    widgets_flush_caches();
+    widgets_clear_widgets_cache('*', TRUE);
   }
 }
 
@@ -318,7 +318,7 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
 	
   //flush widgets caches so tokens are reloaded
   if (module_exists('widgets')) {
-    widgets_flush_caches();
+    widgets_clear_widgets_cache('*', TRUE);
   }
 
   return 'OK';
