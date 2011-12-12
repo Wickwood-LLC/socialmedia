@@ -178,7 +178,18 @@ function socialmedia_admin_settings() {
   
   }
   
+  $form['#submit'][] = 'socialmedia_admin_settings_submit';
+  
+  
+  
   return system_settings_form($form);
+}
+
+function socialmedia_admin_settings_submit() {
+  //flush widgets caches so tokens are reloaded
+  if (module_exists('widgets')) {
+    widgets_flush_caches();
+  }
 }
 
 /**
@@ -305,8 +316,10 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
     }
   }
 	
-  //$twitter = socialmedia_parse_twitter_profile($form_state['values']['socialmedia_profile_url_twitter']);
-  //socialmedia_profile_save($twitter, 'twitter');
+  //flush widgets caches so tokens are reloaded
+  if (module_exists('widgets')) {
+    widgets_flush_caches();
+  }
 
   return 'OK';
 }

@@ -340,8 +340,8 @@ function socialmedia_widgets_element_addthis_addthis_counter() {
 function socialmedia_widgets_element_alter_addthis_addthis_counter(&$form, $set, $element) {
   $options = array(
     '' => t('Large button with verticle count'),
-    ' addthis_32x32_style addthis_bubble_style' => t('Large button with horizontal count'),
-    ' addthis_bubble_style' => t('Small button with horizontal count'),
+    //' addthis_32x32_style addthis_bubble_style' => t('Large button with horizontal count'),
+    //' addthis_bubble_style' => t('Small button with horizontal count'),
     ' addthis_pill_style' => t('Pill button (no count)'),
   );
   $form['style']['#type'] = 'select';
@@ -648,6 +648,7 @@ function socialmedia_widgets_default_sets() {
   $sets['socialmedia_profile-urls'] = array(
     'data' => array(
       'style' => 'plain-linebreaks',
+      'cache' => array('scope' => 'author'),
     ),
     'elements' => array(
       array(
@@ -678,6 +679,10 @@ function socialmedia_widgets_default_sets() {
     ),
   );
   $sets['socialmedia_profile-buttons'] = array(
+    'data' => array(
+      'style' => 'horizontal',
+      'cache' => array('scope' => 'author'),
+    ),
     'elements' => array(
       array(
         'name' => 'socialmedia_socialmedia-twitter-profile-button',
@@ -707,6 +712,10 @@ function socialmedia_widgets_default_sets() {
     ),
   );
   $sets['addthis-share'] = array(
+    'data' => array(
+      'style' => 'horizontal',
+      'cache' => array('scope' => 'page'),
+    ),
     'elements' => array(
       array(
         'name' => 'socialmedia_addthis-tweet',
@@ -731,6 +740,9 @@ function socialmedia_widgets_default_sets() {
     ),
   );
 	$sets['facebook-like-box'] = array(
+    'data' => array(
+      'cache' => array('scope' => 'author'),
+    ),
 	  'elements' => array(
 	    array(
 	      'name' => 'socialmedia_facebook-like-box',
@@ -741,6 +753,9 @@ function socialmedia_widgets_default_sets() {
 	  ),
 	);
 	$sets['twitter-profile-widget'] = array(
+    'data' => array(
+      'cache' => array('scope' => 'author'),
+    ),
 	  'elements' => array(
 	    array(
 	      'name' => 'socialmedia_twitter-profile-widget',
