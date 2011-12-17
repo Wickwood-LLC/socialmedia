@@ -34,30 +34,30 @@ function socialmedia_iconset_is_installed($iconset) {
 function socialmedia_icon_platforms($featured = FALSE) {
   $platforms = array( 
     //'box' => t('Box'),
-    'blinklist' => t('Blinklist'),
-    'digg' => t('Digg'), 
+    //'blinklist' => t('Blinklist'),
     'delicious' => t('Del.icio.us'),
+    'digg' => t('Digg'),    
     'email' => t('E-mail'),  
     'facebook' => t('Facebook'),
     'flickr' => t('Flikr'),
     //'furl' => t('Furl'),
-    'google' => t('Google'),
+    //'google' => t('Google'),
     'googleplus' => t('Google+'),
     'lastfm' => t('Last.fm'),
     'linkedin' => t('LinkedIn'),
     //'misterwong' => t('Mister Wong'),
     //'mixx' => t('Mixx'),
-    'myspace' => t('MySpace'),
-    'newsvine' => t('Newsvine'),
+    //'myspace' => t('MySpace'),
+    //'newsvine' => t('Newsvine'),
     'reddit' => t('Reddit'),
     'rss' => t('RSS'),
     //'slashdot' => t('Slashdot'),
     'slideshare' => t('Slideshare'),
     'stumbleupon' => t('StumbleUpon'),
-    'technorati' => t('Technorati'),
+    //'technorati' => t('Technorati'),
     'twitter' => t('Twitter'),
     'vimeo' => t('Vimeo'),
-    'yahoo' => t('Yahoo!'),
+    //'yahoo' => t('Yahoo!'),
     'youtube' => t('YouTube'),
   );
   
@@ -71,6 +71,15 @@ function socialmedia_icon_platforms($featured = FALSE) {
 }
 
 function socialmedia_iconset_info() {
+  $icons['levelten_glossy'] = array(
+    'name' => 'LevelTen glossy',
+    'styles' => array(
+      '16x16' => '16x16',
+      '32x32' => '32x32', 
+      '48x48' => '48x48', 
+    ),
+    'path callback' => 'socialmedia_icon_path_levelten_glossy', 
+  );
   $icons['icondock'] = array(
     'name' => 'Icon Dock',
     'styles' => array(
@@ -162,6 +171,12 @@ function socialmedia_iconset_info() {
   );
 
   return $icons;
+}
+
+function socialmedia_icon_path_levelten_glossy($platform = 'twitter', $style = NULL) {
+  $style = isset($style) ? $style : '32x32';
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/levelten/glossy/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
+  return $path;
 }
 
 function socialmedia_icon_path_dryicons($platform = 'twitter', $style = NULL) {
