@@ -64,7 +64,7 @@ function socialmedia_icon_platforms($featured = FALSE) {
   if ($featured) {
   	unset($platforms['blinklist']);
   	unset($platforms['lastfm']);
-  	unset($platforms['slideshare']);
+  	//unset($platforms['slideshare']);
   }  
   
   return $platforms;
