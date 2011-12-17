@@ -80,7 +80,7 @@ function socialmedia_menu() {
     'page callback' => 'socialmedia_admin_setup',
     'page arguments' => array(5),
     'access arguments' => array('administer social media'),
-    'file' => 'socialmedia.admin.inc',
+    'file' => 'socialmedia.setup.inc',
     'file path' => drupal_get_path('module', 'socialmedia'),
     'weight' => 2,
     //'type' => MENU_LOCAL_TASK,

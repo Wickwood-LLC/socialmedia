@@ -21,6 +21,7 @@ function socialmedia_addthis_platform_info() {
     'title' => t('AddThis'),
     'description' => t('URL to your Facebook profile or page'),
     'group' => t('Widget platforms'),
+    'homepage' => 'http://www.addthis.com',
     'form callback' => 'socialmedia_addthis_form',
     'parser callback' => 'socialmedia_addthis_parser',
     'tokens callback' => 'socialmedia_addthis_tokens',
@@ -67,6 +68,7 @@ function socialmedia_facebook_platform_info() {
   $platforms['facebook'] = array(
     'title' => t('Facebook'),
     'description' => t('URL to your Facebook profile or page'),
+    'homepage' => 'http://www.facebook.com',
     'parser callback' => 'socialmedia_facebook_parser',
     'tokens callback' => 'socialmedia_facebook_tokens',
   ); 
@@ -140,6 +142,7 @@ function socialmedia_flickr_platform_info() {
   $platforms['flickr'] = array(
     'title' => t('Flickr'),
     'description' => t('URL to your Flickr profile or page'),
+    'homepage' => 'http://www.flickr.com',
     'parser callback' => 'socialmedia_flickr_parser',
     'tokens callback' => 'socialmedia_flickr_tokens',
   ); 
@@ -207,6 +210,7 @@ function socialmedia_googleplus_platform_info() {
   $platforms['googleplus'] = array(
     'title' => t('Google+'),
     'description' => t('URL to your Google+ profile or page'),
+    'homepage' => 'https://plus.google.com/',
     'parser callback' => 'socialmedia_googleplus_parser',
     'tokens callback' => 'socialmedia_googleplus_tokens',
   ); 
@@ -269,6 +273,7 @@ function socialmedia_linkedin_platform_info() {
   $platforms['linkedin'] = array(
     'title' => t('LinkedIn'),
     'description' => t('URL to your LinkedIn profile or page'),
+    'homepage' => 'http://www.linkedin.com/',
     'parser callback' => 'socialmedia_linkedin_parser',
     'tokens callback' => 'socialmedia_linkedin_tokens',
   ); 
@@ -335,6 +340,7 @@ function socialmedia_slideshare_platform_info() {
   $platforms['slideshare'] = array(
     'title' => t('SlideShare'),
     'description' => t('URL to your SlideShare profile or page'),
+    'homepage' => 'http://www.slideshare.net/',
     'parser callback' => 'socialmedia_slideshare_parser',
     'tokens callback' => 'socialmedia_slideshare_tokens',
   ); 
@@ -401,6 +407,7 @@ function socialmedia_twitter_platform_info() {
   $platforms['twitter'] = array(
     'title' => t('Twitter'),    
     //'description' => t('URL to your Twitter account'),
+    'homepage' => 'http://twitter.com/',
     'parser callback' => 'socialmedia_twitter_parser',
     'tokens callback' => 'socialmedia_twitter_tokens',
   ); 
@@ -464,6 +471,7 @@ function socialmedia_vimeo_platform_info() {
   $platforms['vimeo'] = array(
     'title' => t('Vimeo'),
     'description' => t('URL to your Vimeo profile or page'),
+    'homepage' => 'http://vimeo.com/',
     'parser callback' => 'socialmedia_vimeo_parser',
     'tokens callback' => 'socialmedia_vimeo_tokens',
   ); 
@@ -526,6 +534,7 @@ function socialmedia_youtube_platform_info() {
   $platforms['youtube'] = array(
     'title' => t('YouTube'),
     'description' => t('URL to your YouTube profile or page'),
+    'homepage' => 'http://www.youtube.com/',
     'parser callback' => 'socialmedia_youtube_parser',
     'tokens callback' => 'socialmedia_youtube_tokens',
   ); 

@@ -640,11 +640,110 @@ function socialmedia_widgets_element_alter_stumbleupon_badge(&$form, $set, $elem
   return $form;
 }
 
+function socialmedia_widgets_set_profile_default() {
+  $profiles = variable_get('socialmedia_platforms_site' , array());
+  $platforms = socialmedia_socialmedia_platform_info();
+  $set = array(
+    'data' => array(
+      'style' => 'plain-linebreaks',
+      'cache' => array('scope' => 'author'),
+    ),
+    'elements' => array(),
+  );
+  $i = 1;
+  foreach ($profiles AS $key => $profile) {
+    if ($profile && !isset($platforms[$key]['group'])) {
+      $set['elements'][] = array(
+        'name' => 'socialmedia_socialmedia-' . $key . '-profile-button',
+        'data' => array(),
+        'weight' => $i++,
+      );    
+    }
+  }
+  return $set;
+}
 
+function socialmedia_widgets_set_share_default_elements() {
+  $elements = array();
+  $elements['basic'] = array(
+    'twitter' => array(
+      'name' => 'socialmedia_socialmedia-twitter-share-button',
+    ),
+    'facebook' => array(
+      'name' => 'socialmedia_socialmedia-facebook-share-button',
+    ),
+    'google' => array(
+      'name' => 'socialmedia_socialmedia-google-share-button',
+    ),
+    'stubleupon' => array(
+      'name' => 'socialmedia_socialmedia-stumbleupon-share-button',
+    ),
+    'delicious' => array(
+      'name' => 'socialmedia_socialmedia-delicious-share-button',
+    ),
+    'digg' => array(
+      'name' => 'socialmedia_socialmedia-digg-share-button',
+    ),
+    'myspace' => array(
+      'name' => 'socialmedia_socialmedia-myspace-share-button',
+    ),
+    'newsvine' => array(
+      'name' => 'socialmedia_socialmedia-newsvine-share-button',
+    ),
+    'reddit' => array(
+      'name' => 'socialmedia_socialmedia-reddit-share-button',
+    ),
+    'technorati' => array(
+      'name' => 'socialmedia_socialmedia-technorati-share-button',
+    ),
+    'yahoo' => array(
+      'name' => 'socialmedia_socialmedia-yahoo-share-button',
+    ),
+  );
+  $elements['addthis'] = array(
+      'twitter' => array(
+        'name' => 'socialmedia_addthis-tweet',
+        'data' => array('count' => ' tw:count="vertical"'),
+      ),
+      'facebook' => array(
+        'name' => 'socialmedia_addthis-facebook-like',
+        'data' => array('layout' =>  ' fb:like:layout="box_count"'),
+      ),
+      'googleplus' => array(
+        'name' => 'socialmedia_addthis-google-plusone',
+        'data' => array('size' => ' g:plusone:size="tall"'),
+      ),
+      'addthis' => array(
+        'name' => 'socialmedia_addthis-addthis-counter',
+        'data' => array(),
+      ),  
+  );
+  return $elements;
+}
+
+function socialmedia_widgets_set_share_default() {
+  $elements = socialmedia_widgets_set_share_default_elements();
+  
+  $set = array(
+    'data' => array(
+      'style' => 'horizontal',
+      'cache' => array('scope' => 'page'),
+    ),
+    'elements' => array(),
+  );
+  foreach ($elements['basic'] AS $key => $element) {
+    $set['elements'][] = $element;
+  }
+  return $set;
+}
 
 function socialmedia_widgets_default_sets() {
   $sets = array();
 
+  $sets['socialmedia_profile-default'] = socialmedia_widgets_set_profile_default();
+  
+  $sets['socialmedia_share-default'] = socialmedia_widgets_set_share_default();
+  
   $sets['socialmedia_profile-urls'] = array(
     'data' => array(
       'style' => 'plain-linebreaks',

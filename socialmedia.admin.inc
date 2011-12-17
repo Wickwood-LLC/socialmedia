@@ -195,7 +195,7 @@ function socialmedia_admin_settings_submit() {
 /**
  * Builds and returns the socialmedia settings form.
  */
-function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site', $user = NULL) {
+function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site', $user = NULL, $setup_mode = FALSE) {
 
   $uid = (is_object($user)) ? $user->uid : 0;
 
@@ -203,13 +203,18 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
   $defaults = array_keys($platforms);
 
   $active_platforms = variable_get('socialmedia_platforms_' . (($user) ? 'user' : 'site'), $defaults);
+  $form['context'] = array(
+    '#type' => 'value',
+    '#value' => $context,
+  );
+  
   $form['uid'] = array(
     '#type' => 'value',
     '#value' => $uid,
   );
   
   foreach ($platforms AS $name => $platform) {
-  	if (!isset($active_platforms[$name]) || !$active_platforms[$name]) {
+  	if ((!isset($active_platforms[$name]) || !$active_platforms[$name]) && !$setup_mode) {
   		continue;
   	}
   	$fields = array();
@@ -227,7 +232,12 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
       $fields[$name] = array_merge($fields[$name], call_user_func($platform['form callback'], $profile)); 
     }
     else {
-  	  $default_description = t('Enter the URL to your @platform profile.', array('@platform' => $platform['title']));
+  	  $default_description = t('Enter the URL to your @platform profile. To create an account on @platform visit !homepage', 
+  	    array(
+  	      '@platform' => $platform['title'],
+  	      '!homepage' => l($platform['homepage'], $platform['homepage'], array('attributes' => array('target' => '_blank'))),
+  	    )
+  	  );
       $fields[$name]['input_' . $name . '_url'] = array(
         '#type' => 'textfield',
         '#title' => $platform['title'] . ' URL',
@@ -289,7 +299,8 @@ function _socialmedia_admin_profiles_form_build_inputs($values, $platforms) {
 
 function socialmedia_admin_profiles_form_validate($form, &$form_state) {
 
-	$platforms = socialmedia_platform_definitions('site');
+  $setup_mode = (isset($form_state['values']['setup_mode']) && $form_state['values']['setup_mode']) ? 1 : 0;
+  $platforms = socialmedia_platform_definitions();
 	$inputs = _socialmedia_admin_profiles_form_build_inputs($form_state['values'], $platforms);
 
 	foreach ($platforms AS $platform_name => $platform) {
@@ -297,9 +308,12 @@ function socialmedia_admin_profiles_form_validate($form, &$form_state) {
 			continue;
 		}
 		if (isset($platform['parser callback'])) {
+		  if ($setup_mode && (!isset($inputs[$platform_name]['url']) || !trim($inputs[$platform_name]['url']))) {
+		    continue;
+		  }
 			call_user_func($platform['parser callback'], $inputs[$platform_name]);
 		}
-	}	
+	}
 }
 
 function socialmedia_admin_profiles_form_submit($form, &$form_state) {
@@ -322,41 +336,4 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
   }
 
   return 'OK';
-}
-/*
- * TODO: finish wizard
- */
-function socialmedia_admin_setup($step = 1) {
-  if (!$step) {
-    $step = 1;
-  }
-  $output = render(drupal_get_form('socialmedia_admin_setup_' . $step .'_form'));
-  return $output;
-}
-
-function socialmedia_admin_setup_1_form($form, &$form_state) {
-  $form = array();
-  $output = '';
-  
-  if (!module_exists('widgets')) {
-    $output = t('In order to setup Social media you need to !install.',
-      array('!install' => l(t('install the Widgets module'), 'admin/modules'))
-    );
-  }
-  
-  $icons = socialmedia_iconset_info();
-  //$examples = array('twitter', 'facebook', 'stumbleupon', 'youtube');
-  $is_installed = FALSE;
-  foreach ($icons AS $iconset_name => $iconset) {
-    if (socialmedia_iconset_is_installed($iconset_name)) {  
-      $is_installed = $iconset_name;
-    }
-  }
-  
-  if (!$is_installed) {
-    
-  }
-  
-  return $form;
-  
 }
