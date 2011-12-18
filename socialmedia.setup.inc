@@ -44,12 +44,14 @@ function socialmedia_admin_setup_1_form($form, &$form_state) {
  */
 function socialmedia_setup_2_form($form, $form_state) {
   require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.admin.inc');
+  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.tokens.inc');
   drupal_set_title(t('Social media profiles setup'));
   $instructions = <<<EOF
 <p>The first step is to setup your social media profiles. The social media module supports several platforms such as Twitter, Facebook and Google+. If you already have accounts enter them below. If you have not setup any social media profiles yet or want to create additional ones, follow the homepage links below to create accounts. 
 </p><p>
 You do not have to create an account on all platforms. Any platforms that you do not enter a profile url for will be ignored. You can add and remove profiles later on the Social Media configuration page.  
 EOF;
+
   $form['instructions'] = array(
     '#markup' => t($instructions),
   ); 
@@ -57,10 +59,26 @@ EOF;
     '#type' => 'value',
     '#value' => 1,
   );
+  $platforms = socialmedia_socialmedia_platform_info();
   $fields = socialmedia_admin_profiles_form($form, $form_state, 'site', NULL, TRUE);
-
+dsm($fields);
   unset($fields['Widget platforms']);
-  $form = array_merge($form, $fields);
+  foreach ($fields AS $key => $field) {
+    if (isset($platforms[$key])) {
+      $f = array();
+      $imgvars = array(
+        'path' => socialmedia_icon_tokens($key, ''),
+      );
+      $f['input_' . $key . '_enabled'] = array(
+        '#type' => 'checkbox',
+        '#field_prefix' => theme('image', $imgvars),
+        '#title' =>  t('Include @platform in default profile widget set. (If @platform URL provided below.)', array('@platform' => $field['#title'])),
+        '#return_value' => $key,  
+        '#default_value' => $key,    
+      );
+      $form[$key] = array_merge($f, $field);
+    }
+  }
   $form['#validate'][] = 'socialmedia_admin_profiles_form_validate';
   $form['#submit'][] = 'socialmedia_setup_2_form_submit';
 
