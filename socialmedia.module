@@ -87,7 +87,7 @@ function socialmedia_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/media/socialmedia/widgets/profile'] = array(
-    'title' => 'Profile widget set',
+    'title' => 'Default profile set',
     'description' => 'Social media default profile widget sets configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_profile_widgets_form'),
@@ -98,7 +98,7 @@ function socialmedia_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/media/socialmedia/widgets/share'] = array(
-    'title' => 'Share widget set',
+    'title' => 'Default share set',
     'description' => 'Social media default profile widget sets configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('socialmedia_admin_share_widgets_form'),

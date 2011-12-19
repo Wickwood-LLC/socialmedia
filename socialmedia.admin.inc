@@ -125,7 +125,13 @@ function socialmedia_admin_settings() {
   );
   
   $examples = socialmedia_icon_platforms(TRUE);
-  $header = array(t('Icon set'), t('Styles'));
+  $header = array(
+    array(
+      'data' => t('Icon set'),
+      'style' => 'width: 150px;',
+    ), 
+    t('Styles')
+  );
   foreach ($examples AS $ekey => $ename) {
   	$header[] = '';
   }
@@ -134,8 +140,12 @@ function socialmedia_admin_settings() {
   $icons = socialmedia_iconset_info();
   //$examples = array('twitter', 'facebook', 'stumbleupon', 'youtube');
   foreach ($icons AS $iconset_name => $iconset) {
+    $name = (isset($iconset['download'])) ? l($iconset['name'], $iconset['download'], array('attributes' => array('target' => '_blank'))) : $iconset['name'];
+    if (isset($iconset['publisher'])) {
+      $name .= '<br />by ' . ((isset($iconset['publisher url'])) ? l($iconset['publisher'], $iconset['publisher url'], array('attributes' => array('target' => '_blank'))) : $iconset['publisher']);
+    }
     $row = array(
-      $iconset['name'],
+      $name,
       implode('<br />', $iconset['styles']),
     );
     if (socialmedia_iconset_is_installed($iconset_name)) {
@@ -398,6 +408,94 @@ function socialmedia_admin_profile_widgets_form_submit($form, $form_state) {
     }
   }
   variable_set('socialmedia_widget_set_default_profile', $enabled);  
+
+  cache_clear_all('widgets_sets', 'cache');
+  drupal_set_message(t('Default profile widget set settings have been saved.'));
+  return 'OK';
+}
+
+function socialmedia_admin_share_widgets_form($form, $form_state) {
+  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.tokens.inc');
+  drupal_set_title(t('Social media share widget'));
+
+  $instructions = t('The share widget provides a set of buttons that enable visitors to share and bookmark site content. Check each sharing method you want displayed in your default sharing widget set. You can edit and change the sort order later.');
+
+  $instructions2 = t('To place the widget set on your site and for additional configuration settings, !widget_link.',
+    array(
+      '!widget_link' => l(t('visit the profile widget set configuration page'), 'admin/structure/widgets/sets/edit/socialmedia_share-default'),
+    )
+  
+  );
+
+  $form['instructions'] = array(
+    '#markup' => '<p>' . $instructions . '</p>',
+  );
+  $form['instructions2'] = array(
+    '#markup' => '<p>' . $instructions2 . '</p>',
+  ); 
+  $form['setup_mode'] = array(
+    '#type' => 'value',
+    '#value' => 1,
+  );  
+  $form['#tree'] = TRUE;
+  
+  $share_defs = socialmedia_widgets_set_share_default_elements();
+  $definitions = socialmedia_widgets_element_info();
+dsm($definitions);
+  $defaults = variable_get('socialmedia_widget_set_default_share', NULL); 
+//dsm($definitions);
+//dsm($defaults);
+  foreach ($share_defs AS $group => $share_defs2) {
+    $form[$group] = array(
+      '#type' => 'fieldset',
+      '#title' => $share_defs2['name'],
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+    );       
+    foreach ($share_defs2['elements'] AS $key => $element) {
+      $def = widgets_element_definition_load($element['name']);
+      if (isset($element['data'])) {
+        $def['data'] = $element['data']; 
+      }
+      $vars = array(
+        'element' => $def,
+      );
+      $form[$group][$element['name']] = array(
+        '#type' => 'checkbox',
+        '#field_prefix' => theme('widgets_element_view', $vars),
+        '#title' =>  t('Include @widget.', array('@widget' => $definitions[$element['name']]['label'])),
+        '#return_value' => $element['name'],  
+        '#default_value' => isset($defaults[$key]) ? $key : 0,    
+      );
+    }
+  }
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save share widget buttons'),
+  );  
+
+  return $form;
+}
+
+function socialmedia_admin_share_widgets_form_submit($form, $form_state) {
+  $values = $form_state['values'];
+  $share_defs = socialmedia_widgets_set_share_default_elements();
+  $definitions = socialmedia_widgets_element_info();
+//dsm($values);
+//dsm($share_defs);
+
+  $vars = array();
+  foreach ($values AS $group => $elements) {
+    if (isset($share_defs[$group])) {
+      foreach ($elements AS $key => $v) {
+        if ($v) {
+          $vars[$key] = $share_defs[$group]['elements'][$key];
+        }
+      }
+    }
+  }
+//dsm($vars);
+  variable_set('socialmedia_widget_set_default_share', $vars);  
 
   cache_clear_all('widgets_sets', 'cache');
   return 'OK';

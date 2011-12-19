@@ -58,7 +58,7 @@ function socialmedia_addthis_parser($values) {
 function socialmedia_addthis_tokens($key, $profile) {
   switch ($key) {
     case 'username':
-      return $profile['username'];
+      return isset($profile['username']) ? $profile['username'] : '';
   }
   return '';
 }

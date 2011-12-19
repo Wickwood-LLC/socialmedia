@@ -157,7 +157,7 @@ function socialmedia_base_platforms() {
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn">[?profile_username=[socialmedia:sm-linkedin_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
     'share-text-link' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[current-page:url]&title=[current-page:title-plain]&source=' . $_SERVER['HTTP_HOST'] . '" title="[?link-text=Share on LinkedIn?]">[?link-text=Share on LinkedIn?]</a>',
-    'share-button' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
+    'share-button' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Share on LinkedIn?]"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
   );
   
   $platforms['myspace'] = array(
@@ -668,63 +668,83 @@ function socialmedia_widgets_set_profile_default() {
 function socialmedia_widgets_set_share_default_elements() {
   $elements = array();
   $elements['basic'] = array(
-    'twitter' => array(
-      'name' => 'socialmedia_socialmedia-twitter-share-button',
-    ),
-    'facebook' => array(
-      'name' => 'socialmedia_socialmedia-facebook-share-button',
-    ),
-    'google' => array(
-      'name' => 'socialmedia_socialmedia-google-share-button',
-    ),
-    'stubleupon' => array(
-      'name' => 'socialmedia_socialmedia-stumbleupon-share-button',
-    ),
-    'delicious' => array(
-      'name' => 'socialmedia_socialmedia-delicious-share-button',
-    ),
-    'digg' => array(
-      'name' => 'socialmedia_socialmedia-digg-share-button',
-    ),
-    'myspace' => array(
-      'name' => 'socialmedia_socialmedia-myspace-share-button',
-    ),
-    'newsvine' => array(
-      'name' => 'socialmedia_socialmedia-newsvine-share-button',
-    ),
-    'reddit' => array(
-      'name' => 'socialmedia_socialmedia-reddit-share-button',
-    ),
-    'technorati' => array(
-      'name' => 'socialmedia_socialmedia-technorati-share-button',
-    ),
-    'yahoo' => array(
-      'name' => 'socialmedia_socialmedia-yahoo-share-button',
+    'name' => t('Basic'),
+    'elements' => array(
+      'socialmedia_socialmedia-twitter-share-button' => array(
+        'name' => 'socialmedia_socialmedia-twitter-share-button',
+      ),
+      'socialmedia_socialmedia-facebook-share-button' => array(
+        'name' => 'socialmedia_socialmedia-facebook-share-button',
+      ),
+      'socialmedia_socialmedia-google-share-button' => array(
+        'name' => 'socialmedia_socialmedia-google-share-button',
+      ),
+      'socialmedia_socialmedia-stumbleupon-share-button' => array(
+        'name' => 'socialmedia_socialmedia-stumbleupon-share-button',
+      ),
+      'socialmedia_socialmedia-delicious-share-button' => array(
+        'name' => 'socialmedia_socialmedia-delicious-share-button',
+      ),
+      'socialmedia_socialmedia-digg-share-button' => array(
+        'name' => 'socialmedia_socialmedia-digg-share-button',
+      ),
+      'socialmedia_socialmedia-linkedin-share-button' => array(
+        'name' => 'socialmedia_socialmedia-linkedin-share-button',
+      ),
+      'socialmedia_socialmedia-myspace-share-button' => array(
+        'name' => 'socialmedia_socialmedia-myspace-share-button',
+      ),
+      'socialmedia_socialmedia-newsvine-share-button' => array(
+        'name' => 'socialmedia_socialmedia-newsvine-share-button',
+      ),
+      'socialmedia_socialmedia-reddit-share-button' => array(
+        'name' => 'socialmedia_socialmedia-reddit-share-button',
+      ),
+      'socialmedia_socialmedia-technorati-share-button' => array(
+        'name' => 'socialmedia_socialmedia-technorati-share-button',
+      ),
+      'socialmedia_socialmedia-yahoo-share-button' => array(
+        'name' => 'socialmedia_socialmedia-yahoo-share-button',
+      ),
     ),
   );
-  $elements['addthis'] = array(
-      'twitter' => array(
+  /*
+  $elements['standard_counters'] = array(
+    'name' => t('Standard counters'),
+    'elements' => array(
+      'stubleupon' => array(
+        'name' => 'socialmedia_stumbleupon-badge',
+      ),
+    ),
+  );
+  */
+  $elements['addthis_counters'] = array(
+    'name' => t('AddThis counters'),
+    'elements' => array(
+      'socialmedia_addthis-tweet' => array(
         'name' => 'socialmedia_addthis-tweet',
         'data' => array('count' => ' tw:count="vertical"'),
       ),
-      'facebook' => array(
+      'socialmedia_addthis-facebook-like' => array(
         'name' => 'socialmedia_addthis-facebook-like',
         'data' => array('layout' =>  ' fb:like:layout="box_count"'),
       ),
-      'googleplus' => array(
+      'socialmedia_addthis-google-plusone' => array(
         'name' => 'socialmedia_addthis-google-plusone',
         'data' => array('size' => ' g:plusone:size="tall"'),
       ),
-      'addthis' => array(
+      'socialmedia_addthis-addthis-counter' => array(
         'name' => 'socialmedia_addthis-addthis-counter',
         'data' => array(),
-      ),  
+      ),
+    ),  
   );
   return $elements;
 }
 
 function socialmedia_widgets_set_share_default() {
-  $elements = socialmedia_widgets_set_share_default_elements();
+  //$elements = socialmedia_widgets_set_share_default_elements();
+  $elements = variable_get('socialmedia_widget_set_default_share', array());
   
   $set = array(
     'data' => array(
@@ -733,7 +753,9 @@ function socialmedia_widgets_set_share_default() {
     ),
     'elements' => array(),
   );
-  foreach ($elements['basic'] AS $key => $element) {
+  $i=1;
+  foreach ($elements AS $key => $element) {
+    $element['weight'] = $i++;
     $set['elements'][] = $element;
   }
   return $set;

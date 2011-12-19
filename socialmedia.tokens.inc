@@ -124,8 +124,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
         $platform = socialmedia_platform_definition_load($platform_name);
 
         $replacement = call_user_func($platform['tokens callback'], $hash, $profile);
-        if (!$replacement) {
-
+        if (!isset($replacement) || $replacement === FALSE) {
 			    $msg = t('You are trying to use a social media %platform profile token but the profile has not been set. !link',
 			      array(
 			        '%platform' => $platform['title'],

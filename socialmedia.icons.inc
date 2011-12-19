@@ -41,23 +41,23 @@ function socialmedia_icon_platforms($featured = FALSE) {
     'facebook' => t('Facebook'),
     'flickr' => t('Flikr'),
     //'furl' => t('Furl'),
-    //'google' => t('Google'),
+    'google' => t('Google'),
     'googleplus' => t('Google+'),
     'lastfm' => t('Last.fm'),
     'linkedin' => t('LinkedIn'),
     //'misterwong' => t('Mister Wong'),
     //'mixx' => t('Mixx'),
     //'myspace' => t('MySpace'),
-    //'newsvine' => t('Newsvine'),
+    'newsvine' => t('Newsvine'),
     'reddit' => t('Reddit'),
     'rss' => t('RSS'),
     //'slashdot' => t('Slashdot'),
     'slideshare' => t('Slideshare'),
     'stumbleupon' => t('StumbleUpon'),
-    //'technorati' => t('Technorati'),
+    'technorati' => t('Technorati'),
     'twitter' => t('Twitter'),
     'vimeo' => t('Vimeo'),
-    //'yahoo' => t('Yahoo!'),
+    'yahoo' => t('Yahoo!'),
     'youtube' => t('YouTube'),
   );
   
@@ -72,16 +72,20 @@ function socialmedia_icon_platforms($featured = FALSE) {
 
 function socialmedia_iconset_info() {
   $icons['levelten_glossy'] = array(
-    'name' => 'LevelTen glossy',
+    'name' => 'LevelTen Glossy',
+    'publisher' => 'LevelTen Interactive',
+    'publisher url' => 'http://www.leveltendesign.com',
     'styles' => array(
       '16x16' => '16x16',
       '32x32' => '32x32', 
       '48x48' => '48x48', 
     ),
-    'path callback' => 'socialmedia_icon_path_levelten_glossy', 
+    'path callback' => 'socialmedia_icon_path_levelten_glossy',
   );
   $icons['icondock'] = array(
-    'name' => 'Icon Dock',
+    'name' => 'Icon Dock Vector',
+    'publisher' => 'Icon Dock',
+    'publisher url' => 'http://icondock.com',
     'styles' => array(
       '16px' => '16x16',
       '24px' => '24x24',
@@ -91,7 +95,9 @@ function socialmedia_iconset_info() {
     'download' => 'http://icondock.com/free/vector-social-media-icons',
   );
   $icons['dryicons'] = array(
-    'name' => 'dryicons',
+    'name' => 'DryIcons Social',
+    'publisher' => 'DryIcons',
+    'publisher url' => 'http://dryicons.com',
     'styles' => array(
       '16x16' => '16x16',
       '24x24' => '24x24',
@@ -107,7 +113,9 @@ function socialmedia_iconset_info() {
     )
   );
   $icons['instantshift'] = array(
-    'name' => 'instantshift',
+    'name' => 'SocialShift',
+    'publisher' => 'instantShift',
+    'publisher url' => 'http://www.instantshift.com',
     'styles' => array(
       '16' => '16x16',
       '32' => '32x32',
@@ -117,7 +125,9 @@ function socialmedia_iconset_info() {
     'download' => 'http://www.instantshift.com/2010/12/07/socialshift-icon-set-246-free-social-networking-icons/',
   );
   $icons['jankoatwarpspeed'] = array(
-    'name' => 'jankoatwarpspeed',
+    'name' => 'Handycons',
+    'publisher' => 'Janko at Warp Speed',
+    'publisher url' => 'http://www.jankoatwarpspeed.com',  
     'styles' => array(
       '16x16' => '16x16',
       '32x32' => '32x32',
@@ -131,7 +141,9 @@ function socialmedia_iconset_info() {
     ),
   );
   $icons['ristaumedia'] = array(
-    'name' => 'ristaumedia',
+    'name' => 'ristaumedia Social Media',
+    'publisher' => 'ristaumedia',
+    'publisher url' => 'http://ristaumedia.deviantart.com', 
     'styles' => array(
       '32x32' => '32x32',
     ),
@@ -139,7 +151,9 @@ function socialmedia_iconset_info() {
     'download' => 'http://ristaumedia.deviantart.com/art/Social-Media-Icons-Volume-3-268850170',
   );
   $icons['theg-force'] = array(
-    'name' => 'TheG-Force',
+    'name' => 'Hand Drawn',
+    'publisher' => 'TheG-Force',
+    'publisher url' => 'http://theg-force.deviantart.com/', 
     'styles' => array(
       '24x24' => '24x24',
       '32x32' => '32x32',
@@ -150,7 +164,9 @@ function socialmedia_iconset_info() {
     'download' => 'http://theg-force.deviantart.com/art/Social-Icons-hand-drawned-109467069',
   );
   $icons['arbent/clean'] = array(
-    'name' => 'arbent/clean',
+    'name' => 'Social Media Circles (clean)',
+    'publisher' => 'Ar-bent-ing',
+    'publisher url' => 'http://arbent.net',  
     'styles' => array(
       '32x32' => '32x32',
       '64x64' => '64x64', 
@@ -160,7 +176,9 @@ function socialmedia_iconset_info() {
     'download' => 'http://arbent.net/blog/social-media-circles-icon-set',
   );
   $icons['arbent/grunge'] = array(
-    'name' => 'arbent/grunge',
+    'name' => 'Social Media Circles (grunge)',
+    'publisher' => 'Ar-bent-ing',
+    'publisher url' => 'http://arbent.net',  
     'styles' => array(
       '32x32' => '32x32',
       '64x64' => '64x64', 
