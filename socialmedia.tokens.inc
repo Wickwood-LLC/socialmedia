@@ -154,7 +154,7 @@ function socialmedia_icon_tokens($platform_name, $hash) {
     $s = $b[1];
   }
   else {
-    $s = variable_get('socialmedia_icon_default_style', '');
+    $s = variable_get('socialmedia_icon_default_style', SOCIALMEDIA_ICON_DEFAULT_STYLE_DEFAULT);
   }
   if (!$s) {
     $msg = t('You are trying to use a social media icon token but no default icon style has been set. !link',

@@ -9,9 +9,9 @@
 /*
  * TODO: finish wizard
  */
-function socialmedia_admin_setup($step = 1) {
+function socialmedia_admin_setup($step = 0) {
   if (!$step) {
-    $step = 1;
+    $step = 0;
   }
   $output = render(drupal_get_form('socialmedia_setup_' . $step .'_form'));
   return $output;
@@ -22,7 +22,7 @@ function socialmedia_admin_setup($step = 1) {
  * @param $form
  * @param $form_state
  */
-function socialmedia_admin_setup_1_form($form, &$form_state) {
+function socialmedia_admin_setup_0_form($form, &$form_state) {
   $form = array();
   $output = '';
   
@@ -32,7 +32,7 @@ function socialmedia_admin_setup_1_form($form, &$form_state) {
     );
   }
   else {
-    drupal_goto('admin/config/media/socialmedia/setup/2');
+    drupal_goto('admin/config/media/socialmedia/setup/1');
   }
   
   return $form;
@@ -42,9 +42,8 @@ function socialmedia_admin_setup_1_form($form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function socialmedia_setup_2_form($form, $form_state) {
+function socialmedia_setup_1_form($form, $form_state) {
   require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.admin.inc');
-  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.tokens.inc');
   drupal_set_title(t('Social media profiles setup'));
   $instructions = <<<EOF
 <p>The first step is to setup your social media profiles. The social media module supports several platforms such as Twitter, Facebook and Google+. If you already have accounts enter them below. If you have not setup any social media profiles yet or want to create additional ones, follow the homepage links below to create accounts. 
@@ -63,29 +62,18 @@ EOF;
   $fields = socialmedia_admin_profiles_form($form, $form_state, 'site', NULL, TRUE);
 dsm($fields);
   unset($fields['Widget platforms']);
-  foreach ($fields AS $key => $field) {
-    if (isset($platforms[$key])) {
-      $f = array();
-      $imgvars = array(
-        'path' => socialmedia_icon_tokens($key, ''),
-      );
-      $f['input_' . $key . '_enabled'] = array(
-        '#type' => 'checkbox',
-        '#field_prefix' => theme('image', $imgvars),
-        '#title' =>  t('Include @platform in default profile widget set. (If @platform URL provided below.)', array('@platform' => $field['#title'])),
-        '#return_value' => $key,  
-        '#default_value' => $key,    
-      );
-      $form[$key] = array_merge($f, $field);
-    }
-  }
+  $fields['submit']['#value'] = t('Save profiles');
+  
+  
+  $form= array_merge($form, $fields);
+  
   $form['#validate'][] = 'socialmedia_admin_profiles_form_validate';
   $form['#submit'][] = 'socialmedia_setup_2_form_submit';
 
   return $form;
 }
 
-function socialmedia_setup_2_form_submit($form, $form_state) {
+function socialmedia_setup_1_form_submit($form, $form_state) {
   $values = $form_state['values'];
 //dsm($values);
   $platforms = socialmedia_socialmedia_platform_info();
@@ -110,6 +98,38 @@ function socialmedia_setup_2_form_submit($form, $form_state) {
   socialmedia_admin_profiles_form_submit($form, $form_state);
 
   // clear widgets set cache so profile_default updates
+  cache_clear_all('widgets_sets', 'cache');
+  return 'OK';
+}
+
+/**
+ * Select social media profiles
+ * @param $form
+ * @param $form_state
+ */
+function socialmedia_setup_2_form($form, $form_state) {
+  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.admin.inc');
+  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.tokens.inc');
+  drupal_set_title(t('Social media profile widget setup'));
+
+  $fields = socialmedia_admin_profile_widgets_form($form, $form_state);
+  $form = array_merge($form, $fields); 
+
+  return $form;
+}
+
+function socialmedia_setup_2_form_submit($form, $form_state) {
+  $values = $form_state['values'];
+dsm($values);
+  $enabled = array();
+  foreach ($values AS $key => $value) {
+    if (strpos($key, 'input_') === 0) {
+      list($a, $platform) = explode('_', $key, 2);
+      $enabled[$platform] = $value;
+    }
+  }
+  variable_set('socialmedia_widget_set_default_profile', $enabled);  
+
   cache_clear_all('widgets_sets', 'cache');
   return 'OK';
 }

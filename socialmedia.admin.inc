@@ -119,7 +119,7 @@ function socialmedia_admin_settings() {
   $form['iconsets']['socialmedia_icon_default_style'] = array(
     '#type' => 'select',
     '#title' => t('Default icon style'),
-    '#default_value' => variable_get('socialmedia_icon_default_style', ''),
+    '#default_value' => variable_get('socialmedia_icon_default_style', SOCIALMEDIA_ICON_DEFAULT_STYLE_DEFAULT),
   //'#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
     '#options' => $options,
   );
@@ -335,5 +335,70 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
     widgets_clear_widgets_cache('*', TRUE);
   }
 
+  return 'OK';
+}
+
+function socialmedia_admin_profile_widgets_form($form, $form_state) {
+  require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.tokens.inc');
+  drupal_set_title(t('Social media profile widget'));
+
+  $instructions = t('The profile widget provides a set of buttons that link to your social profiles. Check each platform you want displayed in your default profile widget set. You can edit and change the sort order later.');
+
+  $instructions2 = t('Only platforms that you have entered profile information for can be enabled. To enable additional profiles, !profiles_link. To place the widget set on your site and for additional configuration settings, !widget_link.',
+    array(
+      '!profiles_link' => l(t('visit the profile settings page'), 'admin/config/media/socialmedia/profiles'),
+      '!widget_link' => l(t('visit the profile widget set configuration page'), 'admin/structure/widgets/sets/edit/socialmedia_profile-default'),
+    )
+  
+  );
+
+  $form['instructions'] = array(
+    '#markup' => '<p>' . $instructions . '</p>',
+  );
+  $form['instructions2'] = array(
+    '#markup' => '<p>' . $instructions2 . '</p>',
+  ); 
+  $form['setup_mode'] = array(
+    '#type' => 'value',
+    '#value' => 1,
+  );  
+  
+  $profiles = variable_get('socialmedia_platforms_site' , array());
+  $platforms = socialmedia_socialmedia_platform_info();
+  $defaults = variable_get('socialmedia_widget_set_default_profile', NULL); 
+  foreach ($profiles AS $key => $profile) {
+    if ($profile && !isset($platforms[$key]['group'])) {
+      $imgvars = array(
+        'path' => socialmedia_icon_tokens($key, ''),
+      );
+      $form['input_' . $key] = array(
+        '#type' => 'checkbox',
+        '#field_prefix' => theme('image', $imgvars),
+        '#title' =>  t('Include @platform profile link.', array('@platform' => $platforms[$key]['title'])),
+        '#return_value' => $key,  
+        '#default_value' => !isset($defaults[$key]) ? $key : (($defaults[$key]) ? $key : 0),    
+      );
+    }
+  }
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save profile widget buttons'),
+  );  
+
+  return $form;
+}
+
+function socialmedia_admin_profile_widgets_form_submit($form, $form_state) {
+  $values = $form_state['values'];
+  $enabled = array();
+  foreach ($values AS $key => $value) {
+    if (strpos($key, 'input_') === 0) {
+      list($a, $platform) = explode('_', $key, 2);
+      $enabled[$platform] = $value;
+    }
+  }
+  variable_set('socialmedia_widget_set_default_profile', $enabled);  
+
+  cache_clear_all('widgets_sets', 'cache');
   return 'OK';
 }

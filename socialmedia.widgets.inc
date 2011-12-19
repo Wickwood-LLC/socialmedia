@@ -650,9 +650,11 @@ function socialmedia_widgets_set_profile_default() {
     ),
     'elements' => array(),
   );
+  $enabled = variable_get('socialmedia_widget_set_default_profile', NULL);  
   $i = 1;
   foreach ($profiles AS $key => $profile) {
-    if ($profile && !isset($platforms[$key]['group'])) {
+    // include button if profile data set, and $enabled is not set or is enabled
+    if ($profile && !isset($platforms[$key]['group']) && (!isset($enabled) || $enabled[$key])) {
       $set['elements'][] = array(
         'name' => 'socialmedia_socialmedia-' . $key . '-profile-button',
         'data' => array(),
