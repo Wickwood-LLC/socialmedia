@@ -25,13 +25,20 @@ function socialmedia_admin_setup($step = 0) {
 function socialmedia_setup_0_form($form, &$form_state) {
   $form = array();
   $output = '';
+  $enabled = FALSE;
   
-  if (!module_exists('widgets')) {
+  if (!module_exists('widgets') && (!$enabled = module_enable(array('widgets')))) {
     $output = t('In order to setup Social media you need to !install.',
       array('!install' => l(t('install the Widgets module'), 'admin/modules'))
     );
   }
   else {
+    // check if module was just enabled, clear menu cache if yes
+    if ($enabled) {
+      menu_rebuild(TRUE);
+      menu_cache_clear_all();
+      cache_clear_all('theme_registry', 'cache', TRUE);
+    }
     drupal_goto('admin/config/media/socialmedia/setup/1');
   }
   
@@ -99,6 +106,7 @@ function socialmedia_setup_1_form_submit($form, $form_state) {
 
   // clear widgets set cache so profile_default updates
   cache_clear_all('widgets_sets', 'cache');
+
   drupal_set_message(t('Profile information has been saved.'));
   drupal_goto('admin/config/media/socialmedia/setup/2');
 }
@@ -109,6 +117,7 @@ function socialmedia_setup_1_form_submit($form, $form_state) {
  * @param $form_state
  */
 function socialmedia_setup_2_form($form, &$form_state) {
+  cache_clear_all('set:socialmedia_profile-default', 'cache_widgets');
   require_once(drupal_get_path('module', 'socialmedia') . '/socialmedia.admin.inc');
   drupal_set_title(t('Social media profile widget setup'));
 
