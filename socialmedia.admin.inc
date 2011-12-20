@@ -371,22 +371,32 @@ function socialmedia_admin_profile_widgets_form($form, $form_state) {
   $form['setup_mode'] = array(
     '#type' => 'value',
     '#value' => 1,
-  );  
+  );
+  $form['#tree'] = TRUE;  
   
-  $profiles = variable_get('socialmedia_platforms_site' , array());
-  $platforms = socialmedia_socialmedia_platform_info();
-  $defaults = variable_get('socialmedia_widget_set_default_profile', NULL); 
-  foreach ($profiles AS $key => $profile) {
-    if ($profile && !isset($platforms[$key]['group'])) {
-      $imgvars = array(
-        'path' => socialmedia_icon_tokens($key, ''),
+  $defs = socialmedia_widgets_set_profile_default_elements();
+  $set = variable_get('socialmedia_widget_set_default_profile', socialmedia_widgets_set_profile_default());
+  foreach ($defs AS $group => $defs2) {
+    $form[$group] = array(
+      '#type' => 'fieldset',
+      '#title' => $defs2['name'],
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+    );       
+    foreach ($defs2['elements'] AS $key => $element) {
+      $def = widgets_element_definition_load($element['name']);
+      if (isset($element['data'])) {
+        $def['data'] = $element['data']; 
+      }
+      $vars = array(
+        'element' => $def,
       );
-      $form['input_' . $key] = array(
+      $form[$group][$element['name']] = array(
         '#type' => 'checkbox',
-        '#field_prefix' => theme('image', $imgvars),
-        '#title' =>  t('Include @platform profile link.', array('@platform' => $platforms[$key]['title'])),
-        '#return_value' => $key,  
-        '#default_value' => !isset($defaults[$key]) ? $key : (($defaults[$key]) ? $key : 0),    
+        '#field_prefix' => theme('widgets_element_view', $vars),
+        '#title' =>  t('Include @widget.', array('@widget' => $def['label'])),
+        '#return_value' => $element['name'],  
+        '#default_value' => socialmedia_element_in_set($element, $set) ? $key : 0,    
       );
     }
   }
@@ -400,17 +410,26 @@ function socialmedia_admin_profile_widgets_form($form, $form_state) {
 
 function socialmedia_admin_profile_widgets_form_submit($form, $form_state) {
   $values = $form_state['values'];
-  $enabled = array();
-  foreach ($values AS $key => $value) {
-    if (strpos($key, 'input_') === 0) {
-      list($a, $platform) = explode('_', $key, 2);
-      $enabled[$platform] = $value;
+  $defs = socialmedia_widgets_set_profile_default_elements();
+  $set = widgets_set_load('socialmedia_profile-default');
+  $set['elements'] = array();
+
+  $i = 1;
+  foreach ($values AS $group => $elements) {
+    if (isset($defs[$group])) {
+      foreach ($elements AS $key => $v) {
+        if ($v) {
+          $element = $defs[$group]['elements'][$key];
+          $element += widgets_element_definition_load($key);
+          $element['weight'] = $i++;
+          $set['elements'][] = $element;
+        }
+      }
     }
   }
-  variable_set('socialmedia_widget_set_default_profile', $enabled);  
+  variable_set('socialmedia_widget_set_default_profile', $set);  
 
   cache_clear_all('widgets_sets', 'cache');
-  drupal_set_message(t('Default profile widget set settings have been saved.'));
   return 'OK';
 }
 
@@ -440,11 +459,7 @@ function socialmedia_admin_share_widgets_form($form, $form_state) {
   $form['#tree'] = TRUE;
   
   $share_defs = socialmedia_widgets_set_share_default_elements();
-  $definitions = socialmedia_widgets_element_info();
-dsm($definitions);
-  $defaults = variable_get('socialmedia_widget_set_default_share', NULL); 
-//dsm($definitions);
-//dsm($defaults);
+  $set = variable_get('socialmedia_widget_set_default_share', socialmedia_widgets_set_share_default());
   foreach ($share_defs AS $group => $share_defs2) {
     $form[$group] = array(
       '#type' => 'fieldset',
@@ -463,9 +478,9 @@ dsm($definitions);
       $form[$group][$element['name']] = array(
         '#type' => 'checkbox',
         '#field_prefix' => theme('widgets_element_view', $vars),
-        '#title' =>  t('Include @widget.', array('@widget' => $definitions[$element['name']]['label'])),
+        '#title' =>  t('Include @widget.', array('@widget' => $def['label'])),
         '#return_value' => $element['name'],  
-        '#default_value' => isset($defaults[$key]) ? $key : 0,    
+        '#default_value' => socialmedia_element_in_set($element, $set) ? $key : 0,    
       );
     }
   }
@@ -479,24 +494,38 @@ dsm($definitions);
 
 function socialmedia_admin_share_widgets_form_submit($form, $form_state) {
   $values = $form_state['values'];
-  $share_defs = socialmedia_widgets_set_share_default_elements();
-  $definitions = socialmedia_widgets_element_info();
-//dsm($values);
-//dsm($share_defs);
+  $defs = socialmedia_widgets_set_share_default_elements();
+  $set = widgets_set_load('socialmedia_share-default');
+  $set['elements'] = array();
 
-  $vars = array();
+  $i = 1;
   foreach ($values AS $group => $elements) {
-    if (isset($share_defs[$group])) {
+    if (isset($defs[$group])) {
       foreach ($elements AS $key => $v) {
         if ($v) {
-          $vars[$key] = $share_defs[$group]['elements'][$key];
+          $element = $defs[$group]['elements'][$key];
+          $element += widgets_element_definition_load($key);
+          $element['weight'] = $i++;
+          $set['elements'][] = $element;
         }
       }
     }
   }
-//dsm($vars);
-  variable_set('socialmedia_widget_set_default_share', $vars);  
+  variable_set('socialmedia_widget_set_default_share', $set);  
 
   cache_clear_all('widgets_sets', 'cache');
   return 'OK';
+}
+
+function socialmedia_element_in_set($element, $set) {
+//dsm($element);
+//dsm($set);
+  if (is_array($set['elements'])) {
+    foreach ($set['elements'] AS $e) {
+      if ($element['name'] == $e['name']) {
+        return TRUE;
+      }
+    }  
+  }
+  return FALSE;  
 }

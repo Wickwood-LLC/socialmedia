@@ -640,29 +640,45 @@ function socialmedia_widgets_element_alter_stumbleupon_badge(&$form, $set, $elem
   return $form;
 }
 
-function socialmedia_widgets_set_profile_default() {
-  $profiles = variable_get('socialmedia_platforms_site' , array());
-  $platforms = socialmedia_socialmedia_platform_info();
-  $set = array(
-    'data' => array(
-      'style' => 'plain-linebreaks',
-      'cache' => array('scope' => 'author'),
-    ),
+function socialmedia_widgets_set_profile_default_elements() {
+  $elements = array();
+  $elements['basic'] = array(
+    'name' => t('Basic'),
     'elements' => array(),
   );
-  $enabled = variable_get('socialmedia_widget_set_default_profile', NULL);  
-  $i = 1;
+  $profiles = variable_get('socialmedia_platforms_site' , array());
+  $platforms = socialmedia_socialmedia_platform_info();
   foreach ($profiles AS $key => $profile) {
-    // include button if profile data set, and $enabled is not set or is enabled
     if ($profile && !isset($platforms[$key]['group']) && (!isset($enabled) || $enabled[$key])) {
-      $set['elements'][] = array(
-        'name' => 'socialmedia_socialmedia-' . $key . '-profile-button',
-        'data' => array(),
-        'weight' => $i++,
+      $name = 'socialmedia_socialmedia-' . $key . '-profile-button';
+      $elements['basic']['elements'][$name] = array(
+        'name' => $name,
       );    
     }
   }
-  return $set;
+  return $elements;
+}
+
+function socialmedia_widgets_set_profile_default() {
+  $set = variable_get('socialmedia_widget_set_default_profile', NULL);
+  if ($set) {
+    return $set;
+  }
+  $elements = socialmedia_widgets_set_profile_default_elements();
+  $set = array(
+    'data' => array(
+      'style' => 'horizontal',
+      'cache' => array('scope' => 'site'),
+    ),
+    'elements' => array(),
+  );
+  $i=1;
+  foreach ($elements['basic']['elements'] AS $key => $element) {
+    $element += widgets_element_definition_load($key);
+    $element['weight'] = $i++;
+    $set['elements'][] = $element;
+  }
+  return $set;  
 }
 
 function socialmedia_widgets_set_share_default_elements() {
@@ -743,9 +759,13 @@ function socialmedia_widgets_set_share_default_elements() {
 }
 
 function socialmedia_widgets_set_share_default() {
-  //$elements = socialmedia_widgets_set_share_default_elements();
-  $elements = variable_get('socialmedia_widget_set_default_share', array());
   
+  $set = variable_get('socialmedia_widget_set_default_share', NULL);
+  if ($set) {
+    return $set;
+  }
+  
+  $elements = socialmedia_widgets_set_share_default_elements();
   $set = array(
     'data' => array(
       'style' => 'horizontal',
@@ -754,7 +774,8 @@ function socialmedia_widgets_set_share_default() {
     'elements' => array(),
   );
   $i=1;
-  foreach ($elements AS $key => $element) {
+  foreach ($elements['basic']['elements'] AS $key => $element) {
+    $element += widgets_element_definition_load($key);
     $element['weight'] = $i++;
     $set['elements'][] = $element;
   }

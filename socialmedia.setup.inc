@@ -243,7 +243,7 @@ function socialmedia_setup_4_form($form, $form_state) {
   );
 
   $types = node_type_get_types();
-
+  $set = widgets_set_load($set_name);
   $form['share_set']['share_content_types'] = array(
     '#type' => 'fieldset',
     '#title' => t('Content types'),
@@ -256,17 +256,16 @@ function socialmedia_setup_4_form($form, $form_state) {
     'links_teaser' => 'Teaser',   
   );
   foreach ($types AS $typename => $type) {
-    $form['share_set']['share_content_types'][$typename] = array(
+    $form['share_set']['share_content_types']['contenttype_' . $typename] = array(
       '#type' => 'checkboxes',
       '#title' => $type->name,
       '#options' => $options,
-      //'#default_value' => isset($data['visibility']['content_types'][$typename]) ? $data['visibility']['content_types'][$typename] : array(),
+      '#default_value' => isset($set['data']['visibility']['content_types'][$typename]) ? $set['data']['visibility']['content_types'][$typename] : array(),
     ); 
   }  
   $form['share_set']['settings1'] = array(
     '#markup' => '</div>',
-  );
-  
+  );  
   
   $form['facebook_set'] = array(
     '#type' => 'fieldset',
@@ -365,7 +364,7 @@ function socialmedia_setup_4_form($form, $form_state) {
 
 function socialmedia_setup_4_form_submit($form, $form_state) {
   $values = $form_state['values'];
-
+  // update block settings
   $blocks = array();
   $blocks[$values['profile_set_name']] = $values['profile_block'];
   $blocks[$values['share_set_name']] = $values['share_block'];
@@ -384,6 +383,19 @@ function socialmedia_setup_4_form_submit($form, $form_state) {
 //dsm(' ' . $query);
     $query->execute(); 
   }
+  
+  // Update node links settings
+  $set = variable_get('socialmedia_widget_set_default_share', socialmedia_widgets_set_share_default());
+  foreach ($values AS $key => $value) {
+    if (strpos($key, 'contenttype_') === 0) {
+      list($a, $type) = explode('_', $key, 2);
+      $set['data']['visibility']['content_types'][$type] = $value;
+    }
+  }
+  variable_set('socialmedia_widget_set_default_share', $set);
+
+  cache_clear_all('widgets_sets', 'cache');
+
   drupal_set_message(t('Widget set placement has been saved.'));
   drupal_goto('');
 }
