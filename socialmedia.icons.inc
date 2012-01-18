@@ -71,6 +71,21 @@ function socialmedia_icon_platforms($featured = FALSE) {
 }
 
 function socialmedia_iconset_info() {
+  $iconsets = &drupal_static(__FUNCTION__);
+
+  // Grab from cache or build the array.
+  if (isset($iconsets)) {
+    return $iconsets; 
+  }
+  $iconsets = array();
+  $iconsets = module_invoke_all('socialmedia_iconset_info');
+
+  drupal_alter('socialmedia_iconset_info', $iconsets);
+
+  return $iconsets; 
+}
+
+function socialmedia_socialmedia_iconset_info() {
   $icons['levelten_glossy'] = array(
     'name' => 'LevelTen Glossy',
     'publisher' => 'LevelTen Interactive',

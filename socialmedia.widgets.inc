@@ -262,12 +262,9 @@ function socialmedia_base_platforms() {
 }
 
 function socialmedia_widgets_share_platforms_form($data) {
-//dsm($data);
   $form = widgets_template_auto_form($data);
 
   $element = widgets_element_load_by_admin_path();
-//dsm($form);
-//dsm($element);
   if (isset($form['icon-path'])) {
     $options = socialmedia_icon_style_options(TRUE, $element['platform']);
     $form['icon-path'] = array(
@@ -284,7 +281,6 @@ function socialmedia_widgets_share_platforms_form($data) {
 
 
 function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
-//dsm($element);
   if($element['name'] == 'socialmedia_addthis-addthis-counter') {
     socialmedia_widgets_element_alter_addthis_addthis_counter($form, $set, $element);
   }
@@ -414,7 +410,7 @@ function socialmedia_widgets_element_addthis_tweet() {
   $elements['socialmedia_addthis-tweet'] = array(
     'label' => t('Addthis tweet button'),
     'group' => t('Social media: Twitter'),
-    'template' => '<a class="addthis_button_tweet"[?count=?] [?via=tw:via="@{[socialmedia:sm-twitter_amp-username]}"?]></a>',
+    'template' => '<a class="addthis_button_tweet"[?count=?] [?via=tw:via="{[socialmedia:sm-twitter_username]}"?]></a>',
     'add_js' => array(
       'data' => $addthis_js,
       'options' => array(
