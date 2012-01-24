@@ -344,8 +344,89 @@ function socialmedia_admin_profiles_form_submit($form, &$form_state) {
   if (module_exists('widgets')) {
     widgets_clear_widgets_cache('*', TRUE);
   }
+  // rebuild redirects if module exists
+  if (module_exists('redirect')) {
+  	socialmedia_update_redirects();
+  }
 
   return 'OK';
+}
+
+/**
+ * Builds and returns the socialmedia settings form.
+ */
+function socialmedia_admin_redirects_form($form, &$form_state, $context = 'site', $user = NULL, $setup_mode = FALSE) {
+
+  $uid = (is_object($user)) ? $user->uid : 0;
+
+  $platforms = socialmedia_platform_definitions();
+  $defaults = array_keys($platforms);
+
+  $active_platforms = variable_get('socialmedia_platforms_' . (($user) ? 'user' : 'site'), $defaults);
+  $form['context'] = array(
+    '#type' => 'value',
+    '#value' => $context,
+  );
+  
+  $form['uid'] = array(
+    '#type' => 'value',
+    '#value' => $uid,
+  );
+  
+  $instructions = t('The form allow you to enable and configure urls on your site that will automatically redirect to your socal media profiles.');
+  $form['instructions'] = array(
+    '#markup' => $instructions,
+  );
+  
+  $platform_options = array();
+  foreach ($platforms AS $name => $platform) {
+    if ((!isset($active_platforms[$name]) || !$active_platforms[$name]) && !$setup_mode) {
+      continue;
+    }
+    $fields = array();
+    $platform_options[$name] = $platform['title'];   
+    
+    // check if custom form callback, else use default form fields
+    if (isset($platform['form callback'])) {
+      $fields[$name] = array_merge($fields[$name], call_user_func($platform['form callback'], $profile)); 
+    }
+    else {
+      $default_description = t('Enter the URL to your @platform profile. To create an account on @platform visit !homepage', 
+        array(
+          '@platform' => $platform['title'],
+          '!homepage' => l($platform['homepage'], $platform['homepage'], array('attributes' => array('target' => '_blank'))),
+        )
+      );
+      $fields['paths']['input_' . $name . '_path'] = array(
+        '#type' => 'textfield',
+        '#title' => $platform['title'] . ' URL',
+        '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : '',
+        '#description' => isset($platform['profile url']) ? $platform['profile description url'] : $default_description,
+        '#size' => 80,
+      );
+    }
+    if (isset($platform['group'])) {
+      if (!isset($form[$platform['group']])) {
+        $form[$platform['group']] = array(
+          '#type' => 'fieldset',
+          '#title' => $platform['group'],
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+        );        
+      }
+      $form[$platform['group']] = array_merge($form[$platform['group']], $fields);
+    }
+    else {
+      $form = array_merge($form, $fields);
+    }
+  }
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  
+  return $form;
 }
 
 function socialmedia_admin_profile_widgets_form($form, $form_state) {

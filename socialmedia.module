@@ -75,51 +75,66 @@ function socialmedia_menu() {
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/config/media/socialmedia/widgets'] = array(
-    'title' => 'Widgets',
-    'description' => 'Social media widget sets configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('socialmedia_admin_profile_widgets_form'),
-    'access arguments' => array('administer social media'),
-    'file' => 'socialmedia.admin.inc',
-    'file path' => drupal_get_path('module', 'socialmedia'),
-    'weight' => 1,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/media/socialmedia/widgets/profile'] = array(
-    'title' => 'Default profile set',
-    'description' => 'Social media default profile widget sets configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('socialmedia_admin_profile_widgets_form'),
-    'access arguments' => array('administer social media'),
-    'file' => 'socialmedia.admin.inc',
-    'file path' => drupal_get_path('module', 'socialmedia'),
-    'weight' => 0,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/media/socialmedia/widgets/share'] = array(
-    'title' => 'Default share set',
-    'description' => 'Social media default profile widget sets configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('socialmedia_admin_share_widgets_form'),
-    'access arguments' => array('administer social media'),
-    'file' => 'socialmedia.admin.inc',
-    'file path' => drupal_get_path('module', 'socialmedia'),
-    'weight' => 0,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/media/socialmedia/setup'] = array(
-    'title' => 'Setup wizard',
-    'description' => 'Setup wizard to help you get started quickly.',
-    'page callback' => 'socialmedia_admin_setup',
-    'page arguments' => array(5),
-    'access arguments' => array('administer social media'),
-    'file' => 'socialmedia.setup.inc',
-    'file path' => drupal_get_path('module', 'socialmedia'),
-    'weight' => 2,
-    'type' => MENU_LOCAL_ACTION,
-    //'type' => MENU_CALLBACK,
-  );
+  if (module_exists('redirect')) {
+	  $items['admin/config/media/socialmedia/redirects'] = array(
+	    'title' => 'Redirects',
+	    'description' => 'Social media profile configuration',
+	    'page callback' => 'drupal_get_form',
+	    'page arguments' => array('socialmedia_admin_redirect_form'),
+	    'access arguments' => array('administer social media'),
+	    'file' => 'socialmedia.admin.inc',
+	    'file path' => drupal_get_path('module', 'socialmedia'),
+	    'weight' => 2,
+	    'type' => MENU_LOCAL_TASK,
+	  );
+  }
+  if (module_exists('widgets')) {
+	  $items['admin/config/media/socialmedia/widgets'] = array(
+	    'title' => 'Widgets',
+	    'description' => 'Social media widget sets configuration',
+	    'page callback' => 'drupal_get_form',
+	    'page arguments' => array('socialmedia_admin_profile_widgets_form'),
+	    'access arguments' => array('administer social media'),
+	    'file' => 'socialmedia.admin.inc',
+	    'file path' => drupal_get_path('module', 'socialmedia'),
+	    'weight' => 3,
+	    'type' => MENU_LOCAL_TASK,
+	  );
+	  $items['admin/config/media/socialmedia/widgets/profile'] = array(
+	    'title' => 'Default profile set',
+	    'description' => 'Social media default profile widget sets configuration',
+	    'page callback' => 'drupal_get_form',
+	    'page arguments' => array('socialmedia_admin_profile_widgets_form'),
+	    'access arguments' => array('administer social media'),
+	    'file' => 'socialmedia.admin.inc',
+	    'file path' => drupal_get_path('module', 'socialmedia'),
+	    'weight' => 0,
+	    'type' => MENU_DEFAULT_LOCAL_TASK,
+	  );
+	  $items['admin/config/media/socialmedia/widgets/share'] = array(
+	    'title' => 'Default share set',
+	    'description' => 'Social media default profile widget sets configuration',
+	    'page callback' => 'drupal_get_form',
+	    'page arguments' => array('socialmedia_admin_share_widgets_form'),
+	    'access arguments' => array('administer social media'),
+	    'file' => 'socialmedia.admin.inc',
+	    'file path' => drupal_get_path('module', 'socialmedia'),
+	    'weight' => 0,
+	    'type' => MENU_LOCAL_TASK,
+	  );
+	  $items['admin/config/media/socialmedia/setup'] = array(
+	    'title' => 'Setup wizard',
+	    'description' => 'Setup wizard to help you get started quickly.',
+	    'page callback' => 'socialmedia_admin_setup',
+	    'page arguments' => array(5),
+	    'access arguments' => array('administer social media'),
+	    'file' => 'socialmedia.setup.inc',
+	    'file path' => drupal_get_path('module', 'socialmedia'),
+	    'weight' => 2,
+	    'type' => MENU_LOCAL_ACTION,
+	    //'type' => MENU_CALLBACK,
+	  );
+  }
   $items['user/%user/socialmedia'] = array(
     'title' => 'Social profiles',
     'description' => 'User social media profiles',
@@ -130,6 +145,19 @@ function socialmedia_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'socialmedia.admin.inc',
   );
+  /*
+  // add menu items for redirects
+  $platforms = socialmedia_platform_definitions();
+  $defaults = array_keys($platforms);
+  $active_platforms = variable_get('socialmedia_platforms_site_redirects', $defaults);
+  foreach ($platforms AS $name => $platform) {
+    if ((!isset($active_platforms[$name]) || !$active_platforms[$name]) || (!isset($platform['redirect path'])) {
+      continue;
+    }
+    $profile = socialmedia_profile_load($name);
+    
+  }
+  */
   $items['socialmedia/util'] = array(
     'title' => t('Social media util'),
     'page callback' => 'socialmedia_util',
@@ -147,9 +175,33 @@ function socialmedia_menu() {
 
 function socialmedia_util() {
 	
-  $str = 'some stuff [?bob=pre{default}post?] more stuff';
-  $str = 'data-width="[?width=[socialmedia:sm-default_width]?]" [?height=data-height="{[socialmedia:sm-default_width]}"?] data-show-faces';
-  $matches = widgets_field_scan($str, FALSE);
+  $platforms = socialmedia_platform_definitions();
+  $defaults = drupal_map_assoc(array_keys($platforms));
+dsm($defaults);
+  $active_platforms = variable_get('socialmedia_platforms_site_redirects', $defaults);
+
+  foreach ($platforms AS $name => $platform) {
+
+    if ((!isset($active_platforms[$name]) || !$active_platforms[$name]) || (!isset($platform['redirect path']))) {
+      continue;
+    }
+    $source = $platform['redirect path'];
+    $profile = socialmedia_profile_load($name);
+    if (!isset($profile['url'])) {
+    	continue;
+    }
+    if (!$redirect = redirect_load_by_source($source)) {
+	    $redirect = new stdClass();
+		  redirect_object_prepare($redirect, array(
+		    'source' => $source,
+		    'source_options' => array(),
+		    'redirect' => 'http://' . $profile['url'],
+		    'redirect_options' => array(),
+		    'language' => LANGUAGE_NONE,
+		  ));   
+    }
+	  redirect_save($redirect); 
+  }
 
   return '';
 }
@@ -292,4 +344,47 @@ function _socialmedia_widgets_set_error($element, $msg, $status = 'warning') {
       widgets_set_error($element);
     }
   }
+}
+
+function socialmedia_update_redirects($redirects = array(), $original_redirects = array()) {
+  if (!module_exists('redirect')) {
+  	return FALSE;
+  }
+	$platforms = socialmedia_platform_definitions();
+  $defaults = drupal_map_assoc(array_keys($platforms));
+  $active_platforms = variable_get('socialmedia_platforms_site_redirects', array());
+
+  foreach ($platforms AS $name => $platform) {
+  	$source = '';
+  	if ($active_platforms[$name]) {
+  		$source = $active_platforms[$name];
+  	}
+  	elseif ($platform['redirect path']) {
+  		$source = $platform['redirect path'];
+  	}
+    if (!$source) {
+      continue;
+    }
+    $source = $platform['redirect path'];
+    $profile = socialmedia_profile_load($name);
+    if (!isset($profile['url'])) {
+      continue;
+    }
+    
+    if ($redirect = redirect_load_by_source($source)) {
+      $redirect->source = $source;
+      $redirect->redirect = 'http://' . $profile['url'];
+    }
+    else {
+      $redirect = new stdClass();
+      redirect_object_prepare($redirect, array(
+        'source' => $source,
+        'source_options' => array(),
+        'redirect' => 'http://' . $profile['url'],
+        'redirect_options' => array(),
+        'language' => LANGUAGE_NONE,
+      ));   
+    }
+    redirect_save($redirect); 
+  }	
 }
