@@ -7,13 +7,14 @@
  */
 
 /*
- * TODO: finish wizard
+ * 
  */
 function socialmedia_admin_setup($step = 0) {
   if (!$step) {
     $step = 0;
   }
-  $output = render(drupal_get_form('socialmedia_setup_' . $step .'_form'));
+  $form = drupal_get_form('socialmedia_setup_' . $step . '_form');
+  $output = render($form);
   return $output;
 }
 
