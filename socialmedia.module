@@ -81,7 +81,7 @@ function socialmedia_menu() {
 	    'description' => 'Social media profile configuration',
 	    'page callback' => 'drupal_get_form',
 	    'page arguments' => array('socialmedia_admin_redirect_form'),
-	    'access arguments' => array('administer social media'),
+	    'access arguments' => FALSE, // TODO NOT IMPLEMENTED YET array('administer social media'),
 	    'file' => 'socialmedia.admin.inc',
 	    'file path' => drupal_get_path('module', 'socialmedia'),
 	    'weight' => 2,
@@ -352,14 +352,18 @@ function socialmedia_update_redirects($redirects = array(), $original_redirects 
   }
 	$platforms = socialmedia_platform_definitions();
   $defaults = drupal_map_assoc(array_keys($platforms));
-  $active_platforms = variable_get('socialmedia_platforms_site_redirects', array());
+  $active_platforms = variable_get('socialmedia_platforms_site_redirects_enabled', $defaults);
+  $sources = variable_get('socialmedia_platforms_site_redirects_source', array());
 
   foreach ($platforms AS $name => $platform) {
-  	$source = '';
-  	if ($active_platforms[$name]) {
-  		$source = $active_platforms[$name];
+  	if (!isset($active_platforms[$name]) && $active_platforms[$name]) {
+  		continue;
   	}
-  	elseif ($platform['redirect path']) {
+  	$source = '';
+  	if (isset($sources[$name])) {
+  		$source = $sources[$name];
+  	}
+  	elseif (isset($platform['redirect path'])) {
   		$source = $platform['redirect path'];
   	}
     if (!$source) {
