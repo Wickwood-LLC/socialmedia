@@ -75,13 +75,13 @@ function socialmedia_menu() {
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
   );
-  if (module_exists('redirect')) {
+  if (module_exists('redirect') && FALSE) {  // TODO not implemented yet
 	  $items['admin/config/media/socialmedia/redirects'] = array(
 	    'title' => 'Redirects',
 	    'description' => 'Social media profile configuration',
 	    'page callback' => 'drupal_get_form',
 	    'page arguments' => array('socialmedia_admin_redirect_form'),
-	    'access arguments' => FALSE, // TODO NOT IMPLEMENTED YET array('administer social media'),
+	    'access arguments' => array('administer social media'),
 	    'file' => 'socialmedia.admin.inc',
 	    'file path' => drupal_get_path('module', 'socialmedia'),
 	    'weight' => 2,
