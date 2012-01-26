@@ -112,6 +112,10 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
         	}
         	elseif (arg(0) == 'user' && is_numeric(arg(1))) {
         		$uid = menu_get_object('user', 1)->uid;
+        	} else {
+        	  // get user context through a hook call : return UID, or FALSE/NULL if not defined
+        	  $uid = module_invoke_all('socialmedia_get_context_uid');
+        	  $uid = empty($uid) ? NULL : $uid[0];  // takes the first value returned
         	}
         	if (isset($uid) && $uid) {
             $profile = socialmedia_profile_load($platform_name, $uid);
