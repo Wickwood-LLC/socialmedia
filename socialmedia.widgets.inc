@@ -36,6 +36,7 @@ function socialmedia_widgets_element_info() {
   
   // Facebook advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_facebook_like_box());
+  $elements = array_merge($elements, socialmedia_widgets_element_facebook_like_button());  // PVE 7/2/12
 
   // LinkedIn advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_linkedin_share_button());  
@@ -299,6 +300,9 @@ function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
   elseif ($element['name'] == 'socialmedia_facebook-like-box') {
     socialmedia_widgets_element_alter_facebook_like_box($form, $set, $element);
   }
+  elseif ($element['name'] == 'socialmedia_facebook-like-button') {  // PVE 7/2/12
+    socialmedia_widgets_element_alter_facebook_like_button($form, $set, $element);
+  }
   elseif ($element['name'] == 'socialmedia_linkedin-share-button') {
     socialmedia_widgets_element_alter_linkedin_share_button($form, $set, $element);
   }
@@ -526,6 +530,88 @@ function socialmedia_widgets_element_alter_facebook_like_box(&$form, $set, $elem
   $form['color_scheme']['#type'] = 'select';
   $form['color_scheme']['#options'] = $options;
   $form['color_scheme']['#description'] = t('The color scheme of the plugin');
+}
+
+// PVE 7/2/12 see http://developers.facebook.com/docs/reference/plugins/like/
+function socialmedia_widgets_element_facebook_like_button() {
+  $facebook_js_sdk = socialmedia_widgets_facebook_js_sdk();
+	$elements = array();
+	$elements['socialmedia_facebook-like-button'] = array(
+    'label' => t('Facebook like button'),
+    //'help' => t(''),
+    'group' => t('Social media: Facebook'),
+    'template' => '<div class="fb-like" data-href="[?facebook_page_url=[socialmedia:sm-facebook_url]?]" data-send="[?send_button=true?]" [?layout=data-layout="{<none>}"?] data-width="[?width=[socialmedia:sm-default_width]?]" data-show-faces="[?show_faces=true?]" [?action=data-action="{<none>}"?] data-colorscheme="[?color_scheme=light?]" [?font=data-font="{<none>}"?]></div>',
+    'add_js' => array(
+      'data' => $facebook_js_sdk,
+      'options' => array(
+        'scope' => 'set_pre', 
+        'type' => 'inline'
+      ),
+    ),
+    'form callback' => 'widgets_template_auto_form',
+  );
+  return $elements;
+}
+
+// PVE 7/2/12
+function socialmedia_widgets_element_alter_facebook_like_button(&$form, $set, $element) {
+  $form['facebook_page_url']['#description'] = t('The URL of the Facebook Page for this Like box. (example: http://www.facebook.com/platform) ') . $form['facebook_page_url']['#description'];
+
+  $options = array(
+    '<none>' => t('Standard (no count)'),
+    'button_count' => t('Button count'),
+    'box_count' => t('Box count'),
+  );
+  $form['layout']['#type'] = 'select';
+  $form['layout']['#options'] = $options;
+  $form['layout']['#description'] = t('Select button and count style');
+
+  
+  $options = array(
+    'true' => t('Yes'),
+    'false' => t('No'),
+  );
+  $fields = array(
+    'send_button',
+    'show_faces',
+  );
+  foreach ($fields AS $field) {
+    $form[$field]['#type'] = 'radios';
+    $form[$field]['#options'] = $options;
+  }
+  $form['send_button']['#description'] = t('Include a Send button');
+  $form['show_faces']['#description'] = t('Show profile photos in the plugin');
+  
+  $options = array(
+    '<none>' => t('Like'),
+    'recommend' => t('Recommend'),
+  );
+  $form['action']['#title'] = t('Verb to display');
+  $form['action']['#type'] = 'select';
+  $form['action']['#options'] = $options;
+  $form['action']['#description'] = t('The verb to display in the button');
+
+  $options = array(
+    '<none>' => t('Light'),
+    'dark' => t('Dark'),
+  );
+  $form['color_scheme']['#type'] = 'select';
+  $form['color_scheme']['#options'] = $options;
+  $form['color_scheme']['#description'] = t('The color scheme of the plugin');
+
+  $options = array(
+    '<none>' => t('Default'),
+    'arial' => 'arial',
+    'lucida grande' => 'lucida grande',
+    'segoe ui' => 'segoe ui',
+    'tahoma' => 'tahoma',
+    'trebuchet ms' => 'trebuchet ms',
+    'verdana' => 'verdana',
+  );
+  $form['font']['#type'] = 'select';
+  $form['font']['#options'] = $options;
+  $form['font']['#description'] = t('The font of the plugin');
+  
 }
 
 function socialmedia_widgets_element_linkedin_share_button() {
