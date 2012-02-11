@@ -107,6 +107,8 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
       	$profile = NULL;
       	// if token has user context, load the profiles for the user      	
         if ((($type == 'user') || ($type == 'socialmedia'))) {
+        	$uid = widgets_get_context_author_uid($data);
+        	/*
         	if ((arg(0) == 'node') && is_numeric(arg(1))) {        	
         	  $uid = menu_get_object()->uid;
         	}
@@ -116,7 +118,9 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
         	  // get user context through a hook call : return UID, or FALSE/NULL if not defined
         	  $uid = module_invoke_all('socialmedia_get_context_uid');
         	  $uid = empty($uid) ? NULL : $uid[0];  // takes the first value returned
+        	  
         	}
+        	*/
         	if (isset($uid) && $uid) {
             $profile = socialmedia_profile_load($platform_name, $uid);
         	}

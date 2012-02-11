@@ -452,7 +452,7 @@ function socialmedia_twitter_parser($values) {
   }
   $profile = array();
   $profile['url'] = $matches[2][0] . $matches[4][0];
-  $profile['username'] = (isset($values['username']) && $values['username']) ? $values['username'] : $matches[3][0];
+  $profile['username'] = (isset($values['username']) && $values['username']) ? $values['username'] : $matches[4][0];
  
   return $profile;
 }
