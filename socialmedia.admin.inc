@@ -52,7 +52,7 @@ function socialmedia_admin_settings() {
   
   $form['appearance'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Widget appearance'),
+    '#title' => t('Default widget appearance'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#description' => t('Default settings for widget appearance.'),
@@ -106,6 +106,48 @@ function socialmedia_admin_settings() {
     '#title' => t('Border color'),
     '#size' => 8,    
     '#default_value' => variable_get('socialmedia_default_color_border', SOCIALMEDIA_COLOR_BORDER_DEFAULT),
+  );
+  
+  $form['link_attributes'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Default link attributes'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Default settings link attributes.'),
+  );
+  $form['link_attributes']['socialmedia_default_link_target_profile'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Profile target'),
+    '#default_value' => variable_get('socialmedia_default_link_target_profile', SOCIALMEDIA_LINK_TARGET_PROFILE_DEFAULT),
+    '#description' => t('Sets the default target= attribute on profile widget links. Set to &lt;none&gt; to remove attribute.'),
+  );
+  $options = array(
+    '<none>' => t('Remove rel attribute'),
+    'nofollow' => t('Set rel="nofollow"'),
+  );
+  $form['link_attributes']['socialmedia_default_link_rel_profile'] = array(
+    '#type' => 'select',
+    '#title' => t('Profile rel'),
+    '#options' => $options,
+    '#default_value' => variable_get('socialmedia_default_link_target_profile', SOCIALMEDIA_LINK_REL_PROFILE_DEFAULT),
+    '#description' => t('Sets the default rel= attribute on profile widget links.'),
+  );
+  $form['link_attributes']['socialmedia_default_link_target_sharing'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Sharing target'),
+    '#default_value' => variable_get('socialmedia_default_link_target_sharing', SOCIALMEDIA_LINK_TARGET_SHARING_DEFAULT),
+    '#description' => t('Sets the default target= attribute on sharing widget links. Set to &lt;none&gt; to remove attribute.'),
+  );
+  $options = array(
+    '<none>' => t('Remove rel attribute'),
+    'nofollow' => t('Set rel="nofollow"'),
+  );
+  $form['link_attributes']['socialmedia_default_link_rel_sharing'] = array(
+    '#type' => 'select',
+    '#title' => t('Sharing rel'),
+    '#options' => $options,
+    '#default_value' => variable_get('socialmedia_default_link_target_sharing', SOCIALMEDIA_LINK_REL_SHARING_DEFAULT),
+    '#description' => t('Sets the default rel= attribute on sharing widget links.'),
   );
 
   

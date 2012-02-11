@@ -58,6 +58,10 @@ function socialmedia_token_info() {
     'color_header_background' => t('Default header background color'),
     'color_header_text' => t('Default header text color'),
     'color_border' => t('Default border color'),
+    'link_target_profile' => t('Default target attribute for profile links'),
+    'link_target_sharing' => t('Default target attribute for sharing links'),
+    'link_rel_profile' => t('Default rel attribute for profile links'),
+    'link_rel_sharing' => t('Default rel attribute for sharing links'),
   );
   foreach ($defaults AS $key => $value) {
     $tokens['socialmedia']['sm-default-' . $key] = array(
