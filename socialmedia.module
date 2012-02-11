@@ -181,7 +181,7 @@ function socialmedia_util() {
 	
   $platforms = socialmedia_platform_definitions();
   $defaults = drupal_map_assoc(array_keys($platforms));
-dsm($defaults);
+//dsm($defaults);
   $active_platforms = variable_get('socialmedia_platforms_site_redirects', $defaults);
 
   foreach ($platforms AS $name => $platform) {
