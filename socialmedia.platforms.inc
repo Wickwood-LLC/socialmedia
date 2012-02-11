@@ -96,7 +96,7 @@ function socialmedia_facebook_platform_info() {
 
 function socialmedia_facebook_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(www\.)(facebook\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(facebook\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_facebook_url', t('Facebook URL invalid.'));
@@ -109,7 +109,6 @@ function socialmedia_facebook_parser($values) {
   	$profile['username'] = $values['username'];
   	return $profile;
   }
-  
   $b = explode('?', $a[1]);
   $c = explode('/', $b[0]);
   if(!isset($b[1]) && ($b[0] != 'profile.php')) {
@@ -121,6 +120,7 @@ function socialmedia_facebook_parser($values) {
   if(isset($profile['username'])) {
   	return $profile;
   }
+
   form_set_error('input_facebook_username', t('Cannot derive username for this type URL. Please provide a username.'));
   return FALSE;
 }
@@ -171,7 +171,7 @@ function socialmedia_flickr_platform_info() {
 
 function socialmedia_flickr_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(www\.)(flickr\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(flickr\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_flickr_url', t('Flickr URL invalid.'));
@@ -304,7 +304,7 @@ function socialmedia_linkedin_platform_info() {
 
 function socialmedia_linkedin_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(www\.)(linkedin\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(linkedin\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_linkedin_url', t('LinkedIn URL invalid.'));
@@ -372,7 +372,7 @@ function socialmedia_slideshare_platform_info() {
 
 function socialmedia_slideshare_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(www\.)(slideshare\.net\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(slideshare\.net\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_slideshare_url', t('SlideShare URL invalid.'));
@@ -444,16 +444,16 @@ function socialmedia_twitter_platform_info() {
 
 function socialmedia_twitter_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(twitter\.com\/)(#!\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(twitter\.com\/)(#!\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_twitter_url', t('Twitter URL invalid.'));
     return FALSE;
   }
   $profile = array();
-  $profile['url'] = $matches[1][0] . $matches[3][0];
+  $profile['url'] = $matches[2][0] . $matches[4][0];
   $profile['username'] = (isset($values['username']) && $values['username']) ? $values['username'] : $matches[3][0];
-  
+ 
   return $profile;
 }
 
@@ -505,7 +505,7 @@ function socialmedia_vimeo_platform_info() {
 
 function socialmedia_vimeo_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(vimeo\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(vimeo\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_vimeo_url', t('Vimeo URL invalid.'));
@@ -518,7 +518,7 @@ function socialmedia_vimeo_parser($values) {
     $profile['username'] = $values['username'];
     return $profile;
   }
-  
+dsm($profile['url']);   
   form_set_error('input_vimeo_username', t('Cannot derive Vimeo username for this type URL. Please provide a username.'));
   return FALSE;
 }
@@ -569,7 +569,7 @@ function socialmedia_youtube_platform_info() {
 
 function socialmedia_youtube_parser($values) {
   $str = $values['url'];
-  $pattern = '/(?:http:\/\/)?(www\.)(youtube\.com\/)?(\w+)+/i';
+  $pattern = '/(?:http:\/\/)?(www\.)*(youtube\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
     form_set_error('input_youtube_url', t('YouTube URL invalid.'));
@@ -582,10 +582,14 @@ function socialmedia_youtube_parser($values) {
     $profile['username'] = $values['username'];
     return $profile;
   }
-  
-  if(strpos($a[1], 'user/') === 0) {
+  $b = explode('/', $a[1]);
+  if(strpos($b[0], 'user') === 0) {
     $profile['username'] = substr($a[1], 5);
     return $profile;
+  }
+  else if (count($b) == 1) {
+    $profile['username'] = $b[0];
+    return $profile; 	
   }
   form_set_error('input_youtube_username', t('Cannot derive username for this type URL. Please provide a username.'));
   return FALSE;

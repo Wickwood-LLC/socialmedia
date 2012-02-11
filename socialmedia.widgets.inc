@@ -95,8 +95,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Delicious'),
   );
   $platforms['delicious']['templates'] = array(
-    'share-text-link' => '<a href="http://del.icio.us/post?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Bookmark on Del.icio.us?]">[?link-text=Bookmark on Del.icio.us?]</a>',
-    'share-button' => '<a href="http://del.icio.us/post?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Bookmark on Del.icio.us?]"><img src="[?icon-path=[socialmedia:sm-delicious_icon-path]?]" alt="Del.icio.us icon" ></a>',
+    'share-text-link' => '<a href="http://del.icio.us/post?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Del.icio.us?]">[?link-text=Bookmark on Del.icio.us?]</a>',
+    'share-button' => '<a href="http://del.icio.us/post?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Del.icio.us?]"><img src="[?icon-path=[socialmedia:sm-delicious_icon-path]?]" alt="Del.icio.us icon" ></a>',
   ); 
 
   $platforms['digg'] = array(
@@ -104,8 +104,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Digg'),
   );
   $platforms['digg']['templates'] = array(
-    'share-text-link' => '<a href="http://digg.com/submit?phase=2&url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Post to Digg?]">[?link-text=Post to Digg?]</a>',
-    'share-button' => '<a href="http://digg.com/submit?phase=2&url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Post to Digg?]"><img src="[?icon-path=[socialmedia:sm-digg_icon-path]?]" alt="Digg icon" ></a>',
+    'share-text-link' => '<a href="http://digg.com/submit?phase=2&url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post to Digg?]">[?link-text=Post to Digg?]</a>',
+    'share-button' => '<a href="http://digg.com/submit?phase=2&url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post to Digg?]"><img src="[?icon-path=[socialmedia:sm-digg_icon-path]?]" alt="Digg icon" ></a>',
   );  
   
   $platforms['facebook'] = array(
@@ -116,8 +116,8 @@ function socialmedia_base_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-facebook_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook">[?profile_username=[socialmedia:sm-facebook_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-facebook_url]?]" title="Visit [?profile_username=[socialmedia:sm-facebook_username]?] on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
-    'share-text-link' => '<a href="http://www.facebook.com/sharer.php?u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Share on Facebook?]">[?link-text=Share on Facebook?]</a>',
-    'share-button' => '<a href="http://www.facebook.com/sharer.php?u=[current-page:url]&t=[current-page:title-plain]" title="Share on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
+    'share-text-link' => '<a href="http://www.facebook.com/sharer.php?u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Share on Facebook?]">[?link-text=Share on Facebook?]</a>',
+    'share-button' => '<a href="http://www.facebook.com/sharer.php?u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="Share on Facebook"><img src="[?icon-path=[socialmedia:sm-facebook_icon-path]?]" alt="Facebook icon" ></a>',
   );
   
   $platforms['flickr'] = array(
@@ -135,8 +135,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Google'),
   );
   $platforms['google']['templates'] = array(
-    'share-text-link' => '<a href="http://www.google.com/bookmarks/mark?op=add&bkmk=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Bookmark on Google?]">[?link-text=Bookmark on Google?]</a>',
-    'share-button' => '<a href="http://www.google.com/bookmarks/mark?op=add&bkmk=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Bookmark on Google?]"><img src="[?icon-path=[socialmedia:sm-google_icon-path]?]" alt="Google icon" ></a>',
+    'share-text-link' => '<a href="http://www.google.com/bookmarks/mark?op=add&bkmk=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Google?]">[?link-text=Bookmark on Google?]</a>',
+    'share-button' => '<a href="http://www.google.com/bookmarks/mark?op=add&bkmk=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Google?]"><img src="[?icon-path=[socialmedia:sm-google_icon-path]?]" alt="Google icon" ></a>',
   );
   
   $platforms['googleplus'] = array(
@@ -157,8 +157,8 @@ function socialmedia_base_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-linkedin_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn">[?profile_username=[socialmedia:sm-linkedin_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-linkedin_url]?]" title="Visit [?profile_username=[socialmedia:sm-linkedin_username]?] on LinkedIn"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
-    'share-text-link' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[current-page:url]&title=[current-page:title-plain]&source=' . $_SERVER['HTTP_HOST'] . '" title="[?link-text=Share on LinkedIn?]">[?link-text=Share on LinkedIn?]</a>',
-    'share-button' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Share on LinkedIn?]"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
+    'share-text-link' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]&source=' . $_SERVER['HTTP_HOST'] . '" title="[?link-text=Share on LinkedIn?]">[?link-text=Share on LinkedIn?]</a>',
+    'share-button' => '<a href="http://www.linkedin.com/shareArticle?mini=true&url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Share on LinkedIn?]"><img src="[?icon-path=[socialmedia:sm-linkedin_icon-path]?]" alt="LinkedIn icon" ></a>',
   );
   
   $platforms['myspace'] = array(
@@ -166,8 +166,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: MySpace'),
   );
   $platforms['myspace']['templates'] = array(
-    'share-text-link' => '<a href="http://www.myspace.com/index.cfm?fuseaction=postto&u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Share on MySpace?]">[?link-text=Share on MySpace?]</a>',
-    'share-button' => '<a href="http://www.myspace.com/index.cfm?fuseaction=postto&u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Share on MySpace?]"><img src="[?icon-path=[socialmedia:sm-myspace_icon-path]?]" alt="MySpace icon" ></a>',
+    'share-text-link' => '<a href="http://www.myspace.com/index.cfm?fuseaction=postto&u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Share on MySpace?]">[?link-text=Share on MySpace?]</a>',
+    'share-button' => '<a href="http://www.myspace.com/index.cfm?fuseaction=postto&u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Share on MySpace?]"><img src="[?icon-path=[socialmedia:sm-myspace_icon-path]?]" alt="MySpace icon" ></a>',
   );
   
   $platforms['newsvine'] = array(
@@ -175,8 +175,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Newsvine'),
   );
   $platforms['newsvine']['templates'] = array(
-    'share-text-link' => '<a href="http://www.newsvine.com/_tools/seed&save?u=[current-page:url]&h=[current-page:title-plain]" title="[?link-text=Post on Newsvine?]">[?link-text=Post on Newsvine?]</a>',
-    'share-button' => '<a href="http://www.newsvine.com/_tools/seed&save?u=[current-page:url]&h=[current-page:title-plain]" title="[?link-text=Post on Newsvine?]"><img src="[?icon-path=[socialmedia:sm-newsvine_icon-path]?]" alt="Newsvine icon" ></a>',
+    'share-text-link' => '<a href="http://www.newsvine.com/_tools/seed&save?u=[|[node:url]||[current-page:url]|]&h=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post on Newsvine?]">[?link-text=Post on Newsvine?]</a>',
+    'share-button' => '<a href="http://www.newsvine.com/_tools/seed&save?u=[|[node:url]||[current-page:url]|]&h=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post on Newsvine?]"><img src="[?icon-path=[socialmedia:sm-newsvine_icon-path]?]" alt="Newsvine icon" ></a>',
   );
   
   $platforms['reddit'] = array(
@@ -184,8 +184,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Reddit'),
   );
   $platforms['reddit']['templates'] = array(
-    'share-text-link' => '<a href="http://reddit.com/submit?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Post to Reddit?]">[?link-text=Post to Reddit?]</a>',
-    'share-button' => '<a href="http://reddit.com/submit?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Post to Reddit?]"><img src="[?icon-path=[socialmedia:sm-reddit_icon-path]?]" alt="Reddit icon" ></a>',
+    'share-text-link' => '<a href="http://reddit.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post to Reddit?]">[?link-text=Post to Reddit?]</a>',
+    'share-button' => '<a href="http://reddit.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post to Reddit?]"><img src="[?icon-path=[socialmedia:sm-reddit_icon-path]?]" alt="Reddit icon" ></a>',
   );
 
   $platforms['slideshare'] = array(
@@ -203,8 +203,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: StumbleUpon'),
   );
   $platforms['stumbleupon']['templates'] = array(
-    'share-text-link' => '<a href="http://www.stumbleupon.com/submit?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Stumble this on StumbleUpon?]">[?link-text=Stumble this on StumbleUpon?]</a>',
-    'share-button' => '<a href="http://www.stumbleupon.com/submit?url=[current-page:url]&title=[current-page:title-plain]" title="[?link-text=Stumble this on StumbleUpon?]"><img src="[?icon-path=[socialmedia:sm-stumbleupon_icon-path]?]" alt="StumbleUpon icon" ></a>',
+    'share-text-link' => '<a href="http://www.stumbleupon.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Stumble this on StumbleUpon?]">[?link-text=Stumble this on StumbleUpon?]</a>',
+    'share-button' => '<a href="http://www.stumbleupon.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Stumble this on StumbleUpon?]"><img src="[?icon-path=[socialmedia:sm-stumbleupon_icon-path]?]" alt="StumbleUpon icon" ></a>',
   ); 
 
   $platforms['technorati'] = array(
@@ -212,8 +212,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Technorati'),
   );
   $platforms['technorati']['templates'] = array(
-    'share-text-link' => '<a href="http://technorati.com/faves?sub=addfavbtn&add=[current-page:url]" title="[?link-text=Favorite on Technorati?]">[?link-text=Favorite on Technorati?]</a>',
-    'share-button' => '<a href="http://technorati.com/faves?sub=addfavbtn&add=[current-page:url]" title="[?link-text=Favorite on Technorati?]"><img src="[?icon-path=[socialmedia:sm-technorati_icon-path]?]" alt="Technorati icon" ></a>',
+    'share-text-link' => '<a href="http://technorati.com/faves?sub=addfavbtn&add=[|[node:url]||[current-page:url]|]" title="[?link-text=Favorite on Technorati?]">[?link-text=Favorite on Technorati?]</a>',
+    'share-button' => '<a href="http://technorati.com/faves?sub=addfavbtn&add=[|[node:url]||[current-page:url]|]" title="[?link-text=Favorite on Technorati?]"><img src="[?icon-path=[socialmedia:sm-technorati_icon-path]?]" alt="Technorati icon" ></a>',
   ); 
 
   $platforms['twitter'] = array(
@@ -224,8 +224,8 @@ function socialmedia_base_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-twitter_url]?]",
     'profile-text-link' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit @[?profile_username=[socialmedia:sm-twitter_username]?] on Twitter">@[?profile_username=[socialmedia:sm-twitter_username]?]</a>',  
     'profile-button' => '<a href="http://twitter.com/[?profile_username=[socialmedia:sm-twitter_username]?]" title="Visit @[?profile_username=[socialmedia:sm-twitter_username]?] on Twitter"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
-    'share-text-link' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this">[?link-text=Tweet?]</a>',
-    'share-button' => '<a href="http://twitter.com/share?url=[current-page:url]&text=[current-page:title-plain]" title="Tweet this"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
+    'share-text-link' => '<a href="http://twitter.com/share?url=[|[node:url]||[current-page:url]|]&text=[|[node:title]||[current-page:title-plain]|]" title="Tweet this">[?link-text=Tweet?]</a>',
+    'share-button' => '<a href="http://twitter.com/share?url=[|[node:url]||[current-page:url]|]&text=[|[node:title]||[current-page:title-plain]|]" title="Tweet this"><img src="[?icon-path=[socialmedia:sm-twitter_icon-path]?]" alt="Twitter icon" ></a>',
   );
 
   $platforms['vimeo'] = array(
@@ -243,8 +243,8 @@ function socialmedia_base_platforms() {
     'group' => t('Social media: Yahoo!'),
   );
   $platforms['yahoo']['templates'] = array(
-    'share-text-link' => '<a href="http://bookmarks.yahoo.com/myresults/bookmarklet?u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Bookmark on Yahoo!?]">[?link-text=Bookmark on Yahoo!?]</a>',
-    'share-button' => '<a href="http://bookmarks.yahoo.com/myresults/bookmarklet?u=[current-page:url]&t=[current-page:title-plain]" title="[?link-text=Bookmark on Yahoo!?]"><img src="[?icon-path=[socialmedia:sm-yahoo_icon-path]?]" alt="Yahoo! icon" ></a>',
+    'share-text-link' => '<a href="http://bookmarks.yahoo.com/myresults/bookmarklet?u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Yahoo!?]">[?link-text=Bookmark on Yahoo!?]</a>',
+    'share-button' => '<a href="http://bookmarks.yahoo.com/myresults/bookmarklet?u=[|[node:url]||[current-page:url]|]&t=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Bookmark on Yahoo!?]"><img src="[?icon-path=[socialmedia:sm-yahoo_icon-path]?]" alt="Yahoo! icon" ></a>',
   );
 
   $platforms['youtube'] = array(
@@ -354,7 +354,7 @@ function socialmedia_widgets_element_addthis_facebook_like() {
   $elements['socialmedia_addthis-facebook-like'] = array(
     'label' => t('AddThis Facebook like button'),
     'group' => t('Social media: Facebook'),
-    'template' => '<a class="addthis_button_facebook_like"[?layout=?]></a>',
+    'template' => '<a class="addthis_button_facebook_like"[?layout=?] [?width=fb:like:width="{<none>}"?]></a>',
     'add_js' => array(
       'data' => $addthis_js,
       'options' => array(
@@ -443,7 +443,7 @@ function socialmedia_widgets_element_addthis_stumbleupon_badge() {
   $elements['socialmedia_addthis-stumbleupon-badge'] = array(
     'label' => t('AddThis StumbleUpon Badge'),
     'group' => t('Social media: StumbleUpon'),
-    //'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?] su:bdg:url="[?url=[current-page:url]?]"></a>',
+    //'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?] su:bdg:url="[?url=[|[node:url]||[current-page:url]|]?]"></a>',
     'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?]"></a>',
     'add_js' => array(
       'data' => $addthis_js,
