@@ -468,18 +468,28 @@ function socialmedia_widgets_element_alter_addthis_stumbleupon_badge(&$form, $se
   return $form;
 }
 
+
+// PVE 8-10/2/12 translation management + produce FB library only one time
 function socialmedia_widgets_facebook_js_sdk() {
-	  $facebook_js_sdk = <<<EOF
-<script>if(window.FB){ window.FB = null ;}//eat this !</script>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=223324211035941";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-EOF;
+  global $language;
+  $country = variable_get('site_default_country', 'US');
+  if (!$country) {
+  	$country = 'US';
+  }
+  $loc = $language->language.'_'.$country;
+  $facebook_js_sdk = '<script>
+if (!document.getElementById("fb-root")) {
+  fb_root = document.createElement("div");
+  fb_root.id = "fb-root";
+  document.body.insertBefore(fb_root,document.body.firstChild);
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/'.$loc.'/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, "script", "facebook-jssdk"));
+}</script>';
   return $facebook_js_sdk;
 }
 
@@ -540,7 +550,7 @@ function socialmedia_widgets_element_facebook_like_button() {
     'label' => t('Facebook like button'),
     //'help' => t(''),
     'group' => t('Social media: Facebook'),
-    'template' => '<div class="fb-like" data-href="[?facebook_page_url=[socialmedia:sm-facebook_url]?]" data-send="[?send_button=true?]" [?layout=data-layout="{<none>}"?] data-width="[?width=[socialmedia:sm-default_width]?]" data-show-faces="[?show_faces=true?]" [?action=data-action="{<none>}"?] data-colorscheme="[?color_scheme=light?]" [?font=data-font="{<none>}"?]></div>',
+    'template' => '<div class="fb-like" data-href="[|[node:url]||[current-page:url]|]" data-send="[?send_button=true?]" [?layout=data-layout="{<none>}"?] data-width="[?width=[socialmedia:sm-default_width]?]" data-show-faces="[?show_faces=true?]" [?action=data-action="{<none>}"?] data-colorscheme="[?color_scheme=light?]" [?font=data-font="{<none>}"?]></div>',
     'add_js' => array(
       'data' => $facebook_js_sdk,
       'options' => array(
@@ -555,10 +565,9 @@ function socialmedia_widgets_element_facebook_like_button() {
 
 // PVE 7/2/12
 function socialmedia_widgets_element_alter_facebook_like_button(&$form, $set, $element) {
-  $form['facebook_page_url']['#description'] = t('The URL of the Facebook Page for this Like box. (example: http://www.facebook.com/platform) ') . $form['facebook_page_url']['#description'];
 
   $options = array(
-    '<none>' => t('Standard (no count)'),
+    '<none>' => t('Standard'),
     'button_count' => t('Button count'),
     'box_count' => t('Box count'),
   );
@@ -566,7 +575,6 @@ function socialmedia_widgets_element_alter_facebook_like_button(&$form, $set, $e
   $form['layout']['#options'] = $options;
   $form['layout']['#description'] = t('Select button and count style');
 
-  
   $options = array(
     'true' => t('Yes'),
     'false' => t('No'),
@@ -611,7 +619,6 @@ function socialmedia_widgets_element_alter_facebook_like_button(&$form, $set, $e
   $form['font']['#type'] = 'select';
   $form['font']['#options'] = $options;
   $form['font']['#description'] = t('The font of the plugin');
-  
 }
 
 function socialmedia_widgets_element_linkedin_share_button() {
