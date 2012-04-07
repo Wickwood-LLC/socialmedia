@@ -30,9 +30,11 @@ function socialmedia_widgets_element_info() {
   // AddThis advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_addthis_counter()); 
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_facebook_like());  
-  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone());
-  $elements = array_merge($elements, socialmedia_widgets_element_addthis_tweet());  
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone());  
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_email());  
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_stumbleupon_badge());
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_tweet());  
+  
   
   // Facebook advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_facebook_like_box());
@@ -40,6 +42,9 @@ function socialmedia_widgets_element_info() {
 
   // LinkedIn advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_linkedin_share_button());  
+  
+  // RSS widgets
+  $elements = array_merge($elements, socialmedia_widgets_element_rss_button());
   
   // Twitter advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_twitter_profile_widget());
@@ -323,7 +328,7 @@ function socialmedia_widgets_element_addthis_js() {
 function socialmedia_widgets_element_addthis_addthis_counter() {
   $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-addthis-counter'] = array(
-    'label' => t('AddThis Counter'),
+    'label' => t('AddThis counter button'),
     'group' => t('Social media: Multi'),
     'template' => '<a class="addthis_counter[?style=?]"></a>',
     'add_js' => array(
@@ -352,7 +357,7 @@ function socialmedia_widgets_element_alter_addthis_addthis_counter(&$form, $set,
 function socialmedia_widgets_element_addthis_facebook_like() {
 	$addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-facebook-like'] = array(
-    'label' => t('AddThis Facebook like button'),
+    'label' => t('AddThis Facebook like counter button'),
     'group' => t('Social media: Facebook'),
     'template' => '<a class="addthis_button_facebook_like"[?layout=?] [?width=fb:like:width="{<none>}"?]></a>',
     'add_js' => array(
@@ -380,7 +385,7 @@ function socialmedia_widgets_element_alter_addthis_facebook_like(&$form, $set, $
 function socialmedia_widgets_element_addthis_google_plusone() {
   $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-google-plusone'] = array(
-    'label' => t('AddThis Google +1 button'),
+    'label' => t('AddThis Google +1 counter button'),
     'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
     'group' => t('Social media: Google+'),
     'template' => '<a class="addthis_button_google_plusone"[?size=?]></a>',
@@ -409,10 +414,27 @@ function socialmedia_widgets_element_alter_addthis_google_plusone(&$form, $set, 
   return $form;
 }
 
+function socialmedia_widgets_element_addthis_email() {
+  $addthis_js = socialmedia_widgets_element_addthis_js();
+  $elements['socialmedia_addthis-email'] = array(
+    'label' => t('AddThis email a friend button'),
+    'group' => t('Social media: E-mail'),
+    'template' => '<a class="addthis_button_email"?]><img src="[?icon-path=[socialmedia:sm-email_icon-path]?]" alt="e-mail icon" ></a>',
+    'add_js' => array(
+      'data' => $addthis_js,
+      'options' => array(
+        'scope' => 'set_post', 
+      ),
+    ),
+    'form callback' => 'widgets_template_auto_form',
+  );
+  return $elements;
+}
+
 function socialmedia_widgets_element_addthis_tweet() {
   $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-tweet'] = array(
-    'label' => t('Addthis tweet button'),
+    'label' => t('Addthis tweet counter button'),
     'group' => t('Social media: Twitter'),
     'template' => '<a class="addthis_button_tweet"[?count=?] [?via=tw:via="{[socialmedia:sm-twitter_username]}"?]></a>',
     'add_js' => array(
@@ -441,9 +463,9 @@ function socialmedia_widgets_element_alter_addthis_tweet(&$form, $set, $element)
 function socialmedia_widgets_element_addthis_stumbleupon_badge() {
   $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-stumbleupon-badge'] = array(
-    'label' => t('AddThis StumbleUpon Badge'),
+    'label' => t('AddThis StumbleUpon counter badge'),
     'group' => t('Social media: StumbleUpon'),
-    //'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?] su:bdg:url="[?url=[|[node:url]||[current-page:url]|]?]"></a>',
+    //'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?] su:badge:url="[?url=[|[node:url]||[current-page:url]|]?]"></a>',
     'template' => '<a class="addthis_button_stumbleupon_badge"[?style=?]"></a>',
     'add_js' => array(
       'data' => $addthis_js,
@@ -644,6 +666,16 @@ function socialmedia_widgets_element_alter_linkedin_share_button(&$form, $set, $
   return $form;
 }
 
+function socialmedia_widgets_element_rss_button() {
+  $elements['socialmedia_rss-button'] = array(
+    'label' => t('RSS button'),
+    'group' => t('Social media: RSS'),
+    'template' => '<a href="[?rss_url=[socialmedia:sm-rss_url]?]" title="Subscribe via RSS"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-rss_icon-path]?]" alt="RSS icon" ></a>',
+    'form callback' => 'widgets_template_auto_form',
+  );
+  return $elements;
+}
+
 function socialmedia_widgets_element_twitter_profile_widget() {
   $template = <<<EOF
 <script src="http://widgets.twimg.com/j/2/widget.js"></script>
@@ -705,6 +737,8 @@ function socialmedia_widgets_element_alter_twitter_profile_widget(&$form, $set, 
   $form['dimensions']['#collapsed'] = TRUE;  
 
 }
+
+
 
 function socialmedia_widgets_element_stumbleupon_badge() {
   $addthis_js = socialmedia_widgets_element_addthis_js();

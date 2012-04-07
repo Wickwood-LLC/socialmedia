@@ -24,6 +24,7 @@ function socialmedia_admin_settings() {
   
   $platforms = socialmedia_socialmedia_platform_info();
   $options = array();
+  $extra = array();
   foreach ($platforms AS $platform_name => $platform) {
   	$options[$platform_name] = $platform['title'];
   }
@@ -313,6 +314,7 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
           '#title' => $platform['group'],
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,
+          '#weight' => 20,
         );        
       }
       $form[$platform['group']] = array_merge($form[$platform['group']], $fields);
@@ -325,6 +327,7 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
+    '#weight' => 30,
   );
   
   return $form;

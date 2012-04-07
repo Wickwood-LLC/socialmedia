@@ -342,7 +342,7 @@ function socialmedia_platform_definition_load($platform, $uid = NULL) {
 function _socialmedia_widgets_set_error($element, $msg, $status = 'warning') {
   if (module_exists('widgets')) {
     if (user_access('administer socialmedia')) {
-      widgets_set_error($element, $msg);
+      widgets_set_error($element['name'], $msg);
     }
     else {
       widgets_set_error($element);
