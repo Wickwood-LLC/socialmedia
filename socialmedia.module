@@ -396,3 +396,25 @@ function socialmedia_update_redirects($redirects = array(), $original_redirects 
     redirect_save($redirect); 
   }	
 }
+/** 
+ * Determines if page has a author context. Uses widgets algo if widgets is installed
+ * @param $data
+ */
+function socialmedia_get_context_author_uid($data) {
+  if (module_exists('widgets')) {
+    return widgets_get_context_author_uid($data);
+  } 
+  $uid = '';    
+  if (isset($data['node']->uid)) {
+    $uid = $data['node']->uid; 
+  }
+  elseif ((arg(0) == 'node') && is_numeric(arg(1))) {         
+    $uid = menu_get_object()->uid;
+  }
+  elseif (arg(0) == 'user' && is_numeric(arg(1))) {
+    $uid = menu_get_object('user', 1)->uid;
+  } 
+  drupal_alter('socialmedia_context_author_uid', $uid, $data);
+  return $uid;
+  
+}
