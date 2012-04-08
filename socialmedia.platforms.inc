@@ -6,6 +6,7 @@ function socialmedia_socialmedia_platform_info() {
   $platforms = array_merge($platforms, socialmedia_flickr_platform_info());
   $platforms = array_merge($platforms, socialmedia_googleplus_platform_info());
   $platforms = array_merge($platforms, socialmedia_linkedin_platform_info());
+  $platforms = array_merge($platforms, socialmedia_rss_platform_info());
   $platforms = array_merge($platforms, socialmedia_slideshare_platform_info());
   $platforms = array_merge($platforms, socialmedia_vimeo_platform_info());
   $platforms = array_merge($platforms, socialmedia_youtube_platform_info());
@@ -335,6 +336,54 @@ function socialmedia_linkedin_tokens($key, $profile) {
       return $profile['url'];
     case 'username':
       return $profile['username'];
+  }
+  return '';
+}
+
+function socialmedia_rss_platform_info() {
+  $platforms = array();
+  $platforms['rss'] = array(
+    'title' => t('RSS'),
+    'description' => t('URL to your RSS feed'),
+    'group' => t('Syndication'),
+    //'homepage' => 'http://www.addthis.com',
+    'form callback' => 'socialmedia_rss_form',
+    'parser callback' => 'socialmedia_rss_parser',
+    'tokens callback' => 'socialmedia_rss_tokens',
+  ); 
+  $platforms['rss']['form'] = array(
+    'title' => t('RSS'),
+    'description' => t('URL to your RSS feed'),
+  );
+  $platforms['rss']['tokens']['multi'] = array(
+    'rss_url' => array(
+      'name' => t("RSS feed url"), 
+      'description' => t("URL to RSS feed."),
+    ),  
+  );
+  return $platforms;  
+}
+
+function socialmedia_rss_form($profile) {
+  $fields['input_rss_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('RSS url'),
+    '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : base_path() . 'rss.xml',
+    '#description' => t('This is the url to your rss feed. The default feed is located at rss.xml but you might want to link to another feed.'),
+    '#size' => 80,
+  );
+  return $fields;
+}
+
+function socialmedia_rss_parser($values) {
+  $profile['url'] = $values['url'];
+  return $profile;
+}
+
+function socialmedia_rss_tokens($key, $profile) {
+  switch ($key) {
+    case 'url':
+      return isset($profile['url']) ? $profile['url'] : '';
   }
   return '';
 }
