@@ -943,7 +943,7 @@ function socialmedia_widgets_default_sets() {
   $sets['socialmedia_profile-default'] = socialmedia_widgets_set_profile_default();
   
   $sets['socialmedia_share-default'] = socialmedia_widgets_set_share_default();
-dsm($sets);  
+ 
   $sets['socialmedia_profile-urls'] = array(
     'data' => array(
       'style' => 'plain-linebreaks',
