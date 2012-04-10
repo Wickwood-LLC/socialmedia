@@ -438,13 +438,16 @@ function socialmedia_admin_profile_widgets_form($form, $form_state) {
   
   $defs = socialmedia_widgets_set_profile_default_elements();
   $set = variable_get('socialmedia_widget_set_default_profile', socialmedia_widgets_set_profile_default());
+//dsm($defs);
+//dsm($set);
   foreach ($defs AS $group => $defs2) {
     $form[$group] = array(
       '#type' => 'fieldset',
       '#title' => $defs2['name'],
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-    );       
+    ); 
+    $weight = 0;      
     foreach ($defs2['elements'] AS $key => $element) {
       $def = widgets_element_definition_load($element['name']);
       if (isset($element['data'])) {
@@ -458,8 +461,10 @@ function socialmedia_admin_profile_widgets_form($form, $form_state) {
         '#field_prefix' => theme('widgets_element_view', $vars),
         '#title' =>  t('Include @widget.', array('@widget' => $def['label'])),
         '#return_value' => $element['name'],  
-        '#default_value' => socialmedia_element_in_set($element, $set) ? $key : 0,    
-      );
+        '#default_value' => socialmedia_element_in_set($element, $set) ? $key : 0, 
+        '#weight' => (isset($defs['basic']['elements'][$key]['weight'])) ? $defs['basic']['elements'][$key]['weight'] : 0,  
+     );
+     $weight++;
     }
   }
   $form['submit'] = array(

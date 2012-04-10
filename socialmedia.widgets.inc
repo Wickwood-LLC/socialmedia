@@ -29,9 +29,9 @@ function socialmedia_widgets_element_info() {
   
   // AddThis advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_addthis_counter()); 
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_email());
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_facebook_like());  
-  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone());  
-  $elements = array_merge($elements, socialmedia_widgets_element_addthis_email());  
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone());    
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_stumbleupon_badge());
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_tweet());  
   
@@ -44,7 +44,7 @@ function socialmedia_widgets_element_info() {
   $elements = array_merge($elements, socialmedia_widgets_element_linkedin_share_button());  
   
   // RSS widgets
-  $elements = array_merge($elements, socialmedia_widgets_element_rss_button());
+  //$elements = array_merge($elements, socialmedia_widgets_element_rss_button());
   
   // Twitter advanced widgets
   $elements = array_merge($elements, socialmedia_widgets_element_twitter_profile_widget());
@@ -67,10 +67,12 @@ function socialmedia_base_platforms_info() {
     'profile-button' => t('profile button'),    
     'share-text-link' => t('share text link'),
     'share-button' => t('share button'),
+    'feed-url' => t('feed url'),
+    'feed-text-link' => t('feed text link'),
+    'feed-button' => t('feed button'),
   );
   foreach ($platforms AS $platform_name => $platform) {
     foreach ($platform['templates'] AS $template_name => $template) {
-      $lin = 
       $elements['socialmedia_socialmedia-' . $platform_name . '-' . $template_name] = array(
         'platform' => $platform_name,
         'label' => t('Socialmedia @platform @type', 
@@ -201,6 +203,16 @@ function socialmedia_base_platforms() {
     'profile-url' => "[?profile_url=[socialmedia:sm-slideshare_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="Visit [?profile_username=[socialmedia:sm-slideshare_username]?] on SlideShare"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-slideshare_username]?]</a>',  
     'profile-button' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="Visit [?profile_username=[socialmedia:sm-slideshare_username]?] on SlideShare"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-slideshare_icon-path]?]" alt="SlideShare icon" ></a>',
+  );
+  
+  $platforms['rss'] = array(
+    'label' => t('RSS'),
+    'group' => t('Social media: RSS'),
+  );
+  $platforms['rss']['templates'] = array(
+    'feed-url' => "[?profile_url=[socialmedia:sm-rss_url]?]",
+    'feed-text-link' => '<a href="[?profile_url=[socialmedia:sm-rss_url]?]" title="Subscribe via RSS"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_feedname=[socialmedia:sm-rss_feedname]?]</a>',  
+    'feed-button' => '<a href="[?profile_url=[socialmedia:sm-rss_url]?]" title="Subscribe to [?profile_feedname=[socialmedia:sm-slideshare_feedname]?] via RSS"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-rss_icon-path]?]" alt="SlideShare icon" ></a>',
   );
 
   $platforms['stumbleupon'] = array(
@@ -665,7 +677,7 @@ function socialmedia_widgets_element_alter_linkedin_share_button(&$form, $set, $
   $form['style']['#options'] = $options;
   return $form;
 }
-
+/*
 function socialmedia_widgets_element_rss_button() {
   $elements['socialmedia_rss-button'] = array(
     'label' => t('RSS button'),
@@ -675,6 +687,7 @@ function socialmedia_widgets_element_rss_button() {
   );
   return $elements;
 }
+*/
 
 function socialmedia_widgets_element_twitter_profile_widget() {
   $template = <<<EOF
@@ -771,14 +784,25 @@ function socialmedia_widgets_set_profile_default_elements() {
   );
   $profiles = variable_get('socialmedia_platforms_site' , array());
   $platforms = socialmedia_socialmedia_platform_info();
+//dsm($profiles);
+//dsm($platforms);
+  $weight = 1;
   foreach ($profiles AS $key => $profile) {
-    if ($profile && !isset($platforms[$key]['group']) && (!isset($enabled) || $enabled[$key])) {
-      $name = 'socialmedia_socialmedia-' . $key . '-profile-button';
+    if ($profile && (!isset($platforms[$key]['group']) || $platforms[$key]['group'] == 'Syndication')) {
+    	if (isset($platforms[$key]['group']) && $platforms[$key]['group'] == 'Syndication') {
+    		$name = 'socialmedia_socialmedia-' . $key . '-feed-button';
+    	}
+    	else {
+        $name = 'socialmedia_socialmedia-' . $key . '-profile-button';
+    	}
       $elements['basic']['elements'][$name] = array(
         'name' => $name,
-      );    
+        'weight' => ($name == 'socialmedia_socialmedia-rss-feed-button') ? $weight + 20 : $weight,  
+      ); 
+      $weight++;   
     }
   }
+//dsm($elements);
   return $elements;
 }
 
@@ -798,10 +822,15 @@ function socialmedia_widgets_set_profile_default() {
   $i=1;
   foreach ($elements['basic']['elements'] AS $key => $element) {
     $element += widgets_element_definition_load($key);
-    $element['weight'] = $i++;
+    $element['weight'] = isset($element['weight']) ? $element['weight'] : $i++;
     $set['elements'][] = $element;
   }
+  usort($set['elements'], '_socialmedia_widgets_set_profile_default_sort_elements');
   return $set;  
+}
+
+function _socialmedia_widgets_set_profile_default_sort_elements($a, $b) {
+	return ($a['weight'] < $b['weight']) ? -1 : 1;
 }
 
 function socialmedia_widgets_set_share_default_elements() {
@@ -844,6 +873,9 @@ function socialmedia_widgets_set_share_default_elements() {
       ),
       'socialmedia_socialmedia-yahoo-share-button' => array(
         'name' => 'socialmedia_socialmedia-yahoo-share-button',
+      ),
+      'socialmedia_addthis-email' => array(
+        'name' => 'socialmedia_addthis-email',
       ),
     ),
   );
@@ -911,7 +943,7 @@ function socialmedia_widgets_default_sets() {
   $sets['socialmedia_profile-default'] = socialmedia_widgets_set_profile_default();
   
   $sets['socialmedia_share-default'] = socialmedia_widgets_set_share_default();
-  
+dsm($sets);  
   $sets['socialmedia_profile-urls'] = array(
     'data' => array(
       'style' => 'plain-linebreaks',
@@ -959,22 +991,27 @@ function socialmedia_widgets_default_sets() {
       array(
         'name' => 'socialmedia_socialmedia-facebook-profile-button',
         'data' => array(),
-        'weight' => 1,
+        'weight' => 2,
       ),
       array(
         'name' => 'socialmedia_socialmedia-linkedin-profile-button',
         'data' => array(),
-        'weight' => 1,
+        'weight' => 3,
       ),
       array(
         'name' => 'socialmedia_socialmedia-googleplus-profile-button',
         'data' => array(),
-        'weight' => 1,
+        'weight' => 4,
       ),
       array(
         'name' => 'socialmedia_socialmedia-youtube-profile-button',
         'data' => array(),
-        'weight' => 1,
+        'weight' => 5,
+      ),
+      array(
+        'name' => 'socialmedia_socialmedia-rss-feed-button',
+        'data' => array(),
+        'weight' => 6,
       ),
     ),
   );
