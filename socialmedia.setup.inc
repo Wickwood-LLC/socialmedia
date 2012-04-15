@@ -83,10 +83,10 @@ EOF;
 
 function socialmedia_setup_1_form_submit($form, $form_state) {
   $values = $form_state['values'];
-dsm($values);
+//dsm($values);
   $platforms = socialmedia_socialmedia_platform_info();
   $platforms_site = variable_get('socialmedia_platforms_site' , array());
-dsm($platforms);
+//dsm($platforms);
   foreach ($platforms AS $key => $platform) {
     if (!isset($values['input_' . $key . '_url'])) {
       continue;
@@ -181,7 +181,7 @@ function socialmedia_setup_4_form($form, $form_state) {
   );
   $set_name = 'socialmedia_profile-default';
   $set = widgets_set_load($set_name);
-dsm($set);
+//dsm($set);
   $form['profile_set_name'] = array(
     '#type' => 'value',
     '#value' => $set_name,
