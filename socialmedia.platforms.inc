@@ -6,6 +6,7 @@ function socialmedia_socialmedia_platform_info() {
   $platforms = array_merge($platforms, socialmedia_flickr_platform_info());
   $platforms = array_merge($platforms, socialmedia_googleplus_platform_info());
   $platforms = array_merge($platforms, socialmedia_linkedin_platform_info());
+  $platforms = array_merge($platforms, socialmedia_pinterest_platform_info());
   $platforms = array_merge($platforms, socialmedia_rss_platform_info());
   $platforms = array_merge($platforms, socialmedia_slideshare_platform_info());
   $platforms = array_merge($platforms, socialmedia_vimeo_platform_info());
@@ -328,6 +329,75 @@ function socialmedia_linkedin_parser($values) {
 }
 
 function socialmedia_linkedin_tokens($key, $profile) {
+  switch ($key) {
+  // Simple key values on the node.
+    case 'url':
+      return 'http://' . $profile['url'];
+    case 'url-brief':
+      return $profile['url'];
+    case 'username':
+      return $profile['username'];
+  }
+  return '';
+}
+
+function socialmedia_pinterest_platform_info() {
+  $platforms = array();
+  $platforms['pinterest'] = array(
+    'title' => t('Pinterest'),
+    'description' => t('URL to your Pinterest profile or board'),
+    'homepage' => 'http://pinterest.com/',
+    'redirect path' => 'pinterest',
+    'parser callback' => 'socialmedia_pinterest_parser',
+    'tokens callback' => 'socialmedia_pinterest_tokens',
+  ); 
+  $platforms['pinterest']['form'] = array(
+    'title' => t('LinkedIn profile'),
+    'description' => t('URL to your LinkedIn profile'),
+  );
+  $platforms['pinterest']['tokens']['multi'] = array(
+    'linkedin_url' => array(
+      'name' => t("Pinterest profile url"), 
+      'description' => t("URL to LinkedIn profile."),
+    ),
+    'linkedin_url-brief' => array(
+      'name' => t("Pinterest profile url (brief)"), 
+      'description' => t("URL to LinkedIn profile without protocol."),
+    ), 
+    'linkedin_username' => array(
+      'name' => t("Pinterest name"), 
+      'description' => t("LinkedIn profile name"),
+    ),   
+  );
+  return $platforms;  
+}
+
+function socialmedia_pinterest_parser($values) {
+  $str = $values['url'];
+  $pattern = '/(?:http:\/\/)?(www\.)*(pinterest\.com\/)?(\w+)+/i';
+  //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
+  if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
+    form_set_error('input_linkedin_url', t('Pinterest URL invalid.'));
+    return FALSE;
+  }
+  $profile = array();
+  $a = explode('pinterest.com/', $str);
+  $profile['url'] = 'pinterest.com/' . $a[1];
+  if(isset($values['username']) && trim($values['username'])) {
+    $profile['username'] = $values['username'];
+    return $profile;
+  }
+  
+  $b = explode('/', $a[1]);
+  if(isset($b[1])) {
+    $profile['username'] = $b[1];
+    return $profile;
+  }
+  form_set_error('input_pintrest_username', t('Cannot derive username for this type URL. Please provide a username.'));
+  return FALSE;
+}
+
+function socialmedia_pinterest_tokens($key, $profile) {
   switch ($key) {
   // Simple key values on the node.
     case 'url':

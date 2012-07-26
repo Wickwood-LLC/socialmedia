@@ -31,7 +31,8 @@ function socialmedia_widgets_element_info() {
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_addthis_counter()); 
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_email());
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_facebook_like());  
-  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone());    
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_google_plusone()); 
+  $elements = array_merge($elements, socialmedia_widgets_element_addthis_pinterest_pinit());    
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_stumbleupon_badge());
   $elements = array_merge($elements, socialmedia_widgets_element_addthis_tweet());  
   
@@ -186,6 +187,18 @@ function socialmedia_base_platforms() {
     'share-button' => '<a href="http://www.newsvine.com/_tools/seed&save?u=[|[node:url]||[current-page:url]|]&h=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Post on Newsvine?]"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]><img src="[?icon-path=[socialmedia:sm-newsvine_icon-path]?]" alt="Newsvine icon" ></a>',
   );
   
+  $platforms['pinterest'] = array(
+    'label' => t('Pinterest'),
+    'group' => t('Social media: Pinterest'),
+  );
+  $platforms['pinterest']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-pinterest_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-pinterest_url]?]" title="Visit [?profile_username=[socialmedia:sm-pinterest_username]?] on Pinterest"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-pinterest_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-pinterest_url]?]" title="Visit [?profile_username=[socialmedia:sm-pinterest_username]?] on Pinterest"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-pinterest_icon-path]?]" alt="Pinterest icon" ></a>',
+    //'share-text-link' => '<a href="http://pinterest.com/pin/create/button/?url=[|[node:url]||[current-page:url]|]&media=[|[node:title]||[current-page:title-plain]|]" title="[?link-text=Pin It?]"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]>[?link-text=Pin It?]</a>',
+    'share-button' => '<a href="javascript:void((function()%7Bvar%20e=document.createElement(&apos;script&apos;);e.setAttribute(&apos;type&apos;,&apos;text/javascript&apos;);e.setAttribute(&apos;charset&apos;,&apos;UTF-8&apos;);e.setAttribute(&apos;src&apos;,&apos;http://assets.pinterest.com/js/pinmarklet.js?r=&apos;+Math.random()*99999999);document.body.appendChild(e)%7D)());" title="[?link-text=Pin It?]"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]><img src="[?icon-path=[socialmedia:sm-pinterest_icon-path]?]" alt="Pinterest icon" ></a>',
+  );
+  
   $platforms['reddit'] = array(
     'label' => t('Reddit'),
     'group' => t('Social media: Reddit'),
@@ -307,6 +320,9 @@ function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
   }
   elseif($element['name'] == 'socialmedia_addthis-google-plusone') {
     socialmedia_widgets_element_alter_addthis_google_plusone($form, $set, $element);
+  }
+  elseif($element['name'] == 'socialmedia_addthis-pinterest-pinit') {
+    socialmedia_widgets_element_alter_addthis_pinterest_pinit($form, $set, $element);
   }
   elseif($element['name'] == 'socialmedia_addthis-tweet') {
     socialmedia_widgets_element_alter_addthis_tweet($form, $set, $element);
@@ -441,6 +457,37 @@ function socialmedia_widgets_element_addthis_email() {
     'form callback' => 'widgets_template_auto_form',
   );
   return $elements;
+}
+
+function socialmedia_widgets_element_addthis_pinterest_pinit() {
+  $addthis_js = socialmedia_widgets_element_addthis_js();
+  $elements['socialmedia_addthis-pinterest-pinit'] = array(
+    'label' => t('AddThis Pinterest counter button'),
+    'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
+    'group' => t('Social media: Pinterest'),
+    'template' => '<a class="addthis_button_pinterest_pinit"[?size=?]></a>',
+    'add_js' => array(
+      'data' => $addthis_js,
+      'options' => array(
+        'scope' => 'set_post', 
+      ),
+    ),
+    'form callback' => 'widgets_template_auto_form',
+  );
+  return $elements;
+}
+
+function socialmedia_widgets_element_alter_addthis_pinterest_pinit(&$form, $set, $element) {
+  $options = array(
+    '' => t('No counter'),
+    ' pi:pinit:layout="horizontal"' => t('Horizontal'),
+    ' pi:pinit:layout="vertical"' => t('Vertical'),
+  );
+  $form['size']['#type'] = 'select';
+  $form['size']['#options'] = $options;
+  $form['size']['#description'] = t('Select button size and layout');
+
+  return $form;
 }
 
 function socialmedia_widgets_element_addthis_tweet() {
@@ -812,6 +859,7 @@ function socialmedia_widgets_set_profile_default() {
     return $set;
   }
   $elements = socialmedia_widgets_set_profile_default_elements();
+
   $set = array(
     'data' => array(
       'style' => 'horizontal',
@@ -864,6 +912,9 @@ function socialmedia_widgets_set_share_default_elements() {
       ),
       'socialmedia_socialmedia-newsvine-share-button' => array(
         'name' => 'socialmedia_socialmedia-newsvine-share-button',
+      ),
+      'socialmedia_socialmedia-pinterest-share-button' => array(
+        'name' => 'socialmedia_socialmedia-pinterest-share-button',
       ),
       'socialmedia_socialmedia-reddit-share-button' => array(
         'name' => 'socialmedia_socialmedia-reddit-share-button',

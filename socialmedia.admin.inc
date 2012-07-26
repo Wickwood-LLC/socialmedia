@@ -587,7 +587,7 @@ function socialmedia_admin_share_widgets_form_submit($form, $form_state) {
 function socialmedia_element_in_set($element, $set) {
 //dsm($element);
 //dsm($set);
-  if (is_array($set['elements'])) {
+  if (isset($set['elements']) && is_array($set['elements'])) {
     foreach ($set['elements'] AS $e) {
       if ($element['name'] == $e['name']) {
         return TRUE;

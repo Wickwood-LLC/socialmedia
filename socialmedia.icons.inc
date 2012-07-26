@@ -49,6 +49,7 @@ function socialmedia_icon_platforms($featured = FALSE) {
     //'mixx' => t('Mixx'),
     //'myspace' => t('MySpace'),
     'newsvine' => t('Newsvine'),
+    'pinterest' => t('Pinterest'),
     'reddit' => t('Reddit'),
     'rss' => t('RSS'),
     //'slashdot' => t('Slashdot'),
