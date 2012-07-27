@@ -44,7 +44,7 @@ function socialmedia_admin_settings() {
     '#default_value' => variable_get('socialmedia_platforms_user', $defaults),
     '#description' => t('Select the platforms you want active for user level profiles. Only users with the !permissions permission will be able to add user profiles.',
       array(
-        '!permissions' => l(t('Administer own profiles'), 'admin/people/permissions'),
+        '!permissions' => l(t('Administer own social profiles'), 'admin/people/permissions'),
       )
      ),
     '#options' => $options,
