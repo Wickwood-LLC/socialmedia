@@ -637,7 +637,7 @@ function socialmedia_vimeo_parser($values) {
     $profile['username'] = $values['username'];
     return $profile;
   }
-dsm($profile['url']);   
+//dsm($profile['url']);   
   form_set_error('input_vimeo_username', t('Cannot derive Vimeo username for this type URL. Please provide a username.'));
   return FALSE;
 }
