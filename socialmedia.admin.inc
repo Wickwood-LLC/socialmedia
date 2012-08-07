@@ -366,7 +366,7 @@ function socialmedia_admin_profiles_form_validate($form, &$form_state) {
 		  if ($setup_mode && (!isset($inputs[$platform_name]['url']) || !trim($inputs[$platform_name]['url']))) {
 		    continue;
 		  }
-			call_user_func($platform['parser callback'], $inputs[$platform_name]);
+			call_user_func($platform['parser callback'], $inputs[$platform_name], 'user');
 		}
 	}
 }

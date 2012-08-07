@@ -52,7 +52,7 @@ function socialmedia_addthis_form($profile) {
   return $fields;
 }
 
-function socialmedia_addthis_parser($values) {
+function socialmedia_addthis_parser($values, $scope = 'site') {
   $profile['username'] = $values['username'];
   return $profile;
 }
@@ -96,15 +96,20 @@ function socialmedia_facebook_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_facebook_parser($values) {
+function socialmedia_facebook_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(facebook\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_facebook_url', t('Facebook URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_facebook_url', t('Facebook URL invalid.'));
+      return FALSE;
+  	}
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('facebook.com/', $str);
   $profile['url'] = 'www.facebook.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -171,15 +176,20 @@ function socialmedia_flickr_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_flickr_parser($values) {
-  $str = $values['url'];
+function socialmedia_flickr_parser($values, $scope = 'site') {
+  $profile = array('url' => '', 'username' => '');
+	$str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(flickr\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_flickr_url', t('Flickr URL invalid.'));
-    return FALSE;
-  }
-  $profile = array();
+  	if (trim($values['url'])) {
+      form_set_error('input_flickr_url', t('Flickr URL invalid.'));
+      return FALSE;
+  	}
+  	else {
+  		return $profile;
+  	}
+  }  
   $a = explode('www.flickr.com/', $str);
   $profile['url'] = 'www.flickr.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -240,15 +250,20 @@ function socialmedia_googleplus_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_googleplus_parser($values) {
+function socialmedia_googleplus_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http(?:s)?:\/\/)?(plus\.)(google\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_googleplus_url', t('Google+ URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_googleplus_url', t('Google+ URL invalid.'));
+      return FALSE;
+  	}
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('plus.google.com/', $str);
   $profile['url'] = 'plus.google.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -304,15 +319,20 @@ function socialmedia_linkedin_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_linkedin_parser($values) {
+function socialmedia_linkedin_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(linkedin\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_linkedin_url', t('LinkedIn URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_linkedin_url', t('LinkedIn URL invalid.'));
+      return FALSE;
+    }
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('linkedin.com/', $str);
   $profile['url'] = 'www.linkedin.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -372,15 +392,20 @@ function socialmedia_pinterest_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_pinterest_parser($values) {
+function socialmedia_pinterest_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(pinterest\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_linkedin_url', t('Pinterest URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_linkedin_url', t('Pinterest URL invalid.'));
+      return FALSE;
+  	}
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('pinterest.com/', $str);
   $profile['url'] = 'pinterest.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -445,7 +470,7 @@ function socialmedia_rss_form($profile) {
   return $fields;
 }
 
-function socialmedia_rss_parser($values) {
+function socialmedia_rss_parser($values, $scope = 'site') {
   $profile['url'] = $values['url'];
   return $profile;
 }
@@ -489,15 +514,20 @@ function socialmedia_slideshare_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_slideshare_parser($values) {
+function socialmedia_slideshare_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(slideshare\.net\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_slideshare_url', t('SlideShare URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_slideshare_url', t('SlideShare URL invalid.'));
+      return FALSE;
+    }
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('slideshare.net/', $str);
   $profile['url'] = 'www.slideshare.net/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -561,15 +591,20 @@ function socialmedia_twitter_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_twitter_parser($values) {
+function socialmedia_twitter_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(twitter\.com\/)(#!\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_twitter_url', t('Twitter URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_twitter_url', t('Twitter URL invalid.'));
+      return FALSE;
+  	}
+    else {
+      return $profile;
+    }    
   }
-  $profile = array();
   $profile['url'] = $matches[2][0] . $matches[4][0];
   $profile['username'] = (isset($values['username']) && $values['username']) ? $values['username'] : $matches[4][0];
  
@@ -622,15 +657,20 @@ function socialmedia_vimeo_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_vimeo_parser($values) {
+function socialmedia_vimeo_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(vimeo\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_vimeo_url', t('Vimeo URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_vimeo_url', t('Vimeo URL invalid.'));
+      return FALSE;
+    }
+    else {
+      return $profile;
+    }
   }
-  $profile = array();
   $a = explode('vimeo.com/', $str);
   $profile['url'] = 'vimeo.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
@@ -686,15 +726,20 @@ function socialmedia_youtube_platform_info() {
   return $platforms;  
 }
 
-function socialmedia_youtube_parser($values) {
+function socialmedia_youtube_parser($values, $scope = 'site') {
+	$profile = array('url' => '', 'username' => '');
   $str = $values['url'];
   $pattern = '/(?:http:\/\/)?(www\.)*(youtube\.com\/)?(\w+)+/i';
   //$pattern = '/^http:\/\/(www\.)?twitter\.com\/(#!\/)?(?<name>[^\/]+)(/\w+)*$/';
   if (!preg_match($pattern, $str, $matches, PREG_OFFSET_CAPTURE)) {
-    form_set_error('input_youtube_url', t('YouTube URL invalid.'));
-    return FALSE;
+  	if (trim($values['url'])) {
+      form_set_error('input_youtube_url', t('YouTube URL invalid.'));
+      return FALSE;
+  	}
+    else {
+      return $profile;
+    }    
   }
-  $profile = array();
   $a = explode('youtube.com/', $str);
   $profile['url'] = 'www.youtube.com/' . $a[1];
   if(isset($values['username']) && trim($values['username'])) {
