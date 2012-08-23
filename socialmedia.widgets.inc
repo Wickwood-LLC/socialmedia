@@ -122,7 +122,7 @@ function socialmedia_base_platforms() {
     'label' => t('Facebook'),
     'group' => t('Social media: Facebook'),
   );
-  $title = t("Visit %varusername on Facebook", array('%varusername' => '[?profile_username=[socialmedia:sm-facebook_username]?]'));
+  $title = t("Visit !varusername on Facebook", array('!varusername' => '[?profile_username=[socialmedia:sm-facebook_username]?]'));
   $stitle = t("Share on Facebook");
   $platforms['facebook']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-facebook_url]?]",
@@ -136,7 +136,7 @@ function socialmedia_base_platforms() {
     'label' => t('Flickr'),
     'group' => t('Social media: Flickr'),
   );
-  $title = t("Visit %varusername on Flickr", array('%varusername' => '[?profile_username=[socialmedia:sm-flickr_username]?]'));
+  $title = t("Visit !varusername on Flickr", array('!varusername' => '[?profile_username=[socialmedia:sm-flickr_username]?]'));
   $platforms['flickr']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-flickr_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-flickr_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]>[?profile_username=[socialmedia:sm-flickr_username]?]</a>',  
@@ -156,7 +156,7 @@ function socialmedia_base_platforms() {
     'label' => t('Google+'),
     'group' => t('Social media: Google+'),
   );
-  $title = t("Visit %varusername on Google+", array('%varusername' => '[?profile_username=[socialmedia:sm-googleplus_username]?]'));
+  $title = t("Visit !varusername on Google+", array('!varusername' => '[?profile_username=[socialmedia:sm-googleplus_username]?]'));
   $platforms['googleplus']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-googleplus_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-googleplus_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-googleplus_username]?]</a>',  
@@ -167,7 +167,7 @@ function socialmedia_base_platforms() {
     'label' => t('LinkedIn'),
     'group' => t('Social media: LinkedIn'),
   );
-  $title = t("Visit %varusername on LinkedIn", array('%varusername' => '[?profile_username=[socialmedia:sm-linkedin_username]?]'));
+  $title = t("Visit !varusername on LinkedIn", array('!varusername' => '[?profile_username=[socialmedia:sm-linkedin_username]?]'));
   $stitle = t("Share on LinkedIn");
   $platforms['linkedin']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-linkedin_url]?]",
@@ -201,7 +201,7 @@ function socialmedia_base_platforms() {
     'label' => t('Pinterest'),
     'group' => t('Social media: Pinterest'),
   );
-  $title = t("Visit %varusername on Pinterest", array('%varusername' => '[?profile_username=[socialmedia:sm-pinterest_username]?]'));
+  $title = t("Visit !varusername on Pinterest", array('!varusername' => '[?profile_username=[socialmedia:sm-pinterest_username]?]'));
   $stitle = t("Pin It");
   $platforms['pinterest']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-pinterest_url]?]",
@@ -221,28 +221,28 @@ function socialmedia_base_platforms() {
     'share-text-link' => '<a href="http://reddit.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text='.$stitle.'?]"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]>[?link-text='.$stitle.'?]</a>',
     'share-button' => '<a href="http://reddit.com/submit?url=[|[node:url]||[current-page:url]|]&title=[|[node:title]||[current-page:title-plain]|]" title="[?link-text='.$stitle.'?]"[?link-target= target="{[socialmedia:sm-default_link_target_sharing]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_sharing]}"?]><img src="[?icon-path=[socialmedia:sm-reddit_icon-path]?]" alt="Reddit icon" ></a>',
   );
-
-  $platforms['slideshare'] = array(
-    'label' => t('SlideShare'),
-    'group' => t('Social media: SlideShare'),
-  );
-  $title = t("Visit %varusername on SlideShare", array('%varusername' => '[?profile_username=[socialmedia:sm-slideshare_username]?]'));
-  $platforms['slideshare']['templates'] = array(
-    'profile-url' => "[?profile_url=[socialmedia:sm-slideshare_url]?]",
-    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-slideshare_username]?]</a>',  
-    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-slideshare_icon-path]?]" alt="SlideShare icon" ></a>',
-  );
-  
+      
   $platforms['rss'] = array(
     'label' => t('RSS'),
     'group' => t('Social media: RSS'),
   );
   $stitle = t("Subscribe via RSS");
-  $stitle2 = t("Subscribe to %varfeedname via RSS", array('%varfeedname' => '[?profile_username=[socialmedia:sm-rss_feedname]?]'));
+  $stitle2 = t("Subscribe to !varfeedname via RSS", array('!varfeedname' => '[?profile_username=[socialmedia:sm-rss_feedname]?]'));
   $platforms['rss']['templates'] = array(
     'feed-url' => "[?profile_url=[socialmedia:sm-rss_url]?]",
     'feed-text-link' => '<a href="[?profile_url=[socialmedia:sm-rss_url]?]" title="'.$stitle.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_feedname=[socialmedia:sm-rss_feedname]?]</a>',  
     'feed-button' => '<a href="[?profile_url=[socialmedia:sm-rss_url]?]" title="'.$stitle2.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-rss_icon-path]?]" alt="RSS icon" ></a>',
+  );
+
+  $platforms['slideshare'] = array(
+    'label' => t('SlideShare'),
+    'group' => t('Social media: SlideShare'),
+  );
+  $title = t("Visit !varusername on SlideShare", array('!varusername' => '[?profile_username=[socialmedia:sm-slideshare_username]?]'));
+  $platforms['slideshare']['templates'] = array(
+    'profile-url' => "[?profile_url=[socialmedia:sm-slideshare_url]?]",
+    'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-slideshare_username]?]</a>',  
+    'profile-button' => '<a href="[?profile_url=[socialmedia:sm-slideshare_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]><img src="[?icon-path=[socialmedia:sm-slideshare_icon-path]?]" alt="SlideShare icon" ></a>',
   );
 
   $platforms['stumbleupon'] = array(
@@ -269,7 +269,7 @@ function socialmedia_base_platforms() {
     'label' => t('Twitter'),
     'group' => t('Social media: Twitter'),
   );
-  $title = t("Visit %varusername on Twitter", array('%varusername' => '[?profile_username=[socialmedia:sm-twitter_username]?]'));
+  $title = t("Visit !varusername on Twitter", array('!varusername' => '[?profile_username=[socialmedia:sm-twitter_username]?]'));
   $stitle = t("Tweet this");
   $platforms['twitter']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-twitter_url]?]",
@@ -283,7 +283,7 @@ function socialmedia_base_platforms() {
     'label' => t('Vimeo'),
     'group' => t('Social media: Vimeo'),
   );
-  $title = t("Visit %varusername on Vimeo", array('%varusername' => '[?profile_username=[socialmedia:sm-vimeo_username]?]'));
+  $title = t("Visit !varusername on Vimeo", array('!varusername' => '[?profile_username=[socialmedia:sm-vimeo_username]?]'));
   $platforms['vimeo']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-vimeo_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-vimeo_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-vimeo_username]?]</a>',  
@@ -304,7 +304,7 @@ function socialmedia_base_platforms() {
     'label' => t('YouTube'),
     'group' => t('Social media: YouTube'),
   );
-  $title = t("Visit %varusername on YouTube", array('%varusername' => '[?profile_username=[socialmedia:sm-youtube_username]?]'));
+  $title = t("Visit !varusername on YouTube", array('!varusername' => '[?profile_username=[socialmedia:sm-youtube_username]?]'));
   $platforms['youtube']['templates'] = array(
     'profile-url' => "[?profile_url=[socialmedia:sm-youtube_url]?]",
     'profile-text-link' => '<a href="[?profile_url=[socialmedia:sm-youtube_url]?]" title="'.$title.'"[?link-target= target="{[socialmedia:sm-default_link_target_profile]}"?][?link-rel= rel="{[socialmedia:sm-default_link_rel_profile]}"?]>[?profile_username=[socialmedia:sm-youtube_username]?]</a>',  
