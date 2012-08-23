@@ -554,11 +554,14 @@ function socialmedia_widgets_element_alter_addthis_stumbleupon_badge(&$form, $se
 // PVE 8-10/2/12 translation management + produce FB library only one time
 function socialmedia_widgets_facebook_js_sdk() {
   global $language;
+// Get fb local based on site language and country.
   $country = variable_get('site_default_country', 'US');
-  if (!$country) {
-  	$country = 'US';
+  $locale = $language->language . '_' . $country;
+  $locales = _socialmedia_widgets_get_facebook_locales();
+  if (!isset($locales[$locale])) {
+    // Locale not valid, use default.
+    $locale = 'en_US';
   }
-  $loc = $language->language.'_'.$country;
   $facebook_js_sdk = '<script>
 if (!document.getElementById("fb-root")) {
   fb_root = document.createElement("div");
@@ -568,11 +571,32 @@ if (!document.getElementById("fb-root")) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/'.$loc.'/all.js#xfbml=1";
+    js.src = "//connect.facebook.net/'.$locale.'/all.js#xfbml=1";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, "script", "facebook-jssdk"));
 }</script>';
   return $facebook_js_sdk;
+}
+
+function _socialmedia_widgets_get_facebook_locales() {
+  $fb_locale = array();
+  $cache = cache_get('socialmedia_facebook_locales');
+  if (empty($cache->data)) {
+    $result = drupal_http_request("https://www.facebook.com/translations/FacebookLocales.xml");
+    $xml = simplexml_load_string($result->data);
+    foreach ($xml->locale as $line) {
+      $representation = (array) $line->codes->code->standard->representation;
+      $name = (array) $line->englishName;
+      $key = $representation[0];
+      $value = $name[0];
+      $fb_locale[$key] = $value;
+    }
+    cache_set('socialmedia_facebook_locales', serialize($fb_locale), 'cache');
+  }
+  else {
+    $fb_locale = unserialize($cache->data);
+  }
+  return $fb_locale;
 }
 
 function socialmedia_widgets_element_facebook_like_box() {
