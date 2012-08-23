@@ -441,7 +441,7 @@ function socialmedia_rss_platform_info() {
     'title' => t('RSS'),
     'description' => t('URL to your RSS feed'),
     'group' => t('Syndication'),
-    //'homepage' => 'http://www.addthis.com',
+    //'homepage' => '',
     'form callback' => 'socialmedia_rss_form',
     'parser callback' => 'socialmedia_rss_parser',
     'tokens callback' => 'socialmedia_rss_tokens',
@@ -463,7 +463,7 @@ function socialmedia_rss_form($profile) {
   $fields['input_rss_url'] = array(
     '#type' => 'textfield',
     '#title' => t('RSS url'),
-    '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : base_path() . 'rss.xml',
+    '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : 'rss.xml',
     '#description' => t('This is the url to your rss feed. The default feed is located at rss.xml but you might want to link to another feed.'),
     '#size' => 80,
   );
@@ -478,7 +478,12 @@ function socialmedia_rss_parser($values, $scope = 'site') {
 function socialmedia_rss_tokens($key, $profile) {
   switch ($key) {
     case 'url':
-      return isset($profile['url']) ? $profile['url'] : '';
+    	// removed leading '/' if it exists. Used to support old format before url function added.
+    	if (substr($profile['url'], 0, 1) == '/') {
+    		$profile['url'] = substr($profile['url'],1);
+    	}
+    	//return isset($profile['url']) ? $profile['url'] : '';
+      return isset($profile['url']) ? url($profile['url']) : '';
   }
   return '';
 }
