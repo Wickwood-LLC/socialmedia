@@ -430,11 +430,17 @@ function socialmedia_get_context_author_uid($data) {
   if (isset($data['node']->uid)) {
     $uid = $data['node']->uid; 
   }
-  elseif ((arg(0) == 'node') && is_numeric(arg(1))) {         
-    $uid = menu_get_object()->uid;
+  elseif ((arg(0) == 'node') && is_numeric(arg(1))) {
+    $obj = menu_get_object();
+    if (is_object($obj))  {
+      $uid = $obj->uid;
+    }
   }
   elseif (arg(0) == 'user' && is_numeric(arg(1))) {
-    $uid = menu_get_object('user', 1)->uid;
+    $obj = menu_get_object('user', 1);
+    if (is_object($obj))  {
+      $uid = $obj->uid;
+    }
   } 
   drupal_alter('socialmedia_context_author_uid', $uid, $data);
   return $uid;
