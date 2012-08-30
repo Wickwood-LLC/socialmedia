@@ -124,7 +124,7 @@ function socialmedia_socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_dryicons', 
     'download' => 'http://dryicons.com/free-icons/category/social/',
-    'additional instructions' => t('Download the PNG version of all four sets. Some directories are misnamed in set 2. Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
+    'additional instructions' => t('Download the PNG version of all four sets. Some directories are misnamed in set 2. For example, the correct file path to the 32x32 twitter icon should be "socialmedia/icons/dryicons/png/32x32/twitter.png". Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
       array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/dryicons/')
     )
   );
@@ -152,7 +152,7 @@ function socialmedia_socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_jankoatwarpspeed', 
     'download' => 'http://www.jankoatwarpspeed.com/post/2008/10/20/handycons-a-free-hand-drawn-social-media-icon-set.aspx',
-    'additional instructions' => t('Also download and install the !link.',
+    'additional instructions' => t('Also download and install the !link. NOTE: Make sure to install the Handycons2 icon set.',
       array('!link' => l(t('Handycons 2 set'), 'http://www.jankoatwarpspeed.com/post/2009/02/23/Handycons-2-another-free-hand-drawn-icon-set.aspx'))
     ),
   );
@@ -217,6 +217,7 @@ function socialmedia_icon_path_dryicons($platform = 'twitter', $style = NULL) {
   $style = isset($style) ? $style : '32x32';
   $pt = array(
     'googleplus' => 'google_plus',
+    ''
   );
   $path = drupal_get_path('module', 'socialmedia') . '/icons/dryicons/PNG/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
   return $path;
@@ -227,7 +228,7 @@ function socialmedia_icon_path_icondock($platform = 'twitter', $style = NULL) {
   $t = array(
     'googleplus' => 'google-plus',
   );
-  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/Vector Social Media Icons/PNG/' . $style . '/' . ((isset($t[$platform]))? $t[$platform] : $platform) . '.png'; 
+  $path = drupal_get_path('module', 'socialmedia') . '/icons/icondock/Vector Social Media Icons/png/' . $style . '/' . ((isset($t[$platform]))? $t[$platform] : $platform) . '.png'; 
   return $path;
 }
 
