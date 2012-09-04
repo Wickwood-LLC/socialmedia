@@ -1,6 +1,7 @@
 <?php 
 
-/*
+/**
+ * @file
  * Functions pertaining to iconset management
  */
 
@@ -12,8 +13,8 @@ function socialmedia_icon_style_options($for_widgets = TRUE, $platform = NULL) {
   }
   foreach ($icons AS $iconset_name => $iconset) {
     if (socialmedia_iconset_is_installed($iconset_name)) {
-      foreach($iconset['styles'] AS $sid => $style) {
-        if($for_widgets) {
+      foreach ($iconset['styles'] AS $sid => $style) {
+        if ($for_widgets) {
           $options[$iconset['name']][base_path() . call_user_func($iconset['path callback'], $platform, $sid)] = $style;
         }
         else {
@@ -26,9 +27,9 @@ function socialmedia_icon_style_options($for_widgets = TRUE, $platform = NULL) {
 }
 
 function socialmedia_iconset_is_installed($iconset) {
-	
-	$iconsets = socialmedia_iconset_info();
-  return file_exists (call_user_func($iconsets[$iconset]['path callback']));
+  
+  $iconsets = socialmedia_iconset_info();
+  return file_exists(call_user_func($iconsets[$iconset]['path callback']));
 }
 
 function socialmedia_icon_platforms($featured = FALSE) {
@@ -63,9 +64,9 @@ function socialmedia_icon_platforms($featured = FALSE) {
   );
   
   if ($featured) {
-  	unset($platforms['blinklist']);
-  	unset($platforms['lastfm']);
-  	//unset($platforms['slideshare']);
+    unset($platforms['blinklist']);
+    unset($platforms['lastfm']);
+    //unset($platforms['slideshare']);
   }  
   
   return $platforms;
@@ -251,7 +252,7 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
     'vimeo' => 'Vimeo',
     'youtube' => 'Youtube',
   );
-  if(!isset($trans[$platform])) {
+  if (!isset($trans[$platform])) {
     return FALSE;
   }
   $style = isset($style) ? $style : '32x32';
@@ -261,7 +262,7 @@ function socialmedia_icon_path_thegforce($platform = 'twitter', $style = NULL) {
 
 function socialmedia_icon_path_jankoatwarpspeed($platform = 'twitter', $style = NULL) {
   $style = isset($style) ? $style : '32x32';
-	
+  
   $pt = array(
     'googleplus' => 'google',
   );
@@ -281,7 +282,7 @@ function socialmedia_icon_path_jankoatwarpspeed($platform = 'twitter', $style = 
     'yahoo' => 1,
   );
   if (isset($st[$platform])) {
-  	list($style, $t) = explode('x', $style); 
+    list($style, $t) = explode('x', $style); 
   }
 
   $style = isset($style) ? $style : '32x32';
@@ -300,7 +301,7 @@ function socialmedia_icon_path_ristaumedia($platform = 'twitter', $style = NULL)
 
 function socialmedia_icon_path_arbent_clean($platform = 'twitter', $style = NULL) {
   $style = isset($style) ? $style : '32x32';
-	$pt = array(
+  $pt = array(
     'email' => 'mail',
   );
   $path = drupal_get_path('module', 'socialmedia') . '/icons/arbent/clean/' . $style . '/' . ((isset($pt[$platform]))? $pt[$platform] : $platform) . '.png'; 
