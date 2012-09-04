@@ -124,7 +124,7 @@ function socialmedia_socialmedia_iconset_info() {
     ),
     'path callback' => 'socialmedia_icon_path_dryicons', 
     'download' => 'http://dryicons.com/free-icons/category/social/',
-    'additional instructions' => t('Download the PNG version of all four sets. Some directories are misnamed in set 2. For example, the correct file path to the 32x32 twitter icon should be "socialmedia/icons/dryicons/png/32x32/twitter.png". Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64.',
+    'additional instructions' => t('Download the PNG version of all four sets. Some directories are misnamed in set 2. For example, the correct file path to the 32x32 twitter icon should be "socialmedia/icons/dryicons/png/32x32/twitter.png". Merge icons from folders ending in "px", e.g. 64x64px, into their non px equivalents, e.g. 64x64. NOTE: there are some inconsistancies in file naming that may need to be corrected for specific icon sizes.',
       array('%directory' => drupal_get_path('module', 'socialmedia') . '/icons/dryicons/')
     )
   );

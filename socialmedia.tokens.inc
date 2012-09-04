@@ -88,7 +88,9 @@ function socialmedia_token_info() {
 }
 
 function socialmedia_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $replacements = array();
+//dsm($type);
+//dsm($data);
+	$replacements = array();
   if ($type == 'current-page') {
   	if (isset($tokens['title-plain'])) {
   		$replacements[$tokens['title-plain']] = strip_tags(drupal_get_title());
@@ -110,14 +112,18 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
       	}
       	$profile = NULL;
       	// if token has user context, load the profiles for the user      	
-        if ((($type == 'user') || ($type == 'socialmedia'))) {
+      	$profile_context = (isset($data['set']['data']['socialmedia']['profile_context'])) ? $data['set']['data']['socialmedia']['profile_context'] : 'usersite';
+        if ((strpos($profile_context, 'user') !== FALSE) 
+          && (($type == 'user') || ($type == 'socialmedia'))) {
         	$uid = socialmedia_get_context_author_uid($data);
         	if (isset($uid) && $uid) {
             $profile = socialmedia_profile_load($platform_name, $uid);
         	}
         }
         // if site context or user profile not found, load site profile
-        if (($type == 'site') || (($type == 'socialmedia') && (!isset($profile['result']) || !$profile['result']))) {
+        if ((strpos($profile_context, 'site') !== FALSE) 
+          && (($type == 'site') 
+            || (($type == 'socialmedia') && (strpos($profile_context, 'user') !== FALSE) && (!isset($profile['result']) || !$profile['result'])))) {
           $profile = socialmedia_profile_load($platform_name, 0);
         }
         $platform = socialmedia_platform_definition_load($platform_name);
@@ -129,7 +135,8 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
 			        '!link' => l(t('Set @platform profile.', array('@platform' => $platform['title'])), 'admin/config/media/socialmedia')
 			      )
 			    );
-			    _socialmedia_widgets_set_error($data['widgets']['element'], $msg);
+			    //_socialmedia_widgets_set_error($data['widgets']['element'], $msg);
+			    _socialmedia_widgets_set_error($data['widgets']['element'], '');
         }
         else {
         	$replacements[$original] = $replacement;

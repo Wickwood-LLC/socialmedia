@@ -361,6 +361,30 @@ function socialmedia_platform_definition_load($platform, $uid = NULL) {
   return isset($definitions[$platform]) ? $definitions[$platform] : FALSE;
 }
 
+function socialmedia_widgets_set_form_alter(&$form, $set) {
+//dsm($form);
+//dsm($set);
+  $data = $set['data'];
+  $form['socialmedia'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Social media'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $options = array(
+    'siteonly' => t('Use site profiles only'),
+    'useronly' => t('Use user profiles only'),
+    'usersite' => t('Try user profiles first, fallback to site profiles.'),
+  );
+  $form['socialmedia']['profile_context'] = array(
+    '#type' => 'radios',
+    '#title' => t('Profile context'),
+    '#description' => t('Both site and user level social media profiles can be enabed. This option sets which types of profiles to use for the this widget set.'),
+    '#options' => $options,
+    '#default_value' => isset($data['socialmedia']['profile_context']) ? $data['socialmedia']['profile_context'] : 'usersite',
+  );
+}
+
 function _socialmedia_widgets_set_error($element, $msg, $status = 'warning') {
   if (module_exists('widgets')) {
     if (user_access('administer socialmedia')) {
