@@ -76,7 +76,7 @@ function socialmedia_token_info() {
   }
   
   $tokens['current-page']['title-plain'] = array(
-    'name' => t('The palin title of the current page.'),
+    'name' => t('The plain title of the current page.'),
     'description' => t('The title of the current page stripped of HTML'),
   );
   
