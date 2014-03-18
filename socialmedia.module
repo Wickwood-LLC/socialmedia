@@ -18,6 +18,8 @@ define('SOCIALMEDIA_LINK_TARGET_PROFILE_DEFAULT', '_blank');
 define('SOCIALMEDIA_LINK_TARGET_SHARING_DEFAULT', '_blank');
 define('SOCIALMEDIA_LINK_REL_PROFILE_DEFAULT', '<none>');
 define('SOCIALMEDIA_LINK_REL_SHARING_DEFAULT', '<none>');
+define('SOCIALMEDIA_LINK_CLASS_PROFILE_DEFAULT', '<none>');
+define('SOCIALMEDIA_LINK_CLASS_SHARING_DEFAULT', '<none>');
 define('SOCIALMEDIA_ICON_DEFAULT_STYLE_DEFAULT', 'levelten_glossy:32x32');
 
 // Permissions
@@ -260,7 +262,13 @@ function socialmedia_help($path, $arg) {
   }
 }
 
-function socialmedia_profile_save($profile, $platform, $uid = 0) {
+function socialmedia_profile_save($profile, $platform = null, $uid = null) {
+  if (!isset($platform) && isset($profile['platform'])) {
+    $platform = $profile['platform'];
+  }
+  if (!isset($uid)) {
+    $uid = isset($profile['uid']) ? $profile['uid'] : 0;
+  }
   $query = db_merge('socialmedia_profile');
   $query->key(array(
     'platform' => $platform,
@@ -291,6 +299,22 @@ function socialmedia_profile_load($platform, $uid = 0) {
   
   $profiles[$platform][$uid] = $profile;
   return $profile;
+}
+
+function socialmedia_profile_load_all($platform = null, $uid = null) {
+  // Select all the user-defined sets.
+  $query = db_select('socialmedia_profile', NULL, array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('socialmedia_profile');
+
+  if (isset($platform)) {
+    $query->condition('platform', $platform);
+  }
+  if (isset($uid)) {
+    $query->condition('uid', $uid);
+  }
+
+  $profiles =  $query->execute()->fetchAllAssoc('smid', PDO::FETCH_ASSOC);
+  return $profiles;
 }
 
 /**
@@ -354,9 +378,12 @@ function socialmedia_platform_definition_load($platform, $uid = NULL) {
 
   // If a set is specified, do not allow loading of default set
   // elements.
+  // TODO: what was I doing here? I can't remember, commenting out logic
+  /*
   if (isset($uid)) {
     $set = socialmedia_user_load($uid, NULL);
   }
+  */
 
   return isset($definitions[$platform]) ? $definitions[$platform] : FALSE;
 }
@@ -469,4 +496,66 @@ function socialmedia_get_context_author_uid($data) {
   drupal_alter('socialmedia_context_author_uid', $uid, $data);
   return $uid;
   
+}
+
+/**
+ * Implementation of hook_features_api().
+ *
+ * Allow exporting of config wizards by the Features module.
+ */
+function socialmedia_features_api() {
+  return array(
+    'socialmedia_profile' => array(
+      'name' => t('Socialmedia profiles'),
+      'feature_source' => TRUE,
+      'default_hook' => 'socialmedia_profile_defaults',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED,
+      //'default_file' => 'widgets',
+      'file' => drupal_get_path('module', 'socialmedia') . '/socialmedia.features.inc',
+    )
+  );
+}
+
+/**
+ * Implements hook_user_load()
+ *
+ * Attaches socialmedia profile data on users
+ * @param $users
+ */
+function socialmedia_user_load($users) {
+  foreach ($users AS $uid => $user) {
+    $users[$uid]->socialmedia = array(
+      'profiles' => array(),
+    );
+    $profiles = socialmedia_profile_load_all(null, $uid);
+    if (is_array($profiles)) {
+      foreach ($profiles AS $smid => $profile) {
+        $data = unserialize($profile['data']);
+        // skip empty profiles
+        if (empty($data)) {
+          continue;
+        }
+        $users[$uid]->socialmedia['profiles'][$profile['platform']] = $data;
+      }
+    }
+  }
+}
+
+function socialmedia_user_insert(&$edit, $account, $category) {
+  socialmedia_user_save($edit, $account, $category);
+}
+
+function socialmedia_user_update(&$edit, $account, $category) {
+  socialmedia_user_save($edit, $account, $category);
+}
+
+function socialmedia_user_save(&$edit, $account, $category) {
+  if (isset($edit['socialmedia'])
+    && !empty($edit['socialmedia']['profiles'])
+    && is_array($edit['socialmedia']['profiles'])
+  ) {
+    foreach ($edit['socialmedia']['profiles'] AS $platform => $profile) {
+      socialmedia_profile_save($profile, $platform, $account->uid);
+    }
+  }
 }

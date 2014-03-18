@@ -130,8 +130,14 @@ function socialmedia_admin_settings() {
     '#type' => 'select',
     '#title' => t('Profile rel'),
     '#options' => $options,
-    '#default_value' => variable_get('socialmedia_default_link_target_profile', SOCIALMEDIA_LINK_REL_PROFILE_DEFAULT),
+    '#default_value' => variable_get('socialmedia_default_link_rel_profile', SOCIALMEDIA_LINK_REL_PROFILE_DEFAULT),
     '#description' => t('Sets the default rel= attribute on profile widget links.'),
+  );
+  $form['link_attributes']['socialmedia_default_link_class_profile'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Profile class'),
+    '#default_value' => variable_get('socialmedia_default_link_class_profile', SOCIALMEDIA_LINK_CLASS_PROFILE_DEFAULT),
+    '#description' => t('Use to add css class attributes to links.'),
   );
   $form['link_attributes']['socialmedia_default_link_target_sharing'] = array(
     '#type' => 'textfield',
@@ -147,8 +153,14 @@ function socialmedia_admin_settings() {
     '#type' => 'select',
     '#title' => t('Sharing rel'),
     '#options' => $options,
-    '#default_value' => variable_get('socialmedia_default_link_target_sharing', SOCIALMEDIA_LINK_REL_SHARING_DEFAULT),
+    '#default_value' => variable_get('socialmedia_default_link_rel_sharing', SOCIALMEDIA_LINK_REL_SHARING_DEFAULT),
     '#description' => t('Sets the default rel= attribute on sharing widget links.'),
+  );
+  $form['link_attributes']['socialmedia_default_link_class_sharing'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Sharing class'),
+    '#default_value' => variable_get('socialmedia_default_link_class_sharing', SOCIALMEDIA_LINK_CLASS_SHARING_DEFAULT),
+    '#description' => t('Use to add css class attributes to links.'),
   );
 
   
@@ -193,14 +205,21 @@ function socialmedia_admin_settings() {
     );
     if (socialmedia_iconset_is_installed($iconset_name)) {
       foreach ($examples AS $pkey => $pname) {
-        $vars = array(
-          'path' => call_user_func($iconset['path callback'], $pkey),
-          //'alt' => $pname,
-          'title' => $pname,
-        );
-        $row[] = theme('image', $vars) . ' ';
+        if (isset($iconset['path callback'])) {
+          $vars = array(
+            'path' => call_user_func($iconset['path callback'], $pkey),
+            //'alt' => $pname,
+            'title' => $pname,
+          );
+          $row[] = theme('image', $vars) . ' ';
+        }
+        else if (isset($iconset['markup callback'])) {
+          $row[] = ' ';
+        }
+        else {
+          $row[] = ' ';
+        }
       }
-      
     }
     else {
       $str = t('<strong>Not installed.</strong><br />To install: !download and install into %dir.',
