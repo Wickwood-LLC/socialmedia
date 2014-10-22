@@ -97,10 +97,6 @@ function socialmedia_token_info() {
 }
 
 function socialmedia_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  //dsm($type);
-  //dsm($tokens);
-  //dsm($data);
-
   $replacements = array();
   if ($type == 'current-page') {
     if (isset($tokens['title-plain'])) {
@@ -108,9 +104,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
     }
   }
   if (($type == 'site') || ($type == 'user') || ($type == 'socialmedia')) {
-    //dsm($type);
-    //dsm($tokens);
-    //dsm($data);
+
     //$uid = (($type == 'user') && isset($data['user']->uid)) ? $data['user']->uid : 0; 
     foreach ($tokens as $name => $original) {
       if (strpos($name, 'sm-') === 0) {
@@ -151,7 +145,9 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
           $profile = socialmedia_profile_load($platform_name, 0);
         }
         $platform = socialmedia_platform_definition_load($platform_name);
+
         $replacement = call_user_func($platform['tokens callback'], $hash, $profile);
+
         if (!isset($replacement) || $replacement === FALSE) {
           $msg = t('You are trying to use a social media %platform profile token but the profile has not been set. !link',
             array(
@@ -160,7 +156,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
             )
           );
           //_socialmedia_widgets_set_error($data['widgets']['element'], $msg);
-          _socialmedia_widgets_set_error($data['widgets']['element'], '');
+          _socialmedia_widgets_set_error($data['set']['name'] . ':' . $data['widgets']['element']['name'], '');
         }
         else {
           $replacements[$original] = $replacement;
@@ -168,6 +164,7 @@ function socialmedia_tokens($type, $tokens, array $data = array(), array $option
       }
     }
   }
+
   return $replacements;
 }
 

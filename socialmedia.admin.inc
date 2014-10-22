@@ -35,7 +35,7 @@ function socialmedia_admin_settings() {
     '#default_value' => variable_get('socialmedia_platforms_site', $defaults),
     '#description' => t('Select the platforms you want active for site wide profiles.'),
     '#options' => $options,
-    '#multicolumn' => array('width' => 2),  // multi colunms the checkboxes if multicolumnchecdkboxesradio.module installed
+    //'#multicolumn' => array('width' => 2),  // multi colunms the checkboxes if multicolumnchecdkboxesradio.module installed
   );
   
   $form['platforms']['socialmedia_platforms_user'] = array(
@@ -222,12 +222,16 @@ function socialmedia_admin_settings() {
       }
     }
     else {
-      $str = t('<strong>Not installed.</strong><br />To install: !download and install into %dir.',
-        array(
-          '!download' => l(t('download'), $iconset['download'], array('attributes' => array('target' => '_blank'))),
-          '%dir' => drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset_name . '/',
-        )
-      );
+      if (isset($iconset['download'])) {
+        $str = t('<strong>Not installed.</strong><br />To install: !download and install into %dir.',
+          array(
+            '!download' => l(t('download'), $iconset['download'], array('attributes' => array('target' => '_blank'))),
+            '%dir' => drupal_get_path('module', 'socialmedia') . '/icons/' . $iconset_name . '/',
+          )
+        );
+      } else {
+        $str = '';
+      }
       if (isset($iconset['additional instructions'])) {
         $str .= ' ' . $iconset['additional instructions'];
       }
@@ -312,7 +316,7 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
       );
       $fields[$name]['input_' . $name . '_url'] = array(
         '#type' => 'textfield',
-        '#title' => filter_xss($platform['title'] . ' URL'),
+        '#title' => filter_xss($platform['title'] . ' profile URL'),
         '#default_value' => (isset($profile['inputs']['url'])) ? $profile['inputs']['url'] : '',
         '#description' => filter_xss(isset($platform['profile url']) ? $platform['profile description url'] : $default_description),
         '#size' => 80,
@@ -324,7 +328,16 @@ function socialmedia_admin_profiles_form($form, &$form_state, $context = 'site',
         '#default_value' => (isset($profile['inputs']['username'])) ? $profile['inputs']['username'] : '',
         '#description' => filter_xss(isset($platform['description username']) ? $platform['description username'] : $default_description),
         '#size' => 32,
-      ); 
+      );
+      if ($name == 'twitter') {
+        $fields[$name]['input_' . $name . '_user_timeline_widget_id'] = array(
+          '#type' => 'textfield',
+          '#title' => filter_xss($platform['title'] . ' user timeline widget id'),
+          '#default_value' => (isset($profile['inputs']['user_timeline_widget_id'])) ? $profile['inputs']['user_timeline_widget_id'] : '',
+          '#description' => t('Enter the user timeline widget id from Twitter settings you would like to use for profile timelines.'),
+          '#size' => 32,
+        );
+      }
     }
     if (isset($platform['group'])) {
       if (!isset($form[$platform['group']])) {
@@ -457,8 +470,7 @@ function socialmedia_admin_profile_widgets_form($form, $form_state) {
   
   $defs = socialmedia_widgets_set_profile_default_elements();
   $set = variable_get('socialmedia_widget_set_default_profile', socialmedia_widgets_set_profile_default());
-//dsm($defs);
-//dsm($set);
+
   foreach ($defs AS $group => $defs2) {
     $form[$group] = array(
       '#type' => 'fieldset',
