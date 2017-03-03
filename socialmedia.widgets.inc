@@ -953,33 +953,34 @@ EOF;
 
 function socialmedia_widgets_element_twitter_profile_widget() {
   $template = <<<EOF
-<script src="//widgets.twimg.com/j/2/widget.js"></script>
 <script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: [?preferences:number_of_tweets=4?],
-  interval: 30000,
-  width: [?dimensions:width=[socialmedia:sm-default_width]?],
-  height: [?dimensions:height=[socialmedia:sm-default_height]?],
-  theme: {
-    shell: {
-      background: '[?appearance:shell_background_color=[socialmedia:sm-default_color_header_background]?]',
-      color: '[?appearance:shell_text_color=[socialmedia:sm-default_color_header_text]?]'
+jQuery.getScript('https://widgets.twimg.com/j/2/widget.js', function(){
+  new TWTR.Widget({
+    version: 2,
+    type: 'profile',
+    rpp: [?preferences:number_of_tweets=4?],
+    interval: 30000,
+    width: [?dimensions:width=[socialmedia:sm-default_width]?],
+    height: [?dimensions:height=[socialmedia:sm-default_height]?],
+    theme: {
+      shell: {
+        background: '[?appearance:shell_background_color=[socialmedia:sm-default_color_header_background]?]',
+        color: '[?appearance:shell_text_color=[socialmedia:sm-default_color_header_text]?]'
+      },
+      tweets: {
+        background: '[?appearance:tweets_background_color=[socialmedia:sm-default_color_body_background]?]',
+        color: '[?appearance:tweets_text_color=[socialmedia:sm-default_color_body_text]?]',
+        links: '[?appearance:link_color=[socialmedia:sm-default_color_body_linktext]?]'
+      }
     },
-    tweets: {
-      background: '[?appearance:tweets_background_color=[socialmedia:sm-default_color_body_background]?]',
-      color: '[?appearance:tweets_text_color=[socialmedia:sm-default_color_body_text]?]',
-      links: '[?appearance:link_color=[socialmedia:sm-default_color_body_linktext]?]'
+    features: {
+      scrollbar: [?preferences:include_scrollbar=false?],
+      loop: false,
+      live: [?preferences:poll_for_new_results=false?],
+      behavior: 'all'
     }
-  },
-  features: {
-    scrollbar: [?preferences:include_scrollbar=false?],
-    loop: false,
-    live: [?preferences:poll_for_new_results=false?],
-    behavior: 'all'
-  }
-}).render().setUser('[?settings:twitter_username=[socialmedia:sm-twitter_username]?]').start();
+  }).render().setUser('[?settings:twitter_username=[socialmedia:sm-twitter_username]?]').start();
+});
 </script>  
 EOF;
   $elements['socialmedia_twitter-profile-widget'] = array(
