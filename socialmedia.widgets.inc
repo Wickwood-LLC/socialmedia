@@ -9,7 +9,6 @@
  * Implements hook_widgets_element_info().
  */
 function socialmedia_widgets_element_info() {
-  //$addthis_js = '<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#username=[?addthis_username:[socialmedia:addthis:username]]"></script>';
   $elements = array(
     'socialmedia_twitter-tweet-no-count' => array(
       'label' => t('Twitter tweet button (no count)'),
@@ -465,9 +464,7 @@ function socialmedia_widgets_element_form_alter(&$form, $set, $element) {
 }
 
 function socialmedia_widgets_element_addthis_js() {
-  //return '<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#username=[?username=[socialmedia:sm-addthis_username]?]"></script>';
   return '<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=[?pubid=[socialmedia:sm-addthis_pubid]?]"></script>';
-  //return '<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#username="></script>';
 }
 
 function socialmedia_widgets_element_addthis_addthis_counter() {
@@ -500,7 +497,6 @@ function socialmedia_widgets_element_alter_addthis_addthis_counter(&$form, $set,
 }
 
 function socialmedia_widgets_element_addthis_facebook_share_simple($defaults) {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-facebook-share-simple'] = array(
     'label' => t('Addthis Facebook share button (simple)'),
     'group' => t('Social media: Facebook'),
@@ -538,7 +534,6 @@ function socialmedia_widgets_element_alter_addthis_facebook_like(&$form, $set, $
 }
 
 function socialmedia_widgets_element_addthis_google_share_simple($defaults) {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-google-share-simple'] = array(
       'label' => t('Addthis Google share button (simple)'),
       'group' => t('Social media: Google+'),
@@ -597,7 +592,6 @@ function socialmedia_widgets_element_addthis_email() {
 }
 
 function socialmedia_widgets_element_addthis_linkedin_share_simple($defaults) {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-linkedin-share-simple'] = array(
       'label' => t('Addthis Linkedin share button (simple)'),
       'group' => t('Social media: LinkedIn'),
@@ -607,7 +601,6 @@ function socialmedia_widgets_element_addthis_linkedin_share_simple($defaults) {
 }
 
 function socialmedia_widgets_element_addthis_pinterest_share_simple($defaults) {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-pinterest-share-simple'] = array(
     'label' => t('Addthis Pinterest share button (simple)'),
     'group' => t('Social media: Pinterest'),
@@ -648,7 +641,6 @@ function socialmedia_widgets_element_alter_addthis_pinterest_pinit(&$form, $set,
 }
 
 function socialmedia_widgets_element_addthis_tweet_simple($defaults) {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_addthis-tweet-simple'] = array(
     'label' => t('Addthis tweet button (simple)'),
     'group' => t('Social media: Twitter'),
@@ -745,18 +737,35 @@ if (!document.getElementById("fb-root")) {
   return $facebook_js_sdk;
 }
 
+/**
+ * Retrieve locale keys from Facebook.
+ *
+ * @return array|mixed
+ */
 function _socialmedia_widgets_get_facebook_locales() {
   $fb_locale = array();
   $cache = cache_get('socialmedia_facebook_locales');
   if (empty($cache->data)) {
     $result = drupal_http_request("https://www.facebook.com/translations/FacebookLocales.xml");
-    $xml = simplexml_load_string($result->data);
-    foreach ($xml->locale as $line) {
-      $representation = (array) $line->codes->code->standard->representation;
-      $name = (array) $line->englishName;
-      $key = $representation[0];
-      $value = $name[0];
-      $fb_locale[$key] = $value;
+    if ($result->code == 200) {
+      $xml = simplexml_load_string($result->data);
+      foreach ($xml->locale as $line) {
+        $representation = (array) $line->codes->code->standard->representation;
+        $name = (array) $line->englishName;
+        $key = $representation[0];
+        $value = $name[0];
+        $fb_locale[$key] = $value;
+      }
+    }
+    else {
+      // Use JSON version from Github.
+      $result = drupal_http_request("https://raw.githubusercontent.com/akarve/facebook-locales-to-json/master/FacebookLocalesSimple.json");
+      if ($result->code == 200) {
+        $json = json_decode($result->data);
+        foreach ($json as $key => $value) {
+          $fb_locale[$value] = $key;
+        }
+      }
     }
     cache_set('socialmedia_facebook_locales', serialize($fb_locale), 'cache');
   }
@@ -895,7 +904,6 @@ function socialmedia_widgets_element_alter_facebook_like_button(&$form, $set, $e
 }
 
 function socialmedia_widgets_element_linkedin_share_button() {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_linkedin-share-button'] = array(
     'label' => t('LinkedIn share button'),
     'group' => t('Social media: LinkedIn'),
@@ -953,34 +961,33 @@ EOF;
 
 function socialmedia_widgets_element_twitter_profile_widget() {
   $template = <<<EOF
+<script src="//widgets.twimg.com/j/2/widget.js"></script>
 <script>
-jQuery.getScript('https://widgets.twimg.com/j/2/widget.js', function(){
-  new TWTR.Widget({
-    version: 2,
-    type: 'profile',
-    rpp: [?preferences:number_of_tweets=4?],
-    interval: 30000,
-    width: [?dimensions:width=[socialmedia:sm-default_width]?],
-    height: [?dimensions:height=[socialmedia:sm-default_height]?],
-    theme: {
-      shell: {
-        background: '[?appearance:shell_background_color=[socialmedia:sm-default_color_header_background]?]',
-        color: '[?appearance:shell_text_color=[socialmedia:sm-default_color_header_text]?]'
-      },
-      tweets: {
-        background: '[?appearance:tweets_background_color=[socialmedia:sm-default_color_body_background]?]',
-        color: '[?appearance:tweets_text_color=[socialmedia:sm-default_color_body_text]?]',
-        links: '[?appearance:link_color=[socialmedia:sm-default_color_body_linktext]?]'
-      }
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: [?preferences:number_of_tweets=4?],
+  interval: 30000,
+  width: [?dimensions:width=[socialmedia:sm-default_width]?],
+  height: [?dimensions:height=[socialmedia:sm-default_height]?],
+  theme: {
+    shell: {
+      background: '[?appearance:shell_background_color=[socialmedia:sm-default_color_header_background]?]',
+      color: '[?appearance:shell_text_color=[socialmedia:sm-default_color_header_text]?]'
     },
-    features: {
-      scrollbar: [?preferences:include_scrollbar=false?],
-      loop: false,
-      live: [?preferences:poll_for_new_results=false?],
-      behavior: 'all'
+    tweets: {
+      background: '[?appearance:tweets_background_color=[socialmedia:sm-default_color_body_background]?]',
+      color: '[?appearance:tweets_text_color=[socialmedia:sm-default_color_body_text]?]',
+      links: '[?appearance:link_color=[socialmedia:sm-default_color_body_linktext]?]'
     }
-  }).render().setUser('[?settings:twitter_username=[socialmedia:sm-twitter_username]?]').start();
-});
+  },
+  features: {
+    scrollbar: [?preferences:include_scrollbar=false?],
+    loop: false,
+    live: [?preferences:poll_for_new_results=false?],
+    behavior: 'all'
+  }
+}).render().setUser('[?settings:twitter_username=[socialmedia:sm-twitter_username]?]').start();
 </script>  
 EOF;
   $elements['socialmedia_twitter-profile-widget'] = array(
@@ -1017,7 +1024,6 @@ function socialmedia_widgets_element_alter_twitter_profile_widget(&$form, $set, 
 
 
 function socialmedia_widgets_element_stumbleupon_badge() {
-  $addthis_js = socialmedia_widgets_element_addthis_js();
   $elements['socialmedia_stumbleupon-badge'] = array(
     'label' => t('StumbleUpon Badge'),
     'group' => t('Social media: StumbleUpon'),
@@ -1047,8 +1053,6 @@ function socialmedia_widgets_set_profile_default_elements() {
   );
   $profiles = variable_get('socialmedia_platforms_site' , array());
   $platforms = socialmedia_socialmedia_platform_info();
-//dsm($profiles);
-//dsm($platforms);
   $weight = 1;
   foreach ($profiles AS $key => $profile) {
     if ($profile && (!isset($platforms[$key]['group']) || $platforms[$key]['group'] == 'Syndication')) {
@@ -1065,7 +1069,6 @@ function socialmedia_widgets_set_profile_default_elements() {
       $weight++;   
     }
   }
-//dsm($elements);
   return $elements;
 }
 
